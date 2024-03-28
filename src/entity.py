@@ -11,6 +11,9 @@ from .position import Position
 
 
 class Entity(Argument):
+    def teleport(self, position: Position) -> None:
+        ArgCommand('teleport', self, position).add()
+
     def kill(self) -> None:
         ArgCommand('kill', self).add()
 
