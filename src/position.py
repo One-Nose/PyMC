@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from .arg_command import ArgCommand
 from .argument import Argument
-from .block import Block
+from .base_block import BaseBlock
 from .exception import IncompatiblePosition
 
 if TYPE_CHECKING:
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class Position(Argument):
-    def set_block(self, block: Block) -> None:
+    def set_block(self, block: BaseBlock) -> None:
         ArgCommand('setblock', self, block).add()
 
     def to_string(self, entity: Entity | None, position: Position | None) -> str:
