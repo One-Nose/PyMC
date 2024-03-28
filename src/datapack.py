@@ -14,7 +14,7 @@ from .arg_command import ArgCommand
 from .context import Context
 from .entity import Entity
 from .exception import BadFunctionSignature
-from .position import GivenPosition, Position
+from .position import Position
 from .util import ResourceLocation, ResourcePath, ResourceString
 
 
@@ -113,11 +113,11 @@ class Function(Context):
 
         args = [] if entity is None else [entity]
         func_signature = signature(func)
-        position: GivenPosition | None = None
+        position: Position | None = None
         try:
             func_signature.bind(*args)
         except TypeError:
-            position = GivenPosition()
+            position = Position()
             try:
                 func_signature.bind(*args, position)
             except TypeError:

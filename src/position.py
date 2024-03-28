@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
 from .arg_command import ArgCommand
@@ -25,16 +24,6 @@ class Position(Argument):
 
         return ' '.join(self.coor_to_string(coor, position) for coor in range(3))
 
-    @abstractmethod
-    def coor_to_string(self, coor: int, position: Position | None) -> str: ...
-
-    def __call__(
-        self, x: float | None = None, y: float | None = None, z: float | None = None
-    ) -> Any:
-        return ReplacedPosition(self, (x, y, z))
-
-
-class GivenPosition(Position):
     def coor_to_string(self, coor: int, position: Position | None) -> str:
         coor = coor
 
@@ -44,6 +33,11 @@ class GivenPosition(Position):
 
     def __matmul__(self, coors: tuple[float, float, float]) -> Position:
         return RelativePosition(self, coors)
+
+    def __call__(
+        self, x: float | None = None, y: float | None = None, z: float | None = None
+    ) -> Any:
+        return ReplacedPosition(self, (x, y, z))
 
 
 class AbsolutePosition(Position):
