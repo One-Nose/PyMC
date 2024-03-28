@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, ClassVar
 
 from .arg_command import ArgCommand
@@ -14,48 +15,108 @@ if TYPE_CHECKING:
     from .position import Position
 
 
-class ExecuteCommand(Command):
+class ExecuteCommand(Command, ABC):
     context: ExecuteContext
-
-    at_entity: Entity | None
-    positioned: Position | None
-
     command: Command
 
-    def __init__(
-        self, at_entity: Entity | None = None, positioned: Position | None = None
-    ) -> None:
-        self.at_entity = at_entity
-        self.positioned = positioned
-
-        self.context = ExecuteContext(
-            Context.get().datapack, self, at_entity, positioned
-        )
+    def __init__(self, entity: Entity | None, position: Position | None) -> None:
+        super().__init__()
+        self.context = ExecuteContext(Context.get().datapack, self, entity, position)
 
     def add(self) -> None:
         super().add()
         self.context.enter()
 
+    @abstractmethod
+    def get_arguments(
+        self, entity: Entity | None, position: Position | None
+    ) -> list[str | Argument]: ...
+
     def get_args(
         self, entity: Entity | None, position: Position | None
     ) -> list[str | Argument]:
-        arguments: list[str | Argument] = ['execute']
+        arguments: list[str | Argument] = [
+            'execute',
+            *self.get_arguments(entity, position),
+            'run',
+        ]
 
-        if self.at_entity is not None and self.at_entity != entity:
-            arguments.extend(('as', self.at_entity))
+        return arguments
 
-        if self.positioned is not None and self.positioned != position:
-            arguments.extend(('positioned', self.positioned))
+    def get_command_string(
+        self, entity: Entity | None, position: Position | None
+    ) -> str:
+        return self.command.to_string(entity, position)
 
-        if len(arguments) > 1:
-            arguments.append('run')
-        else:
-            arguments = []
+    def to_string(self, entity: Entity | None, position: Position | None) -> str:
+        string = super().to_string(entity, position)
 
-        if isinstance(self.command, ExecuteCommand):
-            return arguments[:-1] + self.command.get_args(entity, position)[1:]
+        if string == 'execute run':
+            return self.command.to_string(entity, position)
 
-        return arguments + self.command.get_args(entity, position)
+        self_string = super().to_string(entity, position)
+        command_string = self.get_command_string(entity, position)
+
+        if command_string.startswith('execute '):
+            return self_string[: -len('run')] + command_string[len('execute ') :]
+
+        return self_string + ' ' + command_string
+
+    def __enter__(self) -> ExecuteContext:
+        self.add()
+        return self.context
+
+    def __exit__(self, exc_type: Exception | None, *_) -> bool:
+        self.context.exit()
+        return exc_type is None
+
+
+class ExecuteAs(ExecuteCommand):
+    def __init__(self, entity: Entity) -> None:
+        super().__init__(entity, None)
+
+    def get_arguments(
+        self, entity: Entity | None, position: Position | None
+    ) -> list[str | Argument]:
+        position = position
+
+        assert self.context.entity is not None
+
+        if self.context.entity == entity:
+            return []
+
+        return ['as', self.context.entity]
+
+    def get_command_string(
+        self, entity: Entity | None, position: Position | None
+    ) -> str:
+        entity = entity
+
+        return super().get_command_string(self.context.entity, position)
+
+
+class ExecutePositioned(ExecuteCommand):
+    def __init__(self, position: Position) -> None:
+        super().__init__(None, position)
+
+    def get_arguments(
+        self, entity: Entity | None, position: Position | None
+    ) -> list[str | Argument]:
+        entity = entity
+
+        assert self.context.position is not None
+
+        if self.context.position == position:
+            return []
+
+        return ['positioned', self.context.position]
+
+    def get_command_string(
+        self, entity: Entity | None, position: Position | None
+    ) -> str:
+        position = position
+
+        return super().get_command_string(entity, self.context.position)
 
 
 class ExecuteContext(Context):

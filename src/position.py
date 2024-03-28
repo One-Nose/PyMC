@@ -7,7 +7,7 @@ from .argument import Argument
 from .base_block import BaseBlock
 from .context import Context
 from .exception import IncompatiblePosition
-from .execute import ExecuteCommand
+from .execute import ExecutePositioned
 
 if TYPE_CHECKING:
     from .entity import Entity
@@ -42,7 +42,7 @@ class Position(Argument):
         return ReplacedPosition(self, (x, y, z))
 
     def __enter__(self) -> Self:
-        ExecuteCommand(positioned=self).add()
+        ExecutePositioned(self).add()
         return self
 
     def __exit__(self, exc_type: Exception | None, *_) -> bool:

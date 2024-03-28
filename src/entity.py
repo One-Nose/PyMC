@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from collections.abc import Generator
+from contextlib import contextmanager
 from typing import Self
 
 from .arg_command import ArgCommand
 from .argument import Argument
 from .context import Context
 from .exception import IncompatibleEntity
-from .execute import ExecuteCommand
+from .execute import ExecuteAs
+from .execute_at import ExecuteAt
 from .position import Position
 
 
@@ -14,6 +17,12 @@ class Entity(Argument):
     @staticmethod
     def all() -> AllEntities:
         return AllEntities()
+
+    @contextmanager
+    def position(self) -> Generator[Position, None, None]:
+        with ExecuteAt(self) as context:
+            assert context.position is not None
+            yield context.position
 
     def teleport(self, position: Position) -> None:
         ArgCommand('teleport', self, position).add()
@@ -29,7 +38,7 @@ class Entity(Argument):
         raise IncompatibleEntity(self, entity)
 
     def __enter__(self) -> Self:
-        ExecuteCommand(at_entity=self).add()
+        ExecuteAs(self).add()
         return self
 
     def __exit__(self, exc_type: Exception | None, *_) -> bool:
