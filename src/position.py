@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from abc import abstractmethod
+from typing import TYPE_CHECKING, Any
 
 from .arg_command import ArgCommand
 from .argument import Argument
@@ -12,45 +13,124 @@ if TYPE_CHECKING:
 
 
 class Position(Argument):
+    @staticmethod
+    def abs(x: float, y: float, z: float) -> AbsolutePosition:
+        return AbsolutePosition((x, y, z))
+
     def set_block(self, block: BaseBlock) -> None:
         ArgCommand('setblock', self, block).add()
 
     def to_string(self, entity: Entity | None, position: Position | None) -> str:
         entity = entity
 
-        if position == self:
-            return '~ ~ ~'
-        raise IncompatiblePosition
+        return ' '.join(self.coor_to_string(coor, position) for coor in range(3))
 
-    def __matmul__(self, coors: tuple[float, float, float]) -> RelativePosition:
-        return RelativePosition(self, *coors)
+    @abstractmethod
+    def coor_to_string(self, coor: int, position: Position | None) -> str: ...
+
+    def __call__(
+        self, x: float | None = None, y: float | None = None, z: float | None = None
+    ) -> Any:
+        return ReplacedPosition(self, (x, y, z))
+
+
+class GivenPosition(Position):
+    def coor_to_string(self, coor: int, position: Position | None) -> str:
+        coor = coor
+
+        if self == position:
+            return '~'
+        raise IncompatiblePosition(self, position)
+
+    def __matmul__(self, coors: tuple[float, float, float]) -> Position:
+        return RelativePosition(self, coors)
+
+
+class AbsolutePosition(Position):
+    coors: tuple[float, float, float]
+
+    def __init__(self, coors: tuple[float, float, float]) -> None:
+        super().__init__()
+
+        self.coors = coors
+
+    def coor_to_string(self, coor: int, position: Position | None) -> str:
+        position = position
+
+        return str(self.coors[coor])
+
+
+class ReplacedPosition(Position):
+    position: Position
+    replacements: tuple[float | None, float | None, float | None]
+
+    def __init__(
+        self,
+        position: Position,
+        replacements: tuple[float | None, float | None, float | None],
+    ) -> None:
+        super().__init__()
+
+        self.position = position
+        self.replacements = replacements
+
+    def coor_to_string(self, coor: int, position: Position | None) -> str:
+        if self.replacements[coor] is None:
+            return self.position.coor_to_string(coor, position)
+
+        return str(self.replacements[coor])
+
+    def args_list(self) -> list[str]:
+        args: list[str] = []
+
+        for i, name in ((0, 'x'), (1, 'y'), (2, 'z')):
+            if self.replacements[i] is not None:
+                args.append(f'{name}={self.replacements[i]}')
+
+        args.append(str(self.position))
+
+        return args
+
+    def __matmul__(self, coors: tuple[float, float, float]) -> ReplacedPosition:
+        return ReplacedPosition(
+            RelativePosition(self.position, coors), self.replacements
+        )
 
 
 class RelativePosition(Position):
     position: Position
+    offset: tuple[float, float, float]
 
-    x: float
-    y: float
-    z: float
-
-    def __init__(self, position: Position, x: float, y: float, z: float) -> None:
+    def __init__(self, position: Position, offset: tuple[float, float, float]) -> None:
         super().__init__()
 
         self.position = position
+        self.offset = offset
 
-        self.x = x
-        self.y = y
-        self.z = z
-
-    def to_string(self, entity: Entity | None, position: Position | None) -> str:
+    def coor_to_string(self, coor: int, position: Position | None) -> str:
         if self.position == position:
-            return ' '.join(
-                '~' if coor == 0 else f'~{coor}' for coor in (self.x, self.y, self.z)
-            )
+            if self.offset[coor] == 0:
+                return '~'
+            return '~' + str(self.offset[coor])
 
-        return super().to_string(entity, position)
+        raise IncompatiblePosition(self, position)
 
     def __matmul__(self, coors: tuple[float, float, float]) -> RelativePosition:
         return RelativePosition(
-            self.position, self.x + coors[0], self.y + coors[1], self.z + coors[2]
+            self.position,
+            (
+                coors[0] + self.offset[0],
+                coors[1] + self.offset[1],
+                coors[2] + self.offset[2],
+            ),
         )
+
+    def args_list(self) -> list[str]:
+        args: list[str] = []
+
+        for i in self.offset:
+            args.append('0' if i == 0 else f'{i:+}')
+
+        args.append(str(self.position))
+
+        return args

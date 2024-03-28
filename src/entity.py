@@ -22,7 +22,7 @@ class Entity(Argument):
 
         if entity == self:
             return '@s'
-        raise IncompatibleEntity
+        raise IncompatibleEntity(self, entity)
 
     def __enter__(self) -> Self:
         ExecuteCommand(at_entity=self).add()
