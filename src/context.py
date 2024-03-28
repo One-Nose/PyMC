@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from .command import Command
     from .datapack import DataPack
     from .entity import Entity
+    from .position import Position
 
 
 class Context:
@@ -19,11 +20,15 @@ class Context:
     datapack: DataPack
     commands: list[Command]
     entity: Entity | None
+    position: Position | None
 
-    def __init__(self, datapack: DataPack, entity: Entity | None) -> None:
+    def __init__(
+        self, datapack: DataPack, entity: Entity | None, position: Position | None
+    ) -> None:
         self.datapack = datapack
         self.commands = []
         self.entity = entity
+        self.position = position
 
     def __enter__(self) -> Self:
         self.enter()
@@ -42,5 +47,5 @@ class Context:
     def to_string(self) -> str:
         text = ''
         for command in self.commands:
-            text += command.to_string(self.entity) + '\n'
+            text += command.to_string(self.entity, self.position) + '\n'
         return text

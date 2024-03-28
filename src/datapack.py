@@ -14,6 +14,7 @@ from .arg_command import ArgCommand
 from .context import Context
 from .entity import Entity
 from .exception import BadFunctionSignature
+from .position import Position
 from .util import ResourceLocation, ResourcePath, ResourceString
 
 
@@ -36,7 +37,7 @@ class DataPack:
             function.compile()
 
     def function(self, entity_type: type[Entity] | None = None):
-        def wrapper(func: Callable[..., None]):
+        def wrapper[T: Callable[..., None]](func: T) -> T:
             func_path = ResourcePath(func.__name__)
 
             self.functions[func_path] = Function(self, func, entity_type)
@@ -53,7 +54,7 @@ class DataPack:
                     with bound_func.args[0]:
                         command.add()
 
-            return call_func
+            return call_func  # type: ignore
 
         return wrapper
 
@@ -108,18 +109,33 @@ class Function(Context):
         func: Callable[..., None],
         entity_type: type[Entity] | None,
     ) -> None:
-        super().__init__(datapack, Entity() if entity_type is None else entity_type())
+        entity = None if entity_type is None else entity_type()
+
+        args = [] if entity is None else [entity]
+        func_signature = signature(func)
+        position: Position | None = None
+        try:
+            func_signature.bind(*args)
+        except TypeError:
+            position = Position()
+            try:
+                func_signature.bind(*args, position)
+            except TypeError:
+                raise BadFunctionSignature
+
+        super().__init__(datapack, entity, position)
 
         self._func = func
         self._entity_type = entity_type
 
     def compile(self) -> None:
-        args = [] if self._entity_type is None else [self.entity]
+        args: list[Entity | Position] = []
 
-        try:
-            signature(self._func).bind(*args)
-        except TypeError:
-            raise BadFunctionSignature
+        if self.entity is not None:
+            args.append(self.entity)
+
+        if self.position is not None:
+            args.append(self.position)
 
         with self:
             self._func(*args)

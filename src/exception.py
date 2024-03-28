@@ -10,6 +10,10 @@ class IncompatibleEntity(MinecraftException):
     pass
 
 
+class IncompatiblePosition(MinecraftException):
+    pass
+
+
 class InvalidResourcePath(MinecraftException):
     def __init__(self, path: str) -> None:
         super().__init__(f'resource path {path!r} is invalid')

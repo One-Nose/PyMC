@@ -3,8 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from .arg_command import ArgCommand
-from .command import Argument, Command
+from .argument import Argument
+from .command import Command
 from .context import Context
+from .position import Position
 from .util import ResourcePath
 
 if TYPE_CHECKING:
@@ -15,25 +17,42 @@ if TYPE_CHECKING:
 class ExecuteCommand(Command):
     context: ExecuteContext
 
-    entity: Entity
+    at_entity: Entity | None
+    positioned: Position | None
+
     command: Command
 
-    def __init__(self, entity: Entity) -> None:
-        self.entity = entity
+    def __init__(
+        self, at_entity: Entity | None = None, positioned: Position | None = None
+    ) -> None:
+        self.at_entity = at_entity
+        self.positioned = positioned
 
-        self.context = ExecuteContext(Context.get().datapack, self, entity)
+        self.context = ExecuteContext(
+            Context.get().datapack, self, at_entity, positioned
+        )
 
     def add(self) -> None:
         super().add()
         self.context.enter()
 
-    def get_args(self, entity: Entity | None) -> list[Argument]:
-        arguments: list[Argument] = []
+    def get_args(
+        self, entity: Entity | None, position: Position | None
+    ) -> list[str | Argument]:
+        arguments: list[str | Argument] = ['execute']
 
-        if self.entity != entity:
-            arguments.extend(('execute', 'as', self.entity, 'run'))
+        if self.at_entity is not None and self.at_entity != entity:
+            arguments.extend(('as', self.at_entity))
 
-        return arguments + self.command.get_args(entity)
+        if self.positioned is not None and self.positioned != position:
+            arguments.extend(('positioned', self.positioned))
+
+        if len(arguments) > 1:
+            arguments.append('run')
+        else:
+            arguments = []
+
+        return arguments + self.command.get_args(entity, position)
 
 
 class ExecuteContext(Context):
@@ -42,9 +61,13 @@ class ExecuteContext(Context):
     command: ExecuteCommand
 
     def __init__(
-        self, datapack: DataPack, command: ExecuteCommand, entity: Entity | None
+        self,
+        datapack: DataPack,
+        command: ExecuteCommand,
+        entity: Entity | None,
+        position: Position | None,
     ) -> None:
-        super().__init__(datapack, entity)
+        super().__init__(datapack, entity, position)
 
         self.command = command
 
