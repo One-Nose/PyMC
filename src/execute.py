@@ -6,12 +6,12 @@ from .arg_command import ArgCommand
 from .argument import Argument
 from .command import Command
 from .context import Context
-from .position import Position
 from .util import ResourcePath
 
 if TYPE_CHECKING:
     from .datapack import DataPack
     from .entity import Entity
+    from .position import Position
 
 
 class ExecuteCommand(Command):
@@ -51,6 +51,9 @@ class ExecuteCommand(Command):
             arguments.append('run')
         else:
             arguments = []
+
+        if isinstance(self.command, ExecuteCommand):
+            return arguments[:-1] + self.command.get_args(entity, position)[1:]
 
         return arguments + self.command.get_args(entity, position)
 

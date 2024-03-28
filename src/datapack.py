@@ -46,13 +46,22 @@ class DataPack:
             def call_func(*args: Any, **kwargs: Any):
                 command = ArgCommand('function', self.resource_location(func_path))
 
+                bound_func = signature(func).bind(*args, **kwargs)
+                bound_func.apply_defaults()
+
                 if entity_type is None:
-                    command.add()
-                else:
-                    bound_func = signature(func).bind(*args, **kwargs)
-                    bound_func.apply_defaults()
-                    with bound_func.args[0]:
+                    if len(bound_func.args) == 0:
                         command.add()
+                    else:
+                        with bound_func.args[0]:
+                            command.add()
+                else:
+                    with bound_func.args[0]:
+                        if len(bound_func.args) == 1:
+                            command.add()
+                        else:
+                            with bound_func.args[1]:
+                                command.add()
 
             return call_func  # type: ignore
 

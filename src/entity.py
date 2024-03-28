@@ -11,6 +11,10 @@ from .position import Position
 
 
 class Entity(Argument):
+    @staticmethod
+    def all() -> AllEntities:
+        return AllEntities()
+
     def teleport(self, position: Position) -> None:
         ArgCommand('teleport', self, position).add()
 
@@ -31,3 +35,11 @@ class Entity(Argument):
     def __exit__(self, exc_type: Exception | None, *_) -> bool:
         Context.get().exit()
         return exc_type is None
+
+
+class AllEntities(Entity):
+    def to_string(self, entity: Entity | None, position: Position | None) -> str:
+        entity = entity
+        position = position
+
+        return '@e'

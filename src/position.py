@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from .arg_command import ArgCommand
 from .argument import Argument
 from .base_block import BaseBlock
+from .context import Context
 from .exception import IncompatiblePosition
+from .execute import ExecuteCommand
 
 if TYPE_CHECKING:
     from .entity import Entity
@@ -38,6 +40,14 @@ class Position(Argument):
         self, x: float | None = None, y: float | None = None, z: float | None = None
     ) -> Any:
         return ReplacedPosition(self, (x, y, z))
+
+    def __enter__(self) -> Self:
+        ExecuteCommand(positioned=self).add()
+        return self
+
+    def __exit__(self, exc_type: Exception | None, *_) -> bool:
+        Context.get().exit()
+        return exc_type is None
 
 
 class AbsolutePosition(Position):
