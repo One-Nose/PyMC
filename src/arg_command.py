@@ -6,8 +6,6 @@ from .command import Command
 
 if TYPE_CHECKING:
     from .argument import Argument
-    from .entity import Entity
-    from .position import Position
 
 
 class ArgCommand(Command):
@@ -16,10 +14,5 @@ class ArgCommand(Command):
     def __init__(self, *arguments: str | Argument) -> None:
         self.arguments = list(arguments)
 
-    def get_args(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]:
-        entity = entity
-        position = position
-
+    def get_args(self) -> list[str | Argument]:
         return self.arguments

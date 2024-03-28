@@ -34,7 +34,7 @@ class Context:
         self.enter()
         return self
 
-    def __exit__(self, exc_type: Exception | None, *_: Any) -> bool:
+    def __exit__(self, exc_type: type[BaseException] | None, *_: Any) -> bool:
         self.exit()
         return exc_type is None
 

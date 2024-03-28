@@ -45,7 +45,7 @@ class Position(Argument):
         ExecutePositioned(self).add()
         return self
 
-    def __exit__(self, exc_type: Exception | None, *_) -> bool:
+    def __exit__(self, exc_type: type[BaseException] | None, *_) -> bool:
         Context.get().exit()
         return exc_type is None
 

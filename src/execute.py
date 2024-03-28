@@ -28,16 +28,12 @@ class ExecuteCommand(Command, ABC):
         self.context.enter()
 
     @abstractmethod
-    def get_arguments(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]: ...
+    def get_arguments(self) -> list[str | Argument]: ...
 
-    def get_args(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]:
+    def get_args(self) -> list[str | Argument]:
         arguments: list[str | Argument] = [
             'execute',
-            *self.get_arguments(entity, position),
+            *self.get_arguments(),
             'run',
         ]
 
@@ -48,10 +44,14 @@ class ExecuteCommand(Command, ABC):
     ) -> str:
         return self.command.to_string(entity, position)
 
-    def to_string(self, entity: Entity | None, position: Position | None) -> str:
-        string = super().to_string(entity, position)
+    def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
+        entity = entity
+        position = position
 
-        if string == 'execute run':
+        return False
+
+    def to_string(self, entity: Entity | None, position: Position | None) -> str:
+        if self.is_redundant(entity, position):
             return self.command.to_string(entity, position)
 
         self_string = super().to_string(entity, position)
@@ -66,7 +66,7 @@ class ExecuteCommand(Command, ABC):
         self.add()
         return self.context
 
-    def __exit__(self, exc_type: Exception | None, *_) -> bool:
+    def __exit__(self, exc_type: type[BaseException] | None, *_) -> bool:
         self.context.exit()
         return exc_type is None
 
@@ -75,17 +75,13 @@ class ExecuteAs(ExecuteCommand):
     def __init__(self, entity: Entity) -> None:
         super().__init__(entity, None)
 
-    def get_arguments(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]:
-        position = position
-
+    def get_arguments(self) -> list[str | Argument]:
         assert self.context.entity is not None
 
-        if self.context.entity == entity:
-            return []
-
         return ['as', self.context.entity]
+
+    def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
+        return super().is_redundant(entity, position) or self.context.entity == entity
 
     def get_command_string(
         self, entity: Entity | None, position: Position | None
@@ -99,17 +95,15 @@ class ExecutePositioned(ExecuteCommand):
     def __init__(self, position: Position) -> None:
         super().__init__(None, position)
 
-    def get_arguments(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]:
-        entity = entity
-
+    def get_arguments(self) -> list[str | Argument]:
         assert self.context.position is not None
 
-        if self.context.position == position:
-            return []
-
         return ['positioned', self.context.position]
+
+    def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
+        return (
+            super().is_redundant(entity, position) or self.context.position == position
+        )
 
     def get_command_string(
         self, entity: Entity | None, position: Position | None

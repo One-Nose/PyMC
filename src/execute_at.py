@@ -18,12 +18,7 @@ class ExecuteAt(ExecuteCommand):
 
         self.entity = entity
 
-    def get_arguments(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]:
-        entity = entity
-        position = position
-
+    def get_arguments(self) -> list[str | Argument]:
         return ['at', self.entity]
 
     def get_command_string(

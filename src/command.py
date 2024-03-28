@@ -13,17 +13,18 @@ if TYPE_CHECKING:
 
 class Command(ABC):
     @abstractmethod
-    def get_args(
-        self, entity: Entity | None, position: Position | None
-    ) -> list[str | Argument]: ...
+    def get_args(self) -> list[str | Argument]: ...
 
     def add(self) -> None:
         Context.get().commands.append(self)
 
     def to_string(self, entity: Entity | None, position: Position | None) -> str:
-        return ' '.join(
-            [
-                arg if isinstance(arg, str) else arg.to_string(entity, position)
-                for arg in self.get_args(entity, position)
-            ]
-        )
+        args: list[str] = []
+
+        for arg in self.get_args():
+            if isinstance(arg, str):
+                args.append(arg)
+            else:
+                args.append(arg.to_string(entity, position))
+
+        return ' '.join(args)
