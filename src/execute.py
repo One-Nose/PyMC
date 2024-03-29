@@ -10,7 +10,6 @@ from .context import Context
 from .util import ResourcePath
 
 if TYPE_CHECKING:
-    from .datapack import DataPack
     from .entity import Entity
     from .position import Position
 
@@ -21,11 +20,18 @@ class ExecuteCommand(Command, ABC):
 
     def __init__(self, entity: Entity | None, position: Position | None) -> None:
         super().__init__()
-        self.context = ExecuteContext(Context.get().datapack, self, entity, position)
+        self.context = ExecuteContext(Context.get(), self, entity, position)
 
     def add(self) -> None:
         super().add()
         self.context.enter()
+
+    @abstractmethod
+    def get_mark_arguments(self) -> list[Argument]: ...
+
+    def update_mark_commands(self) -> None:
+        for arg in self.get_mark_arguments():
+            arg.update_mark_command()
 
     @abstractmethod
     def get_arguments(self) -> list[str | Argument]: ...
@@ -54,7 +60,7 @@ class ExecuteCommand(Command, ABC):
         if self.is_redundant(entity, position):
             return self.command.to_string(entity, position)
 
-        self_string = super().to_string(entity, position)
+        self_string = ArgCommand(*self.get_args()).to_string(entity, position)
         command_string = self.get_command_string(entity, position)
 
         if command_string.startswith('execute '):
@@ -70,6 +76,9 @@ class ExecuteCommand(Command, ABC):
         self.context.exit()
         return exc_type is None
 
+    def args_list(self) -> list[str]:
+        return [repr(arg) for arg in self.get_arguments()]
+
 
 class ExecuteAs(ExecuteCommand):
     def __init__(self, entity: Entity) -> None:
@@ -79,6 +88,11 @@ class ExecuteAs(ExecuteCommand):
         assert self.context.entity is not None
 
         return ['as', self.context.entity]
+
+    def get_mark_arguments(self) -> list[Argument]:
+        assert self.context.entity is not None
+
+        return [self.context.entity]
 
     def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
         return super().is_redundant(entity, position) or self.context.entity == entity
@@ -100,6 +114,11 @@ class ExecutePositioned(ExecuteCommand):
 
         return ['positioned', self.context.position]
 
+    def get_mark_arguments(self) -> list[Argument]:
+        assert self.context.position is not None
+
+        return [self.context.position]
+
     def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
         return (
             super().is_redundant(entity, position) or self.context.position == position
@@ -120,25 +139,23 @@ class ExecuteContext(Context):
 
     def __init__(
         self,
-        datapack: DataPack,
+        parent: Context,
         command: ExecuteCommand,
         entity: Entity | None,
         position: Position | None,
     ) -> None:
-        super().__init__(datapack, entity, position)
+        super().__init__(parent, entity, position)
 
         self.command = command
 
     def exit(self) -> None:
         super().exit()
 
-        if len(self.commands) == 1:
-            self.command.command = self.commands[0]
-        else:
-            func_path = ResourcePath(f'execute_context_{ExecuteContext.func_id}')
+        func_path = ResourcePath(f'execute_context_{ExecuteContext.func_id}')
+        ExecuteContext.func_id += 1
 
-            self.datapack.micro_functions[func_path] = self
-            self.command.command = ArgCommand(
-                'function',
-                self.datapack.micro_resource_location(func_path),
-            )
+        self.datapack.micro_functions[func_path] = self
+        self.command.command = ArgCommand(
+            'function',
+            self.datapack.micro_resource_location(func_path),
+        )

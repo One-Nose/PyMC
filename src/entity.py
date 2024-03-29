@@ -18,6 +18,9 @@ class Entity(Argument):
     def all() -> AllEntities:
         return AllEntities()
 
+    def __init__(self, automark: bool = True) -> None:
+        super().__init__(automark)
+
     @contextmanager
     def position(self) -> Generator[Position, None, None]:
         with ExecuteAt(self) as context:
@@ -29,6 +32,10 @@ class Entity(Argument):
 
     def kill(self) -> None:
         ArgCommand('kill', self).add()
+
+    def update_mark_command(self) -> None:
+        if Context.get().entity != self:
+            super().update_mark_command()
 
     def to_string(self, entity: Entity | None, position: Position | None) -> str:
         position = position

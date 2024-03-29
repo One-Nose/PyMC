@@ -18,8 +18,19 @@ class Position(Argument):
     def abs(x: float, y: float, z: float) -> AbsolutePosition:
         return AbsolutePosition((x, y, z))
 
+    def __init__(self, automark: bool = True) -> None:
+        super().__init__(automark)
+
     def set_block(self, block: BaseBlock) -> None:
         ArgCommand('setblock', self, block).add()
+
+    def update_mark_command(self) -> None:
+        if Context.get().position != self:
+            super().update_mark_command()
+
+    def mark(self) -> None:
+        assert self.mark_command is not None
+        self.mark_command.command = ArgCommand('mark', self)
 
     def to_string(self, entity: Entity | None, position: Position | None) -> str:
         entity = entity
@@ -75,6 +86,7 @@ class ReplacedPosition(Position):
     ) -> None:
         super().__init__()
 
+        position.update_mark_command()
         self.position = position
         self.replacements = replacements
 
@@ -108,6 +120,7 @@ class RelativePosition(Position):
     def __init__(self, position: Position, offset: tuple[float, float, float]) -> None:
         super().__init__()
 
+        position.update_mark_command()
         self.position = position
         self.offset = offset
 

@@ -118,7 +118,7 @@ class Function(Context):
         func: Callable[..., None],
         entity_type: type[Entity] | None,
     ) -> None:
-        entity = None if entity_type is None else entity_type()
+        entity = None if entity_type is None else entity_type(automark=False)
 
         args = [] if entity is None else [entity]
         func_signature = signature(func)
@@ -126,7 +126,7 @@ class Function(Context):
         try:
             func_signature.bind(*args)
         except TypeError:
-            position = Position()
+            position = Position(automark=False)
             try:
                 func_signature.bind(*args, position)
             except TypeError:

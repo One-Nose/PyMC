@@ -15,6 +15,10 @@ class BadFunctionSignature(MinecraftException):
     pass
 
 
+class CommandOutOfContext(MinecraftException):
+    pass
+
+
 class IncompatibleEntity(MinecraftException):
     def __init__(self, entity: Entity, context_entity: Entity | None) -> None:
         super().__init__(
@@ -38,3 +42,7 @@ class InvalidResourcePath(MinecraftException):
 class InvalidResourceString(MinecraftException):
     def __init__(self, string: str) -> None:
         super().__init__(f'resource string {str!r} is invalid')
+
+
+class UnsupportedAutoMark(MinecraftException):
+    pass

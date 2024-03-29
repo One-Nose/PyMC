@@ -27,3 +27,8 @@ class ExecuteAt(ExecuteCommand):
         position = position
 
         return super().get_command_string(entity, self.context.position)
+
+    def get_mark_arguments(self) -> list[Argument]:
+        assert self.context.position is not None
+
+        return [self.entity, self.context.position]
