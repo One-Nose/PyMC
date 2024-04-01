@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
-from .argument import Argument
 from .command import Command
 
 if TYPE_CHECKING:
@@ -31,7 +30,7 @@ class ArgCommand(Command):
 
     def get_mark_arguments(self) -> Iterator[Argument]:
         return (
-            argument for argument in self.arguments if isinstance(argument, Argument)
+            argument for argument in self.arguments if not isinstance(argument, str)
         )
 
     def args_list(self) -> list[str]:
