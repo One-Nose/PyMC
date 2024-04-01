@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import TYPE_CHECKING, ClassVar
 
 from .arg_command import ArgCommand
@@ -25,13 +26,6 @@ class ExecuteCommand(Command, ABC):
     def add(self) -> None:
         super().add()
         self.context.enter()
-
-    @abstractmethod
-    def get_mark_arguments(self) -> list[Argument]: ...
-
-    def update_mark_commands(self) -> None:
-        for arg in self.get_mark_arguments():
-            arg.update_mark_command()
 
     @abstractmethod
     def get_arguments(self) -> list[str | Argument]: ...
@@ -89,10 +83,10 @@ class ExecuteAs(ExecuteCommand):
 
         return ['as', self.context.entity]
 
-    def get_mark_arguments(self) -> list[Argument]:
+    def get_mark_arguments(self) -> Iterator[Argument]:
         assert self.context.entity is not None
 
-        return [self.context.entity]
+        yield self.context.entity
 
     def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
         return super().is_redundant(entity, position) or self.context.entity == entity
@@ -114,10 +108,10 @@ class ExecutePositioned(ExecuteCommand):
 
         return ['positioned', self.context.position]
 
-    def get_mark_arguments(self) -> list[Argument]:
+    def get_mark_arguments(self) -> Iterator[Argument]:
         assert self.context.position is not None
 
-        return [self.context.position]
+        yield self.context.position
 
     def is_redundant(self, entity: Entity | None, position: Position | None) -> bool:
         return (

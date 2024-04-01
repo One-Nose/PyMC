@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
 from .context import Context
 
 if TYPE_CHECKING:
+    from .argument import Argument
     from .entity import Entity
     from .position import Position
 
@@ -15,15 +17,20 @@ class Command(ABC):
         Context.get().commands.append(self)
         self.update_mark_commands()
 
+        # automark arguments that weren't used immediately
         for arg in Context.get().get_arguments():
-            if not arg.mark_always and arg.number == 0:
+            if arg.number == 0:
                 arg.mark_always = True
 
     @abstractmethod
     def to_string(self, entity: Entity | None, position: Position | None) -> str: ...
 
     @abstractmethod
-    def update_mark_commands(self) -> None: ...
+    def get_mark_arguments(self) -> Iterator[Argument]: ...
+
+    def update_mark_commands(self) -> None:
+        for argument in self.get_mark_arguments():
+            argument.update_mark_command()
 
     def args_list(self) -> list[str]:
         return []
@@ -45,6 +52,6 @@ class MarkCommand(Command):
             return ''
         return self.command.to_string(entity, position)
 
-    def update_mark_commands(self) -> None:
+    def get_mark_arguments(self) -> Iterator[Argument]:
         if self.command is not None:
-            self.command.update_mark_commands()
+            yield from self.command.get_mark_arguments()

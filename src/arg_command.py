@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
 from .argument import Argument
@@ -28,10 +29,10 @@ class ArgCommand(Command):
 
         return ' '.join(args)
 
-    def update_mark_commands(self) -> None:
-        for arg in self.arguments:
-            if isinstance(arg, Argument):
-                arg.update_mark_command()
+    def get_mark_arguments(self) -> Iterator[Argument]:
+        return (
+            argument for argument in self.arguments if isinstance(argument, Argument)
+        )
 
     def args_list(self) -> list[str]:
         return [repr(arg) for arg in self.arguments]

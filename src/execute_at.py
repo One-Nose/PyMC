@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
 from .argument import Argument
@@ -28,7 +29,8 @@ class ExecuteAt(ExecuteCommand):
 
         return super().get_command_string(entity, self.context.position)
 
-    def get_mark_arguments(self) -> list[Argument]:
-        assert self.context.position is not None
+    def get_mark_arguments(self) -> Iterator[Argument]:
+        yield self.entity
 
-        return [self.entity, self.context.position]
+        assert self.context.position is not None
+        yield self.context.position
