@@ -26,9 +26,7 @@ class Argument(ABC):
             self.mark_command = None
 
     def update_mark_command(self) -> None:
-        for arg in Context.get().get_arguments():
-            if arg.argument == self:
-                arg.number += 1
+        Context.get().get_arguments()[self].number += 1
 
     def mark(self) -> None:
         raise UnsupportedAutoMark

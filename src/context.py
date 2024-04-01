@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 @dataclass
 class ArgumentRecord:
-    argument: Argument
     number: int
     mark_always: bool
 
@@ -35,7 +34,7 @@ class Context:
     parent: Context | None
 
     commands: list[Command]
-    _arguments: list[ArgumentRecord]
+    _arguments: dict[Argument, ArgumentRecord]
 
     entity: Entity | None
     position: Position | None
@@ -54,19 +53,19 @@ class Context:
             self.parent = None
 
         self.commands = []
-        self._arguments = []
+        self._arguments = {}
 
         self.entity = entity
         self.position = position
 
     def add_argument(self, argument: Argument) -> None:
-        self._arguments.append(ArgumentRecord(argument, 0, mark_always=False))
+        self._arguments[argument] = ArgumentRecord(0, mark_always=False)
 
-    def get_arguments(self) -> list[ArgumentRecord]:
+    def get_arguments(self) -> dict[Argument, ArgumentRecord]:
         parent_args = (
-            self.parent.get_arguments() if isinstance(self.parent, Context) else []
+            self.parent.get_arguments() if isinstance(self.parent, Context) else {}
         )
-        return parent_args + self._arguments
+        return {**parent_args, **self._arguments}
 
     def __enter__(self) -> Self:
         self.enter()
@@ -80,9 +79,9 @@ class Context:
         self._stack.append(self)
 
     def exit(self) -> None:
-        for arg in self._arguments:
-            if arg.mark_always or arg.number > 1:
-                arg.argument.mark()
+        for arg, record in self._arguments.items():
+            if record.mark_always or record.number > 1:
+                arg.mark()
 
         Context._stack.pop()
 

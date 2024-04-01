@@ -18,9 +18,9 @@ class Command(ABC):
         self.update_mark_commands()
 
         # automark arguments that weren't used immediately
-        for arg in Context.get().get_arguments():
-            if arg.number == 0:
-                arg.mark_always = True
+        for record in Context.get().get_arguments().values():
+            if record.number == 0:
+                record.mark_always = True
 
     @abstractmethod
     def to_string(self, entity: Entity | None, position: Position | None) -> str: ...
