@@ -1,57 +1,46 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from collections.abc import Iterator
-from typing import TYPE_CHECKING
+from .context import Context, ContextProvider, Entity
+from .context_node import ContextNode
 
-from .context import Context
-
-if TYPE_CHECKING:
-    from .argument import Argument
-    from .entity import Entity
-    from .position import Position
+type CommandArg = str | ContextProvider
 
 
-class Command(ABC):
-    def add(self) -> None:
-        Context.get().commands.append(self)
-        self.update_mark_commands()
+class Command(ContextNode):
+    args: list[CommandArg]
 
-        # automark arguments that weren't used immediately
-        for record in Context.get().get_arguments().values():
-            if record.number == 0:
-                record.mark_always = True
+    def __init__(self, context: Context, args: list[CommandArg]) -> None:
+        super().__init__(context)
+        self.args = args
 
-    @abstractmethod
-    def to_string(self, entity: Entity | None, position: Position | None) -> str: ...
+    def to_string(self, context: Context) -> str:
+        return ' '.join(self.get_str_args(context))
 
-    @abstractmethod
-    def get_mark_arguments(self) -> Iterator[Argument]: ...
+    def get_str_args(self, context: Context) -> list[str]:
+        providers = self.flattened(context)
 
-    def update_mark_commands(self) -> None:
-        for argument in self.get_mark_arguments():
-            argument.update_mark_command()
+        if providers is None:
+            raise ValueError
 
-    def args_list(self) -> list[str]:
-        return []
+        args: list[str] = []
 
-    def __repr__(self) -> str:
-        return type(self).__name__ + '(' + ', '.join(self.args_list()) + ')'
+        for provider in providers:
+            args.extend(provider.get_str_args(context))
+            context = context.with_provider(provider)
+
+        if len(args) > 0:
+            args.insert(0, 'execute')
+            args.append('run')
+
+        for arg in self.args:
+            if isinstance(arg, str):
+                args.append(arg)
+            else:
+                args.append(arg.to_string(context))
+
+        return args
 
 
-class MarkCommand(Command):
-    command: Command | None
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.command = None
-
-    def to_string(self, entity: Entity | None, position: Position | None) -> str:
-        if self.command is None:
-            return ''
-        return self.command.to_string(entity, position)
-
-    def get_mark_arguments(self) -> Iterator[Argument]:
-        if self.command is not None:
-            yield from self.command.get_mark_arguments()
+class Kill(Command):
+    def __init__(self, entity: Entity) -> None:
+        super().__init__(Context(entity=entity), ['kill', entity])
