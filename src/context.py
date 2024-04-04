@@ -20,7 +20,6 @@ class Context(NamedTuple):
         for provider, condition_provider in zip(self, context):
             if provider not in (None, condition_provider):
                 return False
-
         return True
 
     def with_provider(self, provider: ContextProvider) -> Context:
