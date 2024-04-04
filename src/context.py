@@ -1,27 +1,47 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Generator
 from typing import NamedTuple
 
 from .context_node import ContextNode
-from .exception import IncompatibleContextProvider
 
 
 class Context(NamedTuple):
     entity: EntityProvider | None = None
     position: PositionProvider | None = None
 
+    @staticmethod
+    def combine(*contexts: Context) -> Context:
+        result = Context()
+
+        for context in contexts:
+            if context.conflicts_with(result):
+                raise ValueError
+            result = result.updated(context)
+
+        return result
+
     def providers(self) -> Generator[ContextProvider, None, None]:
         for provider in self:  # pylint: disable=not-an-iterable
             if provider is not None:
                 yield provider
 
-    def compatible_with(self, context: Context) -> bool:
+    def is_or_extends(self, context: Context) -> bool:
         for provider, condition_provider in zip(self, context):
-            if provider not in (None, condition_provider):
+            if condition_provider is not None and provider != condition_provider:
                 return False
         return True
+
+    def conflicts_with(self, context: Context) -> bool:
+        for provider, other_provider in zip(self, context):
+            if (
+                provider is not None
+                and other_provider is not None
+                and provider != other_provider
+            ):
+                return True
+        return False
 
     def applies_to_template(self, template: Context) -> bool:
         for provider, template_provider in zip(self, template):
@@ -30,37 +50,35 @@ class Context(NamedTuple):
         return True
 
     def with_provider(self, provider: ContextProvider) -> Context:
-        replace_args: dict[str, ContextProvider] = {}
+        return self._replace(  # pylint: disable=no-member
+            **{provider.provider_type: provider}
+        )
 
-        if isinstance(provider, EntityProvider):
-            replace_args['entity'] = provider
-        elif isinstance(provider, PositionProvider):
-            replace_args['position'] = provider
-        else:
-            raise TypeError
+    def updated(self, context: Context) -> Context:
+        fields = self._asdict()  # pylint: disable=no-member
 
-        return self._replace(**replace_args)  # pylint: disable=no-member
+        for name, provider in context._asdict().items():
+            if provider is not None:
+                fields[name] = provider
+
+        return Context(**fields)
 
 
 class ContextProvider(ContextNode):
+    provider_type: str
+
     @abstractmethod
-    def get_str_args(self, context: Context) -> tuple[str, ...]: ...
+    def get_str_args(self) -> tuple[str, ...]: ...
 
 
-class ReferenceProvider(ContextProvider):
+class EntityProvider(ContextProvider, ABC):
+    provider_type = 'entity'
+
+
+class PositionProvider(ContextProvider, ABC):
+    provider_type = 'position'
+
+
+class ProviderReference(ContextNode):
     @abstractmethod
-    def to_string(self, context: Context) -> str: ...
-
-
-class EntityProvider(ContextProvider):
-    def get_str_args(self, context: Context) -> tuple[str, ...]:
-        if self == context.entity:
-            return ()
-        raise IncompatibleContextProvider
-
-
-class PositionProvider(ContextProvider):
-    def get_str_args(self, context: Context) -> tuple[str, ...]:
-        if self == context.position:
-            return ()
-        raise IncompatibleContextProvider
+    def to_string(self) -> str: ...

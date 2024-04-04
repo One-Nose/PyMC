@@ -1,2 +1,0 @@
-class IncompatibleContextProvider(Exception):
-    pass

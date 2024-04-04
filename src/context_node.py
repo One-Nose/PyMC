@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from collections.abc import Generator, Sequence
+from collections.abc import Generator, Iterable
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ class ContextNode(ABC):
         self.context = context
 
     def walk(
-        self, exclude: Sequence[ContextProvider] | None = None
+        self, exclude: Iterable[ContextProvider] | None = None
     ) -> Generator[ContextProvider, None, None]:
         if exclude is None:
             exclude = []
@@ -24,26 +24,6 @@ class ContextNode(ABC):
 
         for arg in self.context.providers():
             if arg not in new_exclude:
-                yield arg
                 new_exclude.append(arg)
-            yield from arg.walk(exclude=new_exclude)
-
-    def flattened(
-        self, context: Context, start: Sequence[ContextProvider] | None = None
-    ) -> Sequence[ContextProvider] | None:
-        if start is None:
-            start = []
-
-        found_node = False
-        for node in self.walk(exclude=start):
-            found_node = True
-
-            if node.context.compatible_with(context):
-                result = self.flattened(context.with_provider(node), [*start, node])
-                if result is not None:
-                    return result
-
-        if not found_node:
-            return start
-
-        return None
+                yield arg
+                yield from arg.walk(exclude=new_exclude)

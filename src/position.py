@@ -1,27 +1,23 @@
 from __future__ import annotations
 
-from .context import Context, EntityProvider, PositionProvider, ReferenceProvider
+from .context import Context, EntityProvider, PositionProvider, ProviderReference
 from .entity import EntityReference
-from .exception import IncompatibleContextProvider
 
 
-class PositionReference(PositionProvider, ReferenceProvider):
-    _position: PositionProvider
-
+class PositionReference(ProviderReference):
     def __init__(self, position: PositionProvider) -> None:
-        super().__init__(Context())
+        super().__init__(Context(position=position))
 
-        self._position = position
-
-    def to_string(self, context: Context) -> str:
-        if self._position == context.position:
-            return '~ ~ ~'
-        raise ValueError
+    def to_string(self) -> str:
+        return '~ ~ ~'
 
 
 class Position(PositionProvider):
     def __init__(self) -> None:
-        super().__init__(Context())
+        super().__init__(Context(position=self))
+
+    def get_str_args(self) -> tuple[str, ...]:
+        return ()
 
 
 class PositionedAs(PositionProvider):
@@ -32,8 +28,5 @@ class PositionedAs(PositionProvider):
 
         self.entity = entity
 
-    def get_str_args(self, context: Context) -> tuple[str, ...]:
-        try:
-            return super().get_str_args(context)
-        except IncompatibleContextProvider:
-            return ('positioned', 'as', EntityReference(self.entity).to_string(context))
+    def get_str_args(self) -> tuple[str, ...]:
+        return ('positioned', 'as', EntityReference(self.entity).to_string())
