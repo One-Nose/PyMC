@@ -9,17 +9,17 @@ if TYPE_CHECKING:
 
 
 class ContextNode(ABC):
-    context: Context
+    _context: Context
 
     def __init__(self, context: Context) -> None:
-        self.context = context
+        self._context = context
 
     def walk(
         self, exclude: Sequence[ContextProvider] = []
     ) -> Generator[ContextProvider, None, None]:
         new_exclude = [*exclude]
 
-        for arg in self.context.providers():
+        for arg in self._context.providers():
             if arg not in new_exclude:
                 yield arg
                 new_exclude.append(arg)
@@ -29,7 +29,7 @@ class ContextNode(ABC):
         self, context: Context, start: Sequence[ContextProvider] = []
     ) -> Sequence[ContextProvider] | None:
         for node in self.walk(exclude=start):
-            if node.context.compatible_with(context):
+            if node._context.compatible_with(context):
                 result = self.flattened(context.with_provider(node), [*start, node])
                 if result is not None:
                     return result

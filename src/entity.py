@@ -4,15 +4,15 @@ from .context import Context, EntityProvider, ReferenceProvider
 
 
 class EntityReference(EntityProvider, ReferenceProvider):
-    entity: EntityProvider
+    _entity: EntityProvider
 
     def __init__(self, entity: EntityProvider) -> None:
         super().__init__(Context())
 
-        self.entity = entity
+        self._entity = entity
 
     def to_string(self, context: Context) -> str:
-        if self.entity == context.entity:
+        if self._entity == context.entity:
             return '@s'
         raise ValueError
 

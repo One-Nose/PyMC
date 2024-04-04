@@ -8,16 +8,16 @@ type CommandArg = str | ReferenceProvider
 
 
 class Command(ContextNode):
-    args: list[CommandArg]
+    _args: list[CommandArg]
 
     def __init__(self, context: Context, args: list[CommandArg]) -> None:
         super().__init__(context)
-        self.args = args
+        self._args = args
 
     def to_string(self, context: Context) -> str:
-        return ' '.join(self.get_str_args(context))
+        return ' '.join(self._get_str_args(context))
 
-    def get_str_args(self, context: Context) -> list[str]:
+    def _get_str_args(self, context: Context) -> list[str]:
         providers = self.flattened(context)
 
         if providers is None:
@@ -33,7 +33,7 @@ class Command(ContextNode):
             args.insert(0, 'execute')
             args.append('run')
 
-        for arg in self.args:
+        for arg in self._args:
             if isinstance(arg, str):
                 args.append(arg)
             else:

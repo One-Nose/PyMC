@@ -4,15 +4,15 @@ from .context import Context, PositionProvider, ReferenceProvider
 
 
 class PositionReference(PositionProvider, ReferenceProvider):
-    position: PositionProvider
+    _position: PositionProvider
 
     def __init__(self, position: PositionProvider) -> None:
         super().__init__(Context())
 
-        self.position = position
+        self._position = position
 
     def to_string(self, context: Context) -> str:
-        if self.position == context.position:
+        if self._position == context.position:
             return '~ ~ ~'
         raise ValueError
 
