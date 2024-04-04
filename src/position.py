@@ -10,21 +10,26 @@ class PositionReference(PositionProvider, ProviderReference):
             return ()
         return ('positioned', self.to_string())
 
+    def to_string(self) -> str:
+        if self == self.context.position:
+            return '~ ~ ~'
+        return self._as_string()
+
+    def _as_string(self) -> str:
+        raise ValueError
+
 
 class DirectPositionReference(PositionReference):
     def __init__(self, position: PositionProvider) -> None:
         super().__init__(Context(position=position))
 
-    def to_string(self) -> str:
+    def _as_string(self) -> str:
         return '~ ~ ~'
 
 
 class Position(PositionReference):
     def __init__(self) -> None:
         super().__init__(Context(position=self))
-
-    def to_string(self) -> str:
-        return '~ ~ ~'
 
 
 class PositionedAs(PositionProvider):
