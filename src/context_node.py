@@ -9,33 +9,41 @@ if TYPE_CHECKING:
 
 
 class ContextNode(ABC):
-    _context: Context
+    context: Context
 
     def __init__(self, context: Context) -> None:
-        self._context = context
+        self.context = context
 
     def walk(
-        self, exclude: Sequence[ContextProvider] = []
+        self, exclude: Sequence[ContextProvider] | None = None
     ) -> Generator[ContextProvider, None, None]:
+        if exclude is None:
+            exclude = []
+
         new_exclude = [*exclude]
 
-        for arg in self._context.providers():
+        for arg in self.context.providers():
             if arg not in new_exclude:
                 yield arg
                 new_exclude.append(arg)
             yield from arg.walk(exclude=new_exclude)
 
     def flattened(
-        self, context: Context, start: Sequence[ContextProvider] = []
+        self, context: Context, start: Sequence[ContextProvider] | None = None
     ) -> Sequence[ContextProvider] | None:
+        if start is None:
+            start = []
+
         found_node = False
         for node in self.walk(exclude=start):
             found_node = True
 
-            if node._context.compatible_with(context):
+            if node.context.compatible_with(context):
                 result = self.flattened(context.with_provider(node), [*start, node])
                 if result is not None:
                     return result
 
         if not found_node:
             return start
+
+        return None

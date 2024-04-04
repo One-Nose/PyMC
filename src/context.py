@@ -12,7 +12,7 @@ class Context(NamedTuple):
     position: PositionProvider | None = None
 
     def providers(self) -> Generator[ContextProvider, None, None]:
-        for provider in self:
+        for provider in self:  # pylint: disable=not-an-iterable
             if provider is not None:
                 yield provider
 
@@ -38,7 +38,7 @@ class Context(NamedTuple):
         else:
             raise TypeError
 
-        return self._replace(**replace_args)
+        return self._replace(**replace_args)  # pylint: disable=no-member
 
 
 class ContextProvider(ContextNode):
