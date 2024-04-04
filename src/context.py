@@ -5,6 +5,7 @@ from collections.abc import Generator
 from typing import NamedTuple
 
 from .context_node import ContextNode
+from .exception import IncompatibleContextProvider
 
 
 class Context(NamedTuple):
@@ -55,11 +56,11 @@ class EntityProvider(ContextProvider):
     def get_str_args(self, context: Context) -> tuple[str, ...]:
         if self == context.entity:
             return ()
-        raise ValueError
+        raise IncompatibleContextProvider
 
 
 class PositionProvider(ContextProvider):
     def get_str_args(self, context: Context) -> tuple[str, ...]:
         if self == context.position:
             return ()
-        raise ValueError
+        raise IncompatibleContextProvider

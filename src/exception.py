@@ -1,0 +1,2 @@
+class IncompatibleContextProvider(Exception):
+    pass
