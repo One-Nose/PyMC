@@ -28,10 +28,14 @@ class ContextNode(ABC):
     def flattened(
         self, context: Context, start: Sequence[ContextProvider] = []
     ) -> Sequence[ContextProvider] | None:
+        found_node = False
         for node in self.walk(exclude=start):
+            found_node = True
+
             if node._context.compatible_with(context):
                 result = self.flattened(context.with_provider(node), [*start, node])
                 if result is not None:
                     return result
-        else:
+
+        if not found_node:
             return start
