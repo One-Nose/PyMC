@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .context import Context, EntityProvider, ReferenceProvider
 from .context_node import ContextNode
 from .entity import EntityReference
+
+if TYPE_CHECKING:
+    from .function import Function
 
 type CommandArg = str | ReferenceProvider
 
@@ -45,3 +50,8 @@ class Command(ContextNode):
 class Kill(Command):
     def __init__(self, entity: EntityProvider) -> None:
         super().__init__(Context(entity=entity), ['kill', EntityReference(entity)])
+
+
+class FunctionCommand(Command):
+    def __init__(self, context: Context, function: Function) -> None:
+        super().__init__(context, ['function', function.name()])

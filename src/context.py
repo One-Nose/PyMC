@@ -22,6 +22,12 @@ class Context(NamedTuple):
                 return False
         return True
 
+    def applies_to_template(self, template: Context) -> bool:
+        for provider, template_provider in zip(self, template):
+            if provider is None and template_provider is not None:
+                return False
+        return True
+
     def with_provider(self, provider: ContextProvider) -> Context:
         replace_args: dict[str, ContextProvider] = {}
 
