@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 from .context import Context, EntityProvider, PositionProvider, ProviderReference
-from .entity import EntityReference
+from .entity import DirectEntityReference
 
 
-class PositionReference(ProviderReference):
+class PositionReference(PositionProvider, ProviderReference):
+    def get_str_args(self) -> tuple[str, ...]:
+        if self == self.context.position:
+            return ()
+        return ('positioned', self.to_string())
+
+
+class DirectPositionReference(PositionReference):
     def __init__(self, position: PositionProvider) -> None:
         super().__init__(Context(position=position))
 
@@ -12,12 +19,12 @@ class PositionReference(ProviderReference):
         return '~ ~ ~'
 
 
-class Position(PositionProvider):
+class Position(PositionReference):
     def __init__(self) -> None:
         super().__init__(Context(position=self))
 
-    def get_str_args(self) -> tuple[str, ...]:
-        return ()
+    def to_string(self) -> str:
+        return '~ ~ ~'
 
 
 class PositionedAs(PositionProvider):
@@ -29,4 +36,4 @@ class PositionedAs(PositionProvider):
         self.entity = entity
 
     def get_str_args(self) -> tuple[str, ...]:
-        return ('positioned', 'as', EntityReference(self.entity).to_string())
+        return ('positioned', 'as', DirectEntityReference(self.entity).to_string())

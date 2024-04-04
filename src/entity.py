@@ -3,7 +3,14 @@ from __future__ import annotations
 from .context import Context, EntityProvider, ProviderReference
 
 
-class EntityReference(ProviderReference):
+class EntityReference(EntityProvider, ProviderReference):
+    def get_str_args(self) -> tuple[str, ...]:
+        if self == self.context.entity:
+            return ()
+        return ('as', self.to_string())
+
+
+class DirectEntityReference(EntityReference):
     def __init__(self, entity: EntityProvider) -> None:
         super().__init__(Context(entity=entity))
 
@@ -11,9 +18,9 @@ class EntityReference(ProviderReference):
         return '@s'
 
 
-class Entity(EntityProvider):
+class Entity(EntityReference):
     def __init__(self) -> None:
         super().__init__(Context(entity=self))
 
-    def get_str_args(self) -> tuple[str, ...]:
-        return ()
+    def to_string(self) -> str:
+        return '@s'

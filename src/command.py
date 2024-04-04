@@ -11,8 +11,8 @@ from .context import (
     ProviderReference,
 )
 from .context_node import ContextNode
-from .entity import EntityReference
-from .position import PositionReference
+from .entity import DirectEntityReference
+from .position import DirectPositionReference
 
 if TYPE_CHECKING:
     from .function import Function
@@ -23,14 +23,16 @@ type CommandArg = str | ProviderReference
 class Command(ContextNode):
     _args: list[CommandArg]
 
-    def __init__(self, args: list[CommandArg], *additional_contexts: Context) -> None:
+    def __init__(
+        self, args: Sequence[CommandArg], *additional_contexts: Context
+    ) -> None:
         super().__init__(
             Context.combine(
                 *(arg.context for arg in args if isinstance(arg, ProviderReference)),
                 *additional_contexts,
             )
         )
-        self._args = args
+        self._args = [*args]
 
     def to_string(self, context: Context) -> str:
         return ' '.join(self._get_str_args(context))
@@ -79,13 +81,17 @@ class Command(ContextNode):
 
 class Kill(Command):
     def __init__(self, entity: EntityProvider) -> None:
-        super().__init__(['kill', EntityReference(entity)])
+        super().__init__(['kill', DirectEntityReference(entity)])
 
 
 class Teleport(Command):
     def __init__(self, entity: EntityProvider, position: PositionProvider) -> None:
         super().__init__(
-            ['teleport', EntityReference(entity), PositionReference(position)]
+            [
+                'teleport',
+                DirectEntityReference(entity),
+                DirectPositionReference(position),
+            ]
         )
 
 
