@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from .context import Context, ContextProvider, Entity
+from .context import Context, EntityProvider, ReferenceProvider
 from .context_node import ContextNode
+from .entity import EntityReference
 
-type CommandArg = str | ContextProvider
+type CommandArg = str | ReferenceProvider
 
 
 class Command(ContextNode):
@@ -42,5 +43,5 @@ class Command(ContextNode):
 
 
 class Kill(Command):
-    def __init__(self, entity: Entity) -> None:
-        super().__init__(Context(entity=entity), ['kill', entity])
+    def __init__(self, entity: EntityProvider) -> None:
+        super().__init__(Context(entity=entity), ['kill', EntityReference(entity)])
