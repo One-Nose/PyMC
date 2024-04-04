@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .context import Context, EntityProvider, ReferenceProvider
+from .context import Context, EntityProvider, PositionProvider, ReferenceProvider
 from .context_node import ContextNode
 from .entity import EntityReference
+from .position import PositionReference
 
 if TYPE_CHECKING:
     from .function import Function
@@ -50,6 +51,14 @@ class Command(ContextNode):
 class Kill(Command):
     def __init__(self, entity: EntityProvider) -> None:
         super().__init__(Context(entity=entity), ['kill', EntityReference(entity)])
+
+
+class Teleport(Command):
+    def __init__(self, entity: EntityProvider, position: PositionProvider) -> None:
+        super().__init__(
+            Context(entity=entity, position=position),
+            ['teleport', EntityReference(entity), PositionReference(position)],
+        )
 
 
 class FunctionCommand(Command):
