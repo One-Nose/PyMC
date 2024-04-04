@@ -18,14 +18,14 @@ class EntityReference(EntityProvider, ProviderReference):
         raise ValueError
 
 
+class Entity(EntityReference):
+    def __init__(self) -> None:
+        super().__init__(Context(entity=self))
+
+
 class DirectEntityReference(EntityReference):
     def __init__(self, entity: EntityProvider) -> None:
         super().__init__(Context(entity=entity))
 
     def _as_string(self) -> str:
         return '@s'
-
-
-class Entity(EntityReference):
-    def __init__(self) -> None:
-        super().__init__(Context(entity=self))

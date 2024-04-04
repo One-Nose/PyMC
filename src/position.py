@@ -19,6 +19,11 @@ class PositionReference(PositionProvider, ProviderReference):
         raise ValueError
 
 
+class Position(PositionReference):
+    def __init__(self) -> None:
+        super().__init__(Context(position=self))
+
+
 class DirectPositionReference(PositionReference):
     def __init__(self, position: PositionProvider) -> None:
         super().__init__(Context(position=position))
@@ -27,9 +32,17 @@ class DirectPositionReference(PositionReference):
         return '~ ~ ~'
 
 
-class Position(PositionReference):
-    def __init__(self) -> None:
-        super().__init__(Context(position=self))
+class RelativePosition(PositionReference):
+    _offset: tuple[float, float, float]
+
+    def __init__(
+        self, position: PositionProvider, offset: tuple[float, float, float]
+    ) -> None:
+        super().__init__(Context(position=position))
+        self._offset = offset
+
+    def _as_string(self) -> str:
+        return ' '.join('~' if offset == 0 else f'~{offset}' for offset in self._offset)
 
 
 class PositionedAs(PositionProvider):
