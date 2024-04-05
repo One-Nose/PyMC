@@ -1,17 +1,22 @@
 from __future__ import annotations
 
-from .context import Context, EntityProvider, PositionProvider, ProviderReference
-from .entity import DirectEntityReference
+from .context import Context, ContextProvider, ProviderReference
+from .entity import DirectEntityReference, EntityProvider
 
 
-class PositionReference(PositionProvider, ProviderReference):
-    def get_str_args(self) -> tuple[str, ...]:
-        return ('positioned', self.to_string())
+class PositionProvider(ContextProvider):
+    provider_type = 'position'
+
+    def as_reference(self) -> PositionReference:
+        return DirectPositionReference(self)
 
 
-class Position(PositionReference):
-    def __init__(self) -> None:
-        super().__init__(Context(position=self))
+class PositionReference(ProviderReference):
+    def as_provider(self) -> PositionProvider:
+        return Positioned(self)
+
+
+type AnyPosition = PositionReference | PositionProvider
 
 
 class DirectPositionReference(PositionReference):
@@ -26,13 +31,30 @@ class RelativePosition(PositionReference):
     _offset: tuple[float, float, float]
 
     def __init__(
-        self, position: PositionProvider, offset: tuple[float, float, float]
+        self, position: AnyPosition, offset: tuple[float, float, float]
     ) -> None:
-        super().__init__(Context(position=position))
+        super().__init__(Context(position=position.as_provider()))
         self._offset = offset
 
     def to_string(self) -> str:
         return ' '.join('~' if offset == 0 else f'~{offset}' for offset in self._offset)
+
+
+class Position(PositionProvider):
+    def __init__(self) -> None:
+        super().__init__(Context(position=self))
+
+
+class Positioned(PositionProvider):
+    position: PositionReference
+
+    def __init__(self, position: AnyPosition) -> None:
+        super().__init__(position.context)
+
+        self.position = position.as_reference()
+
+    def get_str_args(self) -> tuple[str, ...]:
+        return ('positioned', self.position.to_string())
 
 
 class PositionedAs(PositionProvider):

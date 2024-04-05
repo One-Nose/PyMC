@@ -4,16 +4,10 @@ from collections.abc import Sequence
 from itertools import chain
 from typing import TYPE_CHECKING
 
-from .context import (
-    Context,
-    ContextProvider,
-    EntityProvider,
-    PositionProvider,
-    ProviderReference,
-)
+from .context import Context, ContextProvider, ProviderReference
 from .context_node import ContextNode
-from .entity import DirectEntityReference
-from .position import DirectPositionReference
+from .entity import AnyEntity
+from .position import AnyPosition
 
 if TYPE_CHECKING:
     from .function import Function
@@ -25,15 +19,25 @@ class Command(ContextNode):
     _args: list[CommandArg]
 
     def __init__(
-        self, args: Sequence[CommandArg], *additional_contexts: Context
+        self,
+        args: Sequence[CommandArg | ContextProvider],
+        *additional_contexts: Context,
     ) -> None:
+        self._args = [
+            arg.as_reference() if isinstance(arg, ContextProvider) else arg
+            for arg in args
+        ]
+
         super().__init__(
             Context.combine(
-                *(arg.context for arg in args if isinstance(arg, ProviderReference)),
+                *(
+                    arg.context
+                    for arg in self._args
+                    if isinstance(arg, ProviderReference)
+                ),
                 *additional_contexts,
             )
         )
-        self._args = [*args]
 
     def to_string(self, context: Context) -> str:
         return ' '.join(self._get_str_args(context))
@@ -81,19 +85,13 @@ class Command(ContextNode):
 
 
 class Kill(Command):
-    def __init__(self, entity: EntityProvider) -> None:
-        super().__init__(['kill', DirectEntityReference(entity)])
+    def __init__(self, entity: AnyEntity) -> None:
+        super().__init__(['kill', entity])
 
 
 class Teleport(Command):
-    def __init__(self, entity: EntityProvider, position: PositionProvider) -> None:
-        super().__init__(
-            [
-                'teleport',
-                DirectEntityReference(entity),
-                DirectPositionReference(position),
-            ]
-        )
+    def __init__(self, entity: AnyEntity, position: AnyPosition) -> None:
+        super().__init__(['teleport', entity, position])
 
 
 class FunctionCommand(Command):

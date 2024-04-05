@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Generator
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, Self
 
 from .context_node import ContextNode
+
+if TYPE_CHECKING:
+    from .entity import EntityProvider
+    from .position import PositionProvider
 
 
 class Context(NamedTuple):
@@ -64,21 +68,25 @@ class Context(NamedTuple):
         return Context(**fields)
 
 
-class ContextProvider(ContextNode):
+class ContextProvider(ContextNode, ABC):
     provider_type: str
 
+    def get_str_args(self) -> tuple[str, ...]:
+        raise ValueError
+
+    def as_provider(self) -> Self:
+        return self
+
     @abstractmethod
-    def get_str_args(self) -> tuple[str, ...]: ...
-
-
-class EntityProvider(ContextProvider, ABC):
-    provider_type = 'entity'
-
-
-class PositionProvider(ContextProvider, ABC):
-    provider_type = 'position'
+    def as_reference(self) -> ProviderReference: ...
 
 
 class ProviderReference(ContextNode):
     def to_string(self) -> str:
         raise ValueError
+
+    def as_reference(self) -> Self:
+        return self
+
+    @abstractmethod
+    def as_provider(self) -> ContextProvider: ...

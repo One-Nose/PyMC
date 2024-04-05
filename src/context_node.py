@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from collections.abc import Generator, Iterable
 from typing import TYPE_CHECKING
 
@@ -8,7 +7,7 @@ if TYPE_CHECKING:
     from .context import Context, ContextProvider
 
 
-class ContextNode(ABC):
+class ContextNode:
     context: Context
 
     def __init__(self, context: Context) -> None:
