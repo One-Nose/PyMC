@@ -80,5 +80,5 @@ class PositionProvider(ContextProvider, ABC):
 
 
 class ProviderReference(ContextNode):
-    @abstractmethod
-    def to_string(self) -> str: ...
+    def to_string(self) -> str:
+        raise ValueError

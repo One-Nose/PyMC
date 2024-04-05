@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from itertools import chain
 from typing import TYPE_CHECKING
 
 from .context import (
@@ -70,7 +71,7 @@ class Command(ContextNode):
         if context.is_or_extends(self.context):
             return start
 
-        for node in self.walk(exclude=start):
+        for node in self.walk(exclude=chain(context.providers(), start)):
             if context.is_or_extends(node.context):
                 result = self.flattened(context.with_provider(node), [*start, node])
                 if result is not None:

@@ -6,17 +6,7 @@ from .entity import DirectEntityReference
 
 class PositionReference(PositionProvider, ProviderReference):
     def get_str_args(self) -> tuple[str, ...]:
-        if self == self.context.position:
-            return ()
         return ('positioned', self.to_string())
-
-    def to_string(self) -> str:
-        if self == self.context.position:
-            return '~ ~ ~'
-        return self._as_string()
-
-    def _as_string(self) -> str:
-        raise ValueError
 
 
 class Position(PositionReference):
@@ -28,7 +18,7 @@ class DirectPositionReference(PositionReference):
     def __init__(self, position: PositionProvider) -> None:
         super().__init__(Context(position=position))
 
-    def _as_string(self) -> str:
+    def to_string(self) -> str:
         return '~ ~ ~'
 
 
@@ -41,7 +31,7 @@ class RelativePosition(PositionReference):
         super().__init__(Context(position=position))
         self._offset = offset
 
-    def _as_string(self) -> str:
+    def to_string(self) -> str:
         return ' '.join('~' if offset == 0 else f'~{offset}' for offset in self._offset)
 
 
