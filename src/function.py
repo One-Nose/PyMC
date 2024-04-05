@@ -1,6 +1,7 @@
 from .command import Command, FunctionCommand
 from .context import Context
 from .datapack import DataPack
+from .exception import BadFunctionCall
 from .resource_path import ResourcePath
 
 
@@ -27,7 +28,8 @@ class Function:
         return '\n'.join(command.to_string(self._context) for command in self._commands)
 
     def to_command(self, context: Context) -> FunctionCommand:
-        assert context.applies_to_template(self._context)
+        if not context.applies_to_template(self._context):
+            raise BadFunctionCall
         return FunctionCommand(context, self)
 
     def name(self) -> str:

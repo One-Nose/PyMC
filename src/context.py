@@ -5,6 +5,7 @@ from collections.abc import Generator
 from typing import TYPE_CHECKING, NamedTuple, Self
 
 from .context_node import ContextNode
+from .exception import ContextCombineError, ProviderStringifyError
 
 if TYPE_CHECKING:
     from .entity import EntityProvider
@@ -21,7 +22,7 @@ class Context(NamedTuple):
 
         for context in contexts:
             if context.conflicts_with(result):
-                raise ValueError
+                raise ContextCombineError
             result = result.updated(context)
 
         return result
@@ -72,7 +73,7 @@ class ContextProvider(ContextNode, ABC):
     provider_type: str
 
     def get_str_args(self) -> tuple[str, ...]:
-        raise ValueError
+        raise ProviderStringifyError
 
     def as_provider(self) -> Self:
         return self
@@ -81,9 +82,9 @@ class ContextProvider(ContextNode, ABC):
     def as_reference(self) -> ProviderReference: ...
 
 
-class ProviderReference(ContextNode):
-    def to_string(self) -> str:
-        raise ValueError
+class ProviderReference(ContextNode, ABC):
+    @abstractmethod
+    def to_string(self) -> str: ...
 
     def as_reference(self) -> Self:
         return self

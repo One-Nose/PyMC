@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from .context import Context, ContextProvider, ProviderReference
 from .context_node import ContextNode
 from .entity import AnyEntity
+from .exception import FlatteningError
 from .position import AnyPosition
 
 if TYPE_CHECKING:
@@ -46,7 +47,7 @@ class Command(ContextNode):
         providers = self.flattened(context)
 
         if providers is None:
-            raise ValueError
+            raise FlatteningError
 
         args: list[str] = []
 

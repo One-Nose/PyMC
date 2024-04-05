@@ -5,5 +5,11 @@
     "--disable=missing-function-docstring",
     "--disable=relative-beyond-top-level",
     "--disable=too-few-public-methods"
-  ]
+  ],
+  "python.testing.pytestArgs": ["--cov=src", "--cov-report=xml", "tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.analysis.ignore": ["tests/"],
+  "pylint.ignorePatterns": ["*/tests/*.py"],
+  "python.testing.autoTestDiscoverOnSaveEnabled": false
 }

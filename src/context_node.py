@@ -14,11 +14,8 @@ class ContextNode:
         self.context = context
 
     def walk(
-        self, exclude: Iterable[ContextProvider] | None = None
+        self, exclude: Iterable[ContextProvider]
     ) -> Generator[ContextProvider, None, None]:
-        if exclude is None:
-            exclude = []
-
         new_exclude = [*exclude]
 
         for arg in self.context.providers():

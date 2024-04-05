@@ -1,3 +1,5 @@
 __pycache__/
 result/
 main.py
+.coverage
+coverage.xml
