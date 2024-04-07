@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 
 
@@ -19,8 +21,20 @@ class ResourcePath:
         assert len(path) >= 1
         self._path = path
 
-    def namespaced(self, namespace: ResourceString) -> str:
-        return f'{namespace}:{self}'
-
     def __str__(self) -> str:
         return '/'.join(str(part) for part in self._path)
+
+
+class ResourceLocation:
+    namespace: ResourceString
+    path: ResourcePath
+
+    def __init__(self, namespace: ResourceString, path: ResourcePath) -> None:
+        self.namespace = namespace
+        self.path = path
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return type(self).__name__ + f'({self})'
+
+    def __str__(self) -> str:
+        return f'{self.namespace}:{self.path}'

@@ -4,6 +4,7 @@ from collections.abc import Sequence
 from itertools import chain
 from typing import TYPE_CHECKING
 
+from .block import Block
 from .context import Context, ContextProvider, ProviderReference
 from .context_node import ContextNode
 from .entity import AnyEntity
@@ -90,6 +91,11 @@ class Kill(Command):
         super().__init__(['kill', entity])
 
 
+class SetBlock(Command):
+    def __init__(self, position: AnyPosition, block: Block) -> None:
+        super().__init__(['setblock', position, block.to_string()])
+
+
 class Teleport(Command):
     def __init__(self, entity: AnyEntity, position: AnyPosition) -> None:
         super().__init__(['teleport', entity, position])
@@ -97,4 +103,4 @@ class Teleport(Command):
 
 class FunctionCommand(Command):
     def __init__(self, context: Context, function: Function) -> None:
-        super().__init__(['function', function.name()], context)
+        super().__init__(['function', str(function.namespaced())], context)

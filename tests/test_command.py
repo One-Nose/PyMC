@@ -1,9 +1,12 @@
 from pytest import raises
 
-from src.command import Kill, Teleport
+from src.block_classes import Bamboo, BasicBlock, Door, Planks, Rail, Stem
+from src.block_state import Direction, RailShape
+from src.command import Kill, SetBlock, Teleport
 from src.context import Context
 from src.entity import Entity
 from src.exception import BadFunctionCall, ContextCombineError, FlatteningError
+from src.minecraft_block import Tree
 from tests.fixtures import *
 
 
@@ -75,3 +78,48 @@ def test_kill_bad_entity(context):
 def test_context_combine_error(context):
     with raises(ContextCombineError):
         Context.combine(context, Context(entity=Entity()))
+
+
+def test_set_block(context, position):
+    assert (
+        SetBlock(position, BasicBlock.AIR).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:air'
+    )
+
+
+def test_set_block_below(context, below_entity):
+    assert (
+        SetBlock(below_entity, BasicBlock.ANDESITE).to_string(context)
+        == 'execute positioned as @s run setblock ~ ~-1 ~ minecraft:andesite'
+    )
+
+
+def test_place_planks(context, position):
+    assert (
+        SetBlock(position, Planks(Tree.OAK)).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:oak_planks'
+    )
+
+
+def test_block_state(context, position):
+    assert (
+        SetBlock(position, Door(Bamboo, open=False, facing=Direction.NORTH)).to_string(
+            context
+        )
+        == 'setblock ~ ~ ~ minecraft:bamboo_door[facing=north, open=false]'
+    )
+
+
+def test_ascending_rail(context, position):
+    assert (
+        SetBlock(
+            position, Rail.Activator(shape=RailShape.Ascending(Direction.SOUTH))
+        ).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:activator_rail[shape=ascending_south]'
+    )
+
+
+def test_attached_stem(context, position):
+    assert (SetBlock(position, Stem.Crop.Attached(BasicBlock.MELON))).to_string(
+        context
+    ) == 'setblock ~ ~ ~ minecraft:attached_melon_stem'

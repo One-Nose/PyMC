@@ -4,7 +4,8 @@
     "--disable=missing-class-docstring",
     "--disable=missing-function-docstring",
     "--disable=relative-beyond-top-level",
-    "--disable=too-few-public-methods"
+    "--disable=too-few-public-methods",
+    "--diable=self-assigning-variable"
   ],
   "python.testing.pytestArgs": ["--cov=src", "--cov-report=xml", "tests"],
   "python.testing.unittestEnabled": false,

@@ -2,7 +2,7 @@ from .command import Command, FunctionCommand
 from .context import Context
 from .datapack import DataPack
 from .exception import BadFunctionCall
-from .resource_path import ResourcePath
+from .resource_path import ResourceLocation, ResourcePath
 
 
 class Function:
@@ -32,5 +32,5 @@ class Function:
             raise BadFunctionCall
         return FunctionCommand(context, self)
 
-    def name(self) -> str:
-        return self._path.namespaced(self._datapack.namespace)
+    def namespaced(self) -> ResourceLocation:
+        return ResourceLocation(self._datapack.namespace, self._path)
