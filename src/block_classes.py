@@ -7,6 +7,7 @@ from .block_state import (
     AnyDirection,
     AnyRailShape,
     AnyStraightRailShape,
+    Attachment,
     Axis,
     BambooLeaves,
     DoorHalf,
@@ -16,6 +17,7 @@ from .block_state import (
     Side,
     SlabType,
     StairsShape,
+    Tilt,
     WallHeight,
 )
 from .minecraft_block import (
@@ -120,6 +122,61 @@ class Basalt(MinecraftBlock):
 
 
 @dataclass
+class BeeNest(MinecraftBlock):
+    id = 'bee_nest'
+
+    facing: HorizontalDirection | None = None
+    honey_level: int | None = None
+
+    block_states = 'facing', 'honey_level'
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+
+        assert self.honey_level is None or 0 <= self.honey_level <= 5
+
+
+@dataclass
+class Beehive(MinecraftBlock):
+    id = 'beehive'
+
+    facing: HorizontalDirection | None = None
+    honey_level: int | None = None
+
+    block_states = 'facing', 'honey_level'
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+
+        assert self.honey_level is None or 0 <= self.honey_level <= 5
+
+
+@dataclass
+class Beetroots(MinecraftBlock):
+    id = 'beetroots'
+
+    age: int | None = None
+
+    block_states = ('age',)
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+
+        assert self.age is None or 0 <= self.age <= 3
+
+
+@dataclass
+class Bell(MinecraftBlock):
+    id = 'bell'
+
+    attachment: Attachment | None = None
+    facing: HorizontalDirection | None = None
+    powered: bool | None = None
+
+    block_states = 'attachment', 'facing', 'powered'
+
+
+@dataclass
 class Button(TypedBlock[AnyWoodType]):
     type_name = 'button'
 
@@ -141,6 +198,26 @@ class Door(TypedBlock[AnyWoodType]):
     powered: bool | None = None
 
     block_states = 'facing', 'half', 'hinge', 'open', 'powered'
+
+
+class Dripleaf:
+    class Big(MinecraftBlock):
+        id = 'big_dripleaf'
+
+        facing: HorizontalDirection | None = None
+        tilt: Tilt | None = None
+        waterlogged: bool | None = None
+
+        block_states = 'facing', 'tilt', 'waterlogged'
+
+        @dataclass
+        class Stem(MinecraftBlock):
+            id = 'big_dripleaf_stem'
+
+            facing: HorizontalDirection | None = None
+            waterlogged: bool | None = None
+
+            block_states = 'facing', 'waterlogged'
 
 
 @dataclass

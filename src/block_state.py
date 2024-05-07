@@ -2,6 +2,13 @@ from collections import UserString
 from enum import StrEnum, auto
 
 
+class Attachment(StrEnum):
+    CEILING = auto()
+    DOUBLE_WALL = auto()
+    FLOOR = auto()
+    SINGLE_WALL = auto()
+
+
 class Axis(StrEnum):
     X = auto()
     Y = auto()
@@ -64,6 +71,13 @@ class StairsShape(StrEnum):
 class StraightRailShape(StrEnum):
     EAST_WEST = auto()
     NORTH_SOUTH = auto()
+
+
+class Tilt(StrEnum):
+    FULL = auto()
+    NONE = auto()
+    PARTIAL = auto()
+    UNSTABLE = auto()
 
 
 class VerticalDirection(StrEnum):
