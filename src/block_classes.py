@@ -4,11 +4,11 @@ from dataclasses import dataclass
 from typing import Any
 
 from .block_state import (
+    AnyDirection,
     AnyRailShape,
     AnyStraightRailShape,
     Axis,
     BambooLeaves,
-    Direction,
     DoorHalf,
     Face,
     Half,
@@ -45,7 +45,7 @@ class Amethyst:
     class Cluster(MinecraftBlock):
         id = 'amethyst_cluster'
 
-        facing: Direction | None = None
+        facing: AnyDirection | None = None
         waterlogged: bool | None = None
 
         block_states = 'facing', 'waterlogged'
