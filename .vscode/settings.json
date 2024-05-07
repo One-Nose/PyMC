@@ -10,7 +10,5 @@
   "python.testing.pytestArgs": ["--cov=src", "--cov-report=xml", "tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "python.analysis.ignore": ["tests/"],
-  "pylint.ignorePatterns": ["*/tests/*.py"],
   "python.testing.autoTestDiscoverOnSaveEnabled": false
 }

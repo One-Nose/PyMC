@@ -1,39 +1,35 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Literal
 
-from .block_state import (
-    AnyDirection,
-    AnyRailShape,
-    AnyStraightRailShape,
-    Attachment,
-    Axis,
-    BambooLeaves,
-    DoorHalf,
-    Face,
-    Half,
-    HorizontalDirection,
-    Side,
-    SlabType,
-    StairsShape,
-    Tilt,
-    WallHeight,
-)
-from .minecraft_block import (
-    AnySlabStairsBlock,
-    Fungus,
-    MinecraftBlock,
-    SimpleBlock,
-    SlabStairsBlock,
-    StandardTree,
-    StemBlock,
-    StoneType,
-    TreeType,
-    TypedBlock,
-)
+from .minecraft_block import MinecraftBlock, SimpleBlock, TypedBlock
 
-type AnyWoodType = TreeType | Fungus | type[Bamboo]
+type Fungus = Literal['crimson', 'warped']
+type StandardTree = Literal[
+    'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
+]
+type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic']
+type StemBlock = Literal['melon']
+type StoneType = Literal['andesite']
+type Tree = StandardTree | Literal['mangrove']
+type WoodType = Tree | Fungus | Literal['bamboo']
+
+
+type Axis = Literal['x', 'y', 'z']
+type Direction = HorizontalDirection | Literal['down', 'up']
+type Half = Literal['bottom', 'top']
+type HorizontalDirection = Literal['east', 'north', 'south', 'west']
+type Rotation = Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+type StraightRailShape = Literal[
+    'ascending_east',
+    'ascending_north',
+    'ascending_south',
+    'ascending_west',
+    'east_west',
+    'north_south',
+]
+type WallHeight = Literal['low', 'none', 'high']
 
 
 class Air(MinecraftBlock):
@@ -47,7 +43,7 @@ class Amethyst:
     class Cluster(MinecraftBlock):
         id = 'amethyst_cluster'
 
-        facing: AnyDirection | None = None
+        facing: Direction | None = None
         waterlogged: bool | None = None
 
         block_states = 'facing', 'waterlogged'
@@ -62,27 +58,17 @@ class Anvil(MinecraftBlock):
     block_states = ('facing',)
 
 
-class Azalea(MinecraftBlock):
-    id = 'azalea'
-
-
 @dataclass
 class Bamboo(MinecraftBlock):
     id = 'bamboo'
 
-    age: int | None = None
-    leaves: BambooLeaves | None = None
-    stage: int | None = None
+    age: Literal[0, 1] | None = None
+    leaves: Literal['large', 'none', 'small'] | None = None
+    stage: Literal[0, 1] | None = None
 
     block_states = 'age', 'leaves', 'stage'
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
-        assert self.age is None or 0 <= self.age <= 1
-        assert self.stage is None or 0 <= self.stage <= 1
-
-    MOSAIC = SlabStairsBlock('bamboo_mosaic')
+    MOSAIC = SimpleBlock('bamboo_mosaic')
 
     @dataclass
     class Block(MinecraftBlock):
@@ -97,7 +83,7 @@ class Bamboo(MinecraftBlock):
 class Barrel(MinecraftBlock):
     id = 'barrel'
 
-    facing: AnyDirection | None = None
+    facing: Direction | None = None
     open: bool | None = None
 
     block_states = 'facing', 'open'
@@ -126,14 +112,9 @@ class BeeNest(MinecraftBlock):
     id = 'bee_nest'
 
     facing: HorizontalDirection | None = None
-    honey_level: int | None = None
+    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
 
     block_states = 'facing', 'honey_level'
-
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
-        assert self.honey_level is None or 0 <= self.honey_level <= 5
 
 
 @dataclass
@@ -141,35 +122,25 @@ class Beehive(MinecraftBlock):
     id = 'beehive'
 
     facing: HorizontalDirection | None = None
-    honey_level: int | None = None
+    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
 
     block_states = 'facing', 'honey_level'
-
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
-        assert self.honey_level is None or 0 <= self.honey_level <= 5
 
 
 @dataclass
 class Beetroots(MinecraftBlock):
     id = 'beetroots'
 
-    age: int | None = None
+    age: Literal[0, 1, 2, 3] | None = None
 
     block_states = ('age',)
-
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
-        assert self.age is None or 0 <= self.age <= 3
 
 
 @dataclass
 class Bell(MinecraftBlock):
     id = 'bell'
 
-    attachment: Attachment | None = None
+    attachment: Literal['ceiling', 'double_wall', 'floor', 'single_wall'] | None = None
     facing: HorizontalDirection | None = None
     powered: bool | None = None
 
@@ -177,10 +148,10 @@ class Bell(MinecraftBlock):
 
 
 @dataclass
-class Button(TypedBlock[AnyWoodType]):
+class Button(TypedBlock[WoodType]):
     type_name = 'button'
 
-    face: Face | None = None
+    face: Literal['ceiling', 'floor', 'wall'] | None = None
     facing: HorizontalDirection | None = None
     powered: bool | None = None
 
@@ -188,12 +159,12 @@ class Button(TypedBlock[AnyWoodType]):
 
 
 @dataclass
-class Door(TypedBlock[AnyWoodType]):
+class Door(TypedBlock[WoodType]):
     type_name = 'door'
 
     facing: HorizontalDirection | None = None
-    half: DoorHalf | None = None
-    hinge: Side | None = None
+    half: Literal['lower', 'upper'] | None = None
+    hinge: Literal['left', 'right'] | None = None
     open: bool | None = None
     powered: bool | None = None
 
@@ -205,7 +176,7 @@ class Dripleaf:
         id = 'big_dripleaf'
 
         facing: HorizontalDirection | None = None
-        tilt: Tilt | None = None
+        tilt: Literal['full', 'none', 'partial', 'unstable'] | None = None
         waterlogged: bool | None = None
 
         block_states = 'facing', 'tilt', 'waterlogged'
@@ -221,7 +192,7 @@ class Dripleaf:
 
 
 @dataclass
-class Fence(TypedBlock[AnyWoodType]):
+class Fence(TypedBlock[WoodType]):
     type_name = 'fence'
 
     east: bool | None = None
@@ -234,7 +205,7 @@ class Fence(TypedBlock[AnyWoodType]):
 
 
 @dataclass
-class FenceGate(TypedBlock[AnyWoodType]):
+class FenceGate(TypedBlock[WoodType]):
     type_name = 'fence_gate'
 
     facing: HorizontalDirection | None = None
@@ -260,23 +231,18 @@ class Hyphae(TypedBlock[Fungus]):
 
 
 @dataclass
-class Leaves(TypedBlock[TreeType | Azalea]):
+class Leaves(TypedBlock[Tree | Literal['azalea']]):
     type_name = 'leaves'
 
-    distance: int | None = None
+    distance: Literal[1, 2, 3, 4, 5, 6, 7] | None = None
     persistent: bool | None = None
     waterlogged: bool | None = None
 
     block_states = 'distance', 'persistent', 'waterlogged'
 
-    def __post_init__(self, block_type: Any) -> None:
-        super().__post_init__(block_type)
-
-        assert self.distance is None or 1 <= self.distance <= 7
-
 
 @dataclass
-class Log(TypedBlock[TreeType]):
+class Log(TypedBlock[Tree]):
     type_name = 'log'
 
     axis: Axis | None = None
@@ -284,12 +250,12 @@ class Log(TypedBlock[TreeType]):
     block_states = ('axis',)
 
 
-class Planks(TypedBlock[AnyWoodType]):
+class Planks(TypedBlock[WoodType]):
     type_name = 'planks'
 
 
 @dataclass
-class PressurePlate(TypedBlock[AnyWoodType]):
+class PressurePlate(TypedBlock[WoodType]):
     type_name = 'pressure_plate'
 
     powered: bool | None = None
@@ -301,7 +267,11 @@ class PressurePlate(TypedBlock[AnyWoodType]):
 class Rail(MinecraftBlock):
     id = 'rail'
 
-    shape: AnyRailShape | None = None
+    shape: (
+        StraightRailShape
+        | Literal['north_east', 'north_west', 'south_east', 'south_west']
+        | None
+    ) = None
     waterlogged: bool | None = None
 
     block_states = 'shape', 'waterlogged'
@@ -311,7 +281,7 @@ class Rail(MinecraftBlock):
         id = 'activator_rail'
 
         powered: bool | None = None
-        shape: AnyStraightRailShape | None = None
+        shape: StraightRailShape | None = None
         waterlogged: bool | None = None
 
         block_states = 'powered', 'shape', 'waterlogged'
@@ -321,47 +291,32 @@ class Rail(MinecraftBlock):
 class Sapling(TypedBlock[StandardTree]):
     type_name = 'sapling'
 
-    stage: int | None = None
+    stage: Literal[0, 1] | None = None
 
     block_states = ('stage',)
 
-    def __post_init__(self, block_type: Any) -> None:
-        super().__post_init__(block_type)
-
-        assert self.stage is None or 0 <= self.stage <= 1
-
 
 @dataclass
-class Sign(TypedBlock[AnyWoodType]):
+class Sign(TypedBlock[WoodType]):
     type_name = 'sign'
 
-    rotation: int | None = None
+    rotation: Rotation | None = None
     waterlogged: bool | None = None
 
     block_states = 'rotation', 'waterlogged'
 
-    def __post_init__(self, block_type: Any) -> None:
-        super().__post_init__(block_type)
-
-        assert self.rotation is None or 0 <= self.rotation <= 15
-
     @dataclass
-    class Hanging(TypedBlock[AnyWoodType]):
+    class Hanging(TypedBlock[WoodType]):
         type_name = 'hanging_sign'
 
         attached: bool | None = None
-        rotation: int | None = None
+        rotation: Rotation | None = None
         waterlogged: bool | None = None
 
         block_states = 'attached', 'rotation', 'waterlogged'
 
-        def __post_init__(self, block_type: Any) -> None:
-            super().__post_init__(block_type)
-
-            assert self.rotation is None or 0 <= self.rotation <= 15
-
         @dataclass
-        class Wall(TypedBlock[AnyWoodType]):
+        class Wall(TypedBlock[WoodType]):
             type_name = 'wall_hanging_sign'
 
             facing: HorizontalDirection | None = None
@@ -370,7 +325,7 @@ class Sign(TypedBlock[AnyWoodType]):
             block_states = 'facing', 'waterlogged'
 
     @dataclass
-    class Wall(TypedBlock[AnyWoodType]):
+    class Wall(TypedBlock[WoodType]):
         type_name = 'wall_sign'
 
         facing: HorizontalDirection | None = None
@@ -380,22 +335,25 @@ class Sign(TypedBlock[AnyWoodType]):
 
 
 @dataclass
-class Slab(TypedBlock[AnySlabStairsBlock]):
+class Slab(TypedBlock[SlabStairsBlock]):
     type_name = 'slab'
 
-    type: SlabType | None = None
+    type: Half | Literal['double'] | None = None
     waterlogged: bool | None = None
 
     block_states = 'type', 'waterlogged'
 
 
 @dataclass
-class Stairs(TypedBlock[AnySlabStairsBlock]):
+class Stairs(TypedBlock[SlabStairsBlock]):
     type_name = 'stairs'
 
     facing: HorizontalDirection | None = None
     half: Half | None = None
-    shape: StairsShape | None = None
+    shape: (
+        Literal['inner_left', 'inner_right', 'outer_left', 'outer_right', 'straight']
+        | None
+    ) = None
     waterlogged: bool | None = None
 
     block_states = 'facing', 'half', 'shape', 'waterlogged'
@@ -406,14 +364,9 @@ class Stem:
     class Crop(TypedBlock[StemBlock]):
         type_name = 'stem'
 
-        age: int | None = None
+        age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
         block_states = ('age',)
-
-        def __post_init__(self, block_type: Any) -> None:
-            super().__post_init__(block_type)
-
-            assert self.age is None or 0 <= self.age <= 7
 
         @dataclass
         class Attached(TypedBlock[StemBlock]):
@@ -434,7 +387,7 @@ class Stem:
 
 
 @dataclass
-class Trapdoor(TypedBlock[AnyWoodType]):
+class Trapdoor(TypedBlock[WoodType]):
     type_name = 'trapdoor'
 
     facing: HorizontalDirection | None = None
@@ -461,7 +414,7 @@ class Wall(TypedBlock[StoneType]):
 
 
 @dataclass
-class Wood(TypedBlock[TreeType]):
+class Wood(TypedBlock[Tree]):
     type_name = 'wood'
 
     axis: Axis | None = None
@@ -472,8 +425,8 @@ class Wood(TypedBlock[TreeType]):
 class BasicBlock:
     AIR = Air()
     ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
-    ANDESITE = StoneType('andesite')
-    AZALEA = Azalea()
+    ANDESITE = SimpleBlock('andesite')
+    AZALEA = SimpleBlock('azalea')
     BEACON = SimpleBlock('beacon')
     BEDROCK = SimpleBlock('bedrock')
-    MELON = StemBlock('melon')
+    MELON = SimpleBlock('melon')
