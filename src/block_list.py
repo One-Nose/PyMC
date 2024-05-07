@@ -1,11 +1,6 @@
 # 1.20.6
 
 BAMBOO_SAPLING = None
-BARREL = None
-BARRIER = None
-BASALT = None
-BEACON = None
-BEDROCK = None
 BEE_NEST = None
 BEEHIVE = None
 BEETROOTS = None

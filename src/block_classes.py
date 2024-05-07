@@ -92,6 +92,34 @@ class Bamboo(MinecraftBlock):
 
 
 @dataclass
+class Barrel(MinecraftBlock):
+    id = 'barrel'
+
+    facing: AnyDirection | None = None
+    open: bool | None = None
+
+    block_states = 'facing', 'open'
+
+
+@dataclass
+class Barrier(MinecraftBlock):
+    id = 'barrier'
+
+    waterlogged: bool | None = None
+
+    block_states = ('waterlogged',)
+
+
+@dataclass
+class Basalt(MinecraftBlock):
+    id = 'basalt'
+
+    axis: Axis | None = None
+
+    block_states = ('axis',)
+
+
+@dataclass
 class Button(TypedBlock[AnyWoodType]):
     type_name = 'button'
 
@@ -369,4 +397,6 @@ class BasicBlock:
     ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
     ANDESITE = StoneType('andesite')
     AZALEA = Azalea()
+    BEACON = SimpleBlock('beacon')
+    BEDROCK = SimpleBlock('bedrock')
     MELON = StemBlock('melon')
