@@ -1,8 +1,12 @@
 from dataclasses import InitVar, dataclass, field
 from enum import StrEnum, auto
+from typing import TYPE_CHECKING
 
 from .block import Block
 from .resource_path import ResourceLocation, ResourcePath, ResourceString
+
+if TYPE_CHECKING:
+    from .block_classes import AnyWoodType
 
 
 @dataclass
@@ -20,12 +24,19 @@ class SimpleBlock(MinecraftBlock):
     id: str = field(init=True)
 
 
+class SlabStairsBlock(SimpleBlock):
+    pass
+
+
 class StemBlock(SimpleBlock):
     pass
 
 
 class StoneType(SimpleBlock):
     pass
+
+
+type AnySlabStairsBlock = AnyWoodType | StoneType | SlabStairsBlock
 
 
 class StandardTree(StrEnum):

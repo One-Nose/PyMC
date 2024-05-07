@@ -19,9 +19,11 @@ from .block_state import (
     WallHeight,
 )
 from .minecraft_block import (
+    AnySlabStairsBlock,
     Fungus,
     MinecraftBlock,
     SimpleBlock,
+    SlabStairsBlock,
     StandardTree,
     StemBlock,
     StoneType,
@@ -77,6 +79,16 @@ class Bamboo(MinecraftBlock):
 
         assert self.age is None or 0 <= self.age <= 1
         assert self.stage is None or 0 <= self.stage <= 1
+
+    MOSAIC = SlabStairsBlock('bamboo_mosaic')
+
+    @dataclass
+    class Block(MinecraftBlock):
+        id = 'bamboo_block'
+
+        axis: Axis | None = None
+
+        block_states = ('axis',)
 
 
 @dataclass
@@ -263,7 +275,7 @@ class Sign(TypedBlock[AnyWoodType]):
 
 
 @dataclass
-class Slab(TypedBlock[AnyWoodType | StoneType]):
+class Slab(TypedBlock[AnySlabStairsBlock]):
     type_name = 'slab'
 
     type: SlabType | None = None
@@ -273,7 +285,7 @@ class Slab(TypedBlock[AnyWoodType | StoneType]):
 
 
 @dataclass
-class Stairs(TypedBlock[AnyWoodType | StoneType]):
+class Stairs(TypedBlock[AnySlabStairsBlock]):
     type_name = 'stairs'
 
     facing: HorizontalDirection | None = None
