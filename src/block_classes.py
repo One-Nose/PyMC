@@ -326,14 +326,6 @@ class Stairs(TypedBlock[AnySlabStairsBlock]):
 
 class Stem:
     @dataclass
-    class Fungus(TypedBlock[Fungus]):
-        type_name = 'stem'
-
-        axis: Axis | None = None
-
-        block_states = ('axis',)
-
-    @dataclass
     class Crop(TypedBlock[StemBlock]):
         type_name = 'stem'
 
@@ -354,6 +346,14 @@ class Stem:
             facing: HorizontalDirection | None = None
 
             block_states = ('facing',)
+
+    @dataclass
+    class Fungus(TypedBlock[Fungus]):
+        type_name = 'stem'
+
+        axis: Axis | None = None
+
+        block_states = ('axis',)
 
 
 @dataclass
