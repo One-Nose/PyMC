@@ -3,15 +3,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from .minecraft_block import MinecraftBlock, SimpleBlock, TypedBlock
+from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
 
+type Color = Literal['black']
 type Fungus = Literal['crimson', 'warped']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
 type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic']
 type StemBlock = Literal['melon']
-type StoneType = Literal['andesite']
+type StoneType = Literal['andesite', 'blackstone']
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | Fungus | Literal['bamboo']
 
@@ -32,8 +33,7 @@ type StraightRailShape = Literal[
 type WallHeight = Literal['low', 'none', 'high']
 
 
-class Air(MinecraftBlock):
-    id = 'air'
+AIR = SimpleBlock('air')
 
 
 class Amethyst:
@@ -49,6 +49,10 @@ class Amethyst:
         block_states = 'facing', 'waterlogged'
 
 
+ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
+ANDESITE = SimpleBlock('andesite')
+
+
 @dataclass
 class Anvil(MinecraftBlock):
     id = 'anvil'
@@ -56,6 +60,9 @@ class Anvil(MinecraftBlock):
     facing: HorizontalDirection | None = None
 
     block_states = ('facing',)
+
+
+AZALEA = SimpleBlock('azalea')
 
 
 @dataclass
@@ -77,6 +84,23 @@ class Bamboo(MinecraftBlock):
         axis: Axis | None = None
 
         block_states = ('axis',)
+
+
+@dataclass
+class Banner(TypedBlock[Color]):
+    type_name = 'banner'
+
+    rotation: Rotation | None = None
+
+    block_states = ('rotation',)
+
+    @dataclass
+    class Wall(TypedBlock[Color]):
+        type_name = 'wall_banner'
+
+        facing: HorizontalDirection | None = None
+
+        block_states = ('facing',)
 
 
 @dataclass
@@ -107,24 +131,39 @@ class Basalt(MinecraftBlock):
     block_states = ('axis',)
 
 
+BEACON = SimpleBlock('beacon')
+
+
 @dataclass
-class BeeNest(MinecraftBlock):
+class Bed(TypedBlock[Color]):
+    type_name = 'bed'
+
+    facing: HorizontalDirection | None = None
+    occupied: bool | None = None
+    part: Literal['foot', 'head'] | None = None
+
+    block_states = 'facing', 'occupied', 'part'
+
+
+BEDROCK = SimpleBlock('bedrock')
+
+
+@dataclass
+class _BeeHouse(MinecraftBlock):
+    facing: HorizontalDirection | None = None
+    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
+
+    block_states = 'facing', 'honey_level'
+
+
+@dataclass
+class BeeNest(_BeeHouse):
     id = 'bee_nest'
 
-    facing: HorizontalDirection | None = None
-    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
-
-    block_states = 'facing', 'honey_level'
-
 
 @dataclass
-class Beehive(MinecraftBlock):
+class Beehive(_BeeHouse):
     id = 'beehive'
-
-    facing: HorizontalDirection | None = None
-    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
-
-    block_states = 'facing', 'honey_level'
 
 
 @dataclass
@@ -148,6 +187,21 @@ class Bell(MinecraftBlock):
 
 
 @dataclass
+class Blackstone(MinecraftBlock):
+    id = 'blackstone'
+
+
+@dataclass
+class BlastFurnace(MinecraftBlock):
+    id = 'blast_furnace'
+
+    facing: HorizontalDirection | None = None
+    lit: bool | None = None
+
+    block_states = 'facing', 'lit'
+
+
+@dataclass
 class Button(TypedBlock[WoodType]):
     type_name = 'button'
 
@@ -156,6 +210,48 @@ class Button(TypedBlock[WoodType]):
     powered: bool | None = None
 
     block_states = 'face', 'facing', 'powered'
+
+
+@dataclass
+class Cake(MinecraftBlock):
+    id = 'cake'
+
+    bites: Literal[0, 1, 2, 3, 4, 5, 6] | None = None
+
+    block_states = ('bites',)
+
+    @dataclass
+    class Candle(TypedBlock[Color]):
+        type_name = 'candle_cake'
+
+        lit: bool | None = None
+
+        block_states = ('lit',)
+
+
+@dataclass
+class Candle(TypedBlock[Color]):
+    type_name = 'candle'
+
+    candles: Literal[1, 2, 3, 4] | None = None
+    lit: bool | None = None
+    waterlogged: bool | None = None
+
+    block_states = 'candles', 'lit', 'waterlogged'
+
+
+@dataclass
+class Carpet(TypedBlock[Color]):
+    type_name = 'carpet'
+
+
+@dataclass
+class Concrete(TypedBlock[Color]):
+    type_name = 'concrete'
+
+    @dataclass
+    class Powder(TypedBlock[Color]):
+        type_name = 'concrete_powder'
 
 
 @dataclass
@@ -172,6 +268,7 @@ class Door(TypedBlock[WoodType]):
 
 
 class Dripleaf:
+    @dataclass
     class Big(MinecraftBlock):
         id = 'big_dripleaf'
 
@@ -222,6 +319,37 @@ class Flower:
 
 
 @dataclass
+class _GlassPane(MinecraftBlock):
+    east: bool | None = None
+    north: bool | None = None
+    south: bool | None = None
+    waterlogged: bool | None = None
+    west: bool | None = None
+
+    block_states = 'east', 'north', 'south', 'waterlogged', 'west'
+
+
+@dataclass
+class _Glass(MinecraftBlock):
+    id = 'glass'
+
+    @dataclass
+    class Pane(_GlassPane):
+        id = 'glass_pane'
+
+        @dataclass
+        class Stained(_GlassPane, TypedBlock[Color]):
+            type_name = 'stained_glass_pane'
+
+    @dataclass
+    class Stained(TypedBlock[Color]):
+        type_name = 'stained_glass'
+
+
+GLASS = _Glass()
+
+
+@dataclass
 class Hyphae(TypedBlock[Fungus]):
     type_name = 'hyphae'
 
@@ -250,6 +378,10 @@ class Log(TypedBlock[Tree]):
     block_states = ('axis',)
 
 
+MELON = SimpleBlock('melon')
+
+
+@dataclass
 class Planks(TypedBlock[WoodType]):
     type_name = 'planks'
 
@@ -294,6 +426,15 @@ class Sapling(TypedBlock[StandardTree]):
     stage: Literal[0, 1] | None = None
 
     block_states = ('stage',)
+
+
+@dataclass
+class ShulkerBox(OptionalTypedBlock[Color]):
+    type_name = 'shulker_box'
+
+    facing: Direction | None = None
+
+    block_states = ('facing',)
 
 
 @dataclass
@@ -387,6 +528,19 @@ class Stem:
 
 
 @dataclass
+class Terracotta(OptionalTypedBlock[Color]):
+    type_name = 'terracotta'
+
+    @dataclass
+    class Glazed(TypedBlock[Color]):
+        type_name = 'glazed_terracotta'
+
+        facing: HorizontalDirection | None = None
+
+        block_states = ('facing',)
+
+
+@dataclass
 class Trapdoor(TypedBlock[WoodType]):
     type_name = 'trapdoor'
 
@@ -422,11 +576,6 @@ class Wood(TypedBlock[Tree]):
     block_states = ('axis',)
 
 
-class BasicBlock:
-    AIR = Air()
-    ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
-    ANDESITE = SimpleBlock('andesite')
-    AZALEA = SimpleBlock('azalea')
-    BEACON = SimpleBlock('beacon')
-    BEDROCK = SimpleBlock('bedrock')
-    MELON = SimpleBlock('melon')
+@dataclass
+class Wool(TypedBlock[Color]):
+    type_name = 'wool'

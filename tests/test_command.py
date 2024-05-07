@@ -1,6 +1,6 @@
 from pytest import raises
 
-from src.block_classes import BasicBlock, Door, Planks, Rail, Stem
+from src.block_classes import AIR, ANDESITE, GLASS, Door, Planks, Rail, ShulkerBox, Stem
 from src.command import Kill, SetBlock, Teleport
 from src.context import Context
 from src.entity import Entity
@@ -93,15 +93,12 @@ def test_context_combine_error(context: Context):
 
 
 def test_set_block(context: Context, position: Position):
-    assert (
-        SetBlock(position, BasicBlock.AIR).to_string(context)
-        == 'setblock ~ ~ ~ minecraft:air'
-    )
+    assert SetBlock(position, AIR).to_string(context) == 'setblock ~ ~ ~ minecraft:air'
 
 
 def test_set_block_below(context: Context, below_entity: RelativePosition):
     assert (
-        SetBlock(below_entity, BasicBlock.ANDESITE).to_string(context)
+        SetBlock(below_entity, ANDESITE).to_string(context)
         == 'execute positioned as @s run setblock ~ ~-1 ~ minecraft:andesite'
     )
 
@@ -130,6 +127,42 @@ def test_ascending_rail(context: Context, position: Position):
 
 
 def test_attached_stem(context: Context, position: Position):
-    assert (SetBlock(position, Stem.Crop.Attached('melon'))).to_string(
-        context
-    ) == 'setblock ~ ~ ~ minecraft:attached_melon_stem'
+    assert (
+        SetBlock(position, Stem.Crop.Attached('melon')).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:attached_melon_stem'
+    )
+
+
+def test_shulker_box(context: Context, position: Position):
+    assert (
+        SetBlock(position, ShulkerBox()).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:shulker_box'
+    )
+
+
+def test_facing_shulker_box(context: Context, position: Position):
+    assert (
+        SetBlock(position, ShulkerBox(facing='east')).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:shulker_box[facing=east]'
+    )
+
+
+def test_black_shulker_box(context: Context, position: Position):
+    assert (
+        SetBlock(position, ShulkerBox('black')).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:black_shulker_box'
+    )
+
+
+def test_glass_pane(context: Context, position: Position):
+    assert (
+        SetBlock(position, GLASS.Pane(south=False)).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:glass_pane[south=false]'
+    )
+
+
+def test_stained_glass_pane(context: Context, position: Position):
+    assert (
+        SetBlock(position, GLASS.Pane.Stained('black', west=True)).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:black_stained_glass_pane[west=true]'
+    )

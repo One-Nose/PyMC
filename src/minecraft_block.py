@@ -20,15 +20,23 @@ class SimpleBlock(MinecraftBlock):
 
 
 @dataclass
-class TypedBlock[T: str](MinecraftBlock):
+class TypedBlock[T: str | None](MinecraftBlock):
     type_name: str = field(init=False)
     prefix: str | None = field(init=False, default=None)
     block_type: InitVar[T]
 
     def __post_init__(self, block_type: T) -> None:
-        self.id = block_type + '_' + self.type_name
+        self.id = ('' if block_type is None else block_type + '_') + self.type_name
 
         if self.prefix is not None:
             self.id = self.prefix + '_' + self.id
 
         super().__post_init__()
+
+
+@dataclass
+class OptionalTypedBlock[T: str](TypedBlock[T | None]):
+    block_type: InitVar[T | None] = None
+
+    def __post_init__(self, block_type: T | None) -> None:
+        super().__post_init__(block_type)
