@@ -23,7 +23,7 @@ type Axis = Literal['x', 'y', 'z']
 type Direction = HorizontalDirection | Literal['down', 'up']
 type Half = Literal['bottom', 'top']
 type HorizontalDirection = Literal['east', 'north', 'south', 'west']
-type Rotation = Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+type Nibble = Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 type StraightRailShape = Literal[
     'ascending_east',
     'ascending_north',
@@ -35,7 +35,14 @@ type StraightRailShape = Literal[
 type WallHeight = Literal['low', 'none', 'high']
 
 
-AIR = SimpleBlock('air')
+@dataclass
+class _Air(MinecraftBlock):
+    id = 'air'
+
+    CAVE = SimpleBlock('cave_air')
+
+
+AIR = _Air()
 
 
 class Amethyst:
@@ -79,7 +86,7 @@ class Bamboo(MinecraftBlock):
     block_states = 'age', 'leaves', 'stage'
 
     MOSAIC = SimpleBlock('bamboo_mosaic')
-    SAPLING = SimpleBlock('bamboo_sapling')
+    SHOOT = SimpleBlock('bamboo_sapling')
 
     @dataclass
     class Block(MinecraftBlock):
@@ -94,7 +101,7 @@ class Bamboo(MinecraftBlock):
 class Banner(TypedBlock[Color]):
     type_name = 'banner'
 
-    rotation: Rotation | None = None
+    rotation: Nibble | None = None
 
     block_states = ('rotation',)
 
@@ -252,6 +259,15 @@ class Button(TypedBlock[WoodType]):
 
 
 @dataclass
+class Cactus(MinecraftBlock):
+    id = 'cactus'
+
+    age: Nibble | None = None
+
+    block_states = ('age',)
+
+
+@dataclass
 class Cake(MinecraftBlock):
     id = 'cake'
 
@@ -260,7 +276,7 @@ class Cake(MinecraftBlock):
     block_states = ('bites',)
 
     @dataclass
-    class Candle(TypedBlock[Color]):
+    class Candle(OptionalTypedBlock[Color]):
         type_name = 'candle_cake'
 
         lit: bool | None = None
@@ -268,8 +284,23 @@ class Cake(MinecraftBlock):
         block_states = ('lit',)
 
 
+CALCITE = SimpleBlock('calcite')
+
+
 @dataclass
-class Candle(TypedBlock[Color]):
+class Campfire(MinecraftBlock):
+    id = 'campfire'
+
+    facing: HorizontalDirection | None = None
+    lit: bool | None = None
+    signal_fire: bool | None = None
+    waterlogged: bool | None = None
+
+    block_states = 'facing', 'lit', 'signal_fire', 'waterlogged'
+
+
+@dataclass
+class Candle(OptionalTypedBlock[Color]):
     type_name = 'candle'
 
     candles: Literal[1, 2, 3, 4] | None = None
@@ -282,6 +313,19 @@ class Candle(TypedBlock[Color]):
 @dataclass
 class Carpet(TypedBlock[Color]):
     type_name = 'carpet'
+
+
+@dataclass
+class Carrots(MinecraftBlock):
+    id = 'carrots'
+
+    age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
+
+    block_states = ('age',)
+
+
+CARTOGRAPHY_TABLE = SimpleBlock('cartography_table')
+CAULDRON = SimpleBlock('cauldron')
 
 
 @dataclass
@@ -493,6 +537,22 @@ class PressurePlate(TypedBlock[WoodType]):
 
 
 @dataclass
+class _Pumpkin(MinecraftBlock):
+    id = 'pumpkin'
+
+    @dataclass
+    class Carved(MinecraftBlock):
+        id = 'carved_pumpkin'
+
+        facing: HorizontalDirection | None = None
+
+        block_states = ('facing',)
+
+
+PUMPKIN = _Pumpkin()
+
+
+@dataclass
 class Rail(MinecraftBlock):
     id = 'rail'
 
@@ -526,6 +586,35 @@ class Sapling(TypedBlock[StandardTree]):
 
 
 @dataclass
+class _SculkSensor(MinecraftBlock):
+    power: Nibble | None = None
+    sculk_sensor_phase: Literal['active', 'cooldown', 'inactive'] | None = None
+    waterlogged: bool | None = None
+
+
+@dataclass
+class _Sculk(MinecraftBlock):
+    id = 'sculk'
+
+    @dataclass
+    class Sensor(_SculkSensor):
+        id = 'sculk_sensor'
+
+        block_states = 'power', 'sculk_sensor_phase', 'waterlogged'
+
+        @dataclass
+        class Calibrated(_SculkSensor):
+            id = 'calibrated_sculk_sensor'
+
+            facing: HorizontalDirection | None = None
+
+            block_states = 'facing', 'power', 'sculk_sensor_phase', 'waterlogged'
+
+
+SKULK = _Sculk()
+
+
+@dataclass
 class ShulkerBox(OptionalTypedBlock[Color]):
     type_name = 'shulker_box'
 
@@ -538,7 +627,7 @@ class ShulkerBox(OptionalTypedBlock[Color]):
 class Sign(TypedBlock[WoodType]):
     type_name = 'sign'
 
-    rotation: Rotation | None = None
+    rotation: Nibble | None = None
     waterlogged: bool | None = None
 
     block_states = 'rotation', 'waterlogged'
@@ -548,7 +637,7 @@ class Sign(TypedBlock[WoodType]):
         type_name = 'hanging_sign'
 
         attached: bool | None = None
-        rotation: Rotation | None = None
+        rotation: Nibble | None = None
         waterlogged: bool | None = None
 
         block_states = 'attached', 'rotation', 'waterlogged'
@@ -648,6 +737,36 @@ class Trapdoor(TypedBlock[WoodType]):
     waterlogged: bool | None = None
 
     block_states = 'facing', 'half', 'open', 'powered', 'waterlogged'
+
+
+@dataclass
+class Vines(MinecraftBlock):
+    id = 'vine'
+
+    east: bool | None = None
+    north: bool | None = None
+    south: bool | None = None
+    up: bool | None = None
+    west: bool | None = None
+
+    block_states = 'east', 'north', 'south', 'up', 'west'
+
+    @dataclass
+    class Cave(MinecraftBlock):
+        id = 'cave_vines'
+
+        berries: bool | None = None
+        age: Nibble | Literal[16, 17, 18, 19, 20, 21, 22, 23, 24, 25] | None = None
+
+        block_states = 'berries', 'age'
+
+        @dataclass
+        class Plant(MinecraftBlock):
+            id = 'cave_vines_plant'
+
+            berries: bool | None = None
+
+            block_states = ('berries',)
 
 
 @dataclass
