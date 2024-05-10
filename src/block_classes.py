@@ -6,13 +6,14 @@ from typing import Literal
 from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
 
 type Color = Literal['black', 'blue']
+type CoralType = Literal['brain']
 type Fungus = Literal['crimson', 'warped']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
 type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic']
 type StemBlock = Literal['melon']
-type StoneType = Literal['andesite', 'blackstone']
+type StoneType = Literal['andesite', 'blackstone', 'brick']
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | Fungus | Literal['bamboo']
 
@@ -203,6 +204,32 @@ class BlastFurnace(MinecraftBlock):
 
 
 @dataclass
+class BoneBlock(MinecraftBlock):
+    id = 'bone_block'
+
+    axis: Axis | None = None
+
+    block_states = ('axis',)
+
+
+BOOKSHELF = SimpleBlock('bookshelf')
+
+
+@dataclass
+class BrewingStand(MinecraftBlock):
+    id = 'brewing_stand'
+
+    has_bottle_0: bool | None = None
+    has_bottle_1: bool | None = None
+    has_bottle_2: bool | None = None
+
+    block_states = 'has_bottle_0', 'has_bottle_1', 'has_bottle_2'
+
+
+BRICKS = SimpleBlock('bricks')
+
+
+@dataclass
 class Button(TypedBlock[WoodType]):
     type_name = 'button'
 
@@ -266,6 +293,36 @@ class Door(TypedBlock[WoodType]):
     powered: bool | None = None
 
     block_states = 'facing', 'half', 'hinge', 'open', 'powered'
+
+
+@dataclass
+class Coral(TypedBlock[CoralType]):
+    type_name = 'coral'
+
+    waterlogged: bool | None = None
+
+    block_states = ('waterlogged',)
+
+    @dataclass
+    class Block(TypedBlock[CoralType]):
+        type_name = 'coral_block'
+
+    @dataclass
+    class Fan(TypedBlock[CoralType]):
+        type_name = 'coral_fan'
+
+        waterlogged: bool | None = None
+
+        block_states = ('waterlogged',)
+
+        @dataclass
+        class Wall(TypedBlock[CoralType]):
+            type_name = 'coral_wall_fan'
+
+            facing: HorizontalDirection | None = None
+            waterlogged: bool | None = None
+
+            block_states = 'facing', 'waterlogged'
 
 
 class Dripleaf:
