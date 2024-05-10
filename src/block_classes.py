@@ -5,7 +5,7 @@ from typing import Literal
 
 from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
 
-type Color = Literal['black']
+type Color = Literal['black', 'blue']
 type Fungus = Literal['crimson', 'warped']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
@@ -317,6 +317,7 @@ class FenceGate(TypedBlock[WoodType]):
 class Flower:
     ALLIUM = SimpleBlock('allium')
     AZURE_BLUET = SimpleBlock('azure_bluet')
+    BLUE_ORCHID = SimpleBlock('blue_orchid')
 
 
 @dataclass
@@ -357,6 +358,16 @@ class Hyphae(TypedBlock[Fungus]):
     axis: Axis | None = None
 
     block_states = ('axis',)
+
+
+@dataclass
+class _Ice(MinecraftBlock):
+    id = 'ice'
+
+    BLUE = SimpleBlock('blue_ice')
+
+
+ICE = _Ice()
 
 
 @dataclass
