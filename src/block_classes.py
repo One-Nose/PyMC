@@ -9,6 +9,7 @@ type Color = Literal['black', 'blue', 'brown']
 type CoralType = Literal['brain', 'bubble']
 type Fungus = Literal['crimson', 'warped']
 type MushroomType = Literal['brown']
+type SandType = Literal['red']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
@@ -70,6 +71,14 @@ class Anvil(MinecraftBlock):
     facing: HorizontalDirection | None = None
 
     block_states = ('facing',)
+
+    @dataclass
+    class Chipped(MinecraftBlock):
+        id = 'chipped_anvil'
+
+        facing: HorizontalDirection | None = None
+
+        block_states = ('facing',)
 
 
 AZALEA = SimpleBlock('azalea')
@@ -197,9 +206,20 @@ class Bell(MinecraftBlock):
     block_states = 'attachment', 'facing', 'powered'
 
 
+class _PolisedBlackstone(MinecraftBlock):
+    id = 'polished_blackstone'
+
+    CHISELED = SimpleBlock('chiseled_polished_blackstone')
+
+
 @dataclass
-class Blackstone(MinecraftBlock):
+class _Blackstone(MinecraftBlock):
     id = 'blackstone'
+
+    POLISHED = _PolisedBlackstone()
+
+
+BLACKSTONE = _Blackstone()
 
 
 @dataclass
@@ -221,7 +241,34 @@ class BoneBlock(MinecraftBlock):
     block_states = ('axis',)
 
 
-BOOKSHELF = SimpleBlock('bookshelf')
+@dataclass
+class _Bookshelf(MinecraftBlock):
+    id = 'bookshelf'
+
+    @dataclass
+    class Chiseled(MinecraftBlock):
+        id = 'chiseled_bookshelf'
+
+        facing: HorizontalDirection | None = None
+        slot_0_occupied: bool | None = None
+        slot_1_occupied: bool | None = None
+        slot_2_occupied: bool | None = None
+        slot_3_occupied: bool | None = None
+        slot_4_occupied: bool | None = None
+        slot_5_occupied: bool | None = None
+
+        block_states = (
+            'facing',
+            'slot_0_occupied',
+            'slot_1_occupied',
+            'slot_2_occupied',
+            'slot_3_occupied',
+            'slot_4_occupied',
+            'slot_5_occupied',
+        )
+
+
+BOOKSHELF = _Bookshelf()
 
 
 @dataclass
@@ -329,25 +376,69 @@ CAULDRON = SimpleBlock('cauldron')
 
 
 @dataclass
+class Chain(MinecraftBlock):
+    id = 'chain'
+
+    axis: Axis | None = None
+    waterlogged: bool | None = None
+
+    block_states = 'axis', 'waterlogged'
+
+
+@dataclass
+class Chest(MinecraftBlock):
+    id = 'chest'
+
+    facing: HorizontalDirection | None = None
+    type: Literal['left', 'right', 'single'] | None = None
+    waterlogged: bool | None = None
+
+    block_states = 'facing', 'type', 'waterlogged'
+
+
+class Chorus:
+    @dataclass
+    class Flower(MinecraftBlock):
+        id = 'chorus_flower'
+
+        age: Literal[0, 1, 2, 3, 4, 5] | None = None
+
+        block_states = ('age',)
+
+    @dataclass
+    class Plant(MinecraftBlock):
+        id = 'chorus_plant'
+
+        down: bool | None = None
+        east: bool | None = None
+        north: bool | None = None
+        south: bool | None = None
+        up: bool | None = None
+        west: bool | None = None
+
+        block_states = 'down', 'east', 'north', 'south', 'up', 'west'
+
+
+CLAY = SimpleBlock('clay')
+
+
+@dataclass
+class CommandBlock(OptionalTypedBlock[Literal['chain']]):
+    id = 'command_block'
+
+    conditional: bool | None = None
+    facing: Direction | None = None
+
+    block_states = 'conditional', 'facing'
+
+
+@dataclass
 class Concrete(TypedBlock[Color]):
     type_name = 'concrete'
 
     @dataclass
     class Powder(TypedBlock[Color]):
         type_name = 'concrete_powder'
-
-
-@dataclass
-class Door(TypedBlock[WoodType]):
-    type_name = 'door'
-
-    facing: HorizontalDirection | None = None
-    half: Literal['lower', 'upper'] | None = None
-    hinge: Literal['left', 'right'] | None = None
-    open: bool | None = None
-    powered: bool | None = None
-
-    block_states = 'facing', 'half', 'hinge', 'open', 'powered'
 
 
 @dataclass
@@ -378,6 +469,30 @@ class Coral(TypedBlock[CoralType]):
             waterlogged: bool | None = None
 
             block_states = 'facing', 'waterlogged'
+
+
+@dataclass
+class Deepslate(MinecraftBlock):
+    id = 'deepslate'
+
+    axis: Axis | None = None
+
+    block_states = ('axis',)
+
+    CHISELED = SimpleBlock('chiseled_deepslate')
+
+
+@dataclass
+class Door(TypedBlock[WoodType]):
+    type_name = 'door'
+
+    facing: HorizontalDirection | None = None
+    half: Literal['lower', 'upper'] | None = None
+    hinge: Literal['left', 'right'] | None = None
+    open: bool | None = None
+    powered: bool | None = None
+
+    block_states = 'facing', 'half', 'hinge', 'open', 'powered'
 
 
 class Dripleaf:
@@ -523,6 +638,16 @@ class Mushroom(TypedBlock[MushroomType]):
 
 
 @dataclass
+class _NetherBricks(MinecraftBlock):
+    id = 'nether_bricks'
+
+    CHISELED = SimpleBlock('chiseled_nether_bricks')
+
+
+NETHER_BRICKS = _NetherBricks()
+
+
+@dataclass
 class Planks(TypedBlock[WoodType]):
     type_name = 'planks'
 
@@ -553,6 +678,16 @@ PUMPKIN = _Pumpkin()
 
 
 @dataclass
+class _QuartzBlock(MinecraftBlock):
+    id = 'quartz_block'
+
+    CHISELED = SimpleBlock('chiseled_quartz_block')
+
+
+QUARTZ_BLOCK = _QuartzBlock()
+
+
+@dataclass
 class Rail(MinecraftBlock):
     id = 'rail'
 
@@ -574,6 +709,15 @@ class Rail(MinecraftBlock):
         waterlogged: bool | None = None
 
         block_states = 'powered', 'shape', 'waterlogged'
+
+
+@dataclass
+class Sandstone(OptionalTypedBlock[SandType]):
+    type_name = 'sandstone'
+
+    class Chiseled(OptionalTypedBlock[SandType]):
+        type_name = 'sandstone'
+        prefix = 'chiseled'
 
 
 @dataclass
@@ -711,6 +855,23 @@ class Stem:
         axis: Axis | None = None
 
         block_states = ('axis',)
+
+
+@dataclass
+class _StoneBricks(MinecraftBlock):
+    id = 'stone_bricks'
+
+    CHISELED = SimpleBlock('chiseled_stone_bricks')
+
+
+@dataclass
+class _Stone(MinecraftBlock):
+    id = 'stone'
+
+    STONE_BRICKS = _StoneBricks()
+
+
+STONE = _Stone()
 
 
 @dataclass
