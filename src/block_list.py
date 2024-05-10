@@ -1,6 +1,5 @@
 # 1.20.6
 
-BAMBOO_SAPLING = None
 BLUE_BANNER = None
 BLUE_BED = None
 BLUE_CANDLE = None

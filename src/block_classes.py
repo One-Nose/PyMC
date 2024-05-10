@@ -76,6 +76,7 @@ class Bamboo(MinecraftBlock):
     block_states = 'age', 'leaves', 'stage'
 
     MOSAIC = SimpleBlock('bamboo_mosaic')
+    SAPLING = SimpleBlock('bamboo_sapling')
 
     @dataclass
     class Block(MinecraftBlock):
