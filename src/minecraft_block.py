@@ -40,3 +40,16 @@ class OptionalTypedBlock[T: str](TypedBlock[T | None]):
 
     def __post_init__(self, block_type: T | None) -> None:
         super().__post_init__(block_type)
+
+
+@dataclass
+class ConnectedBlock:
+    east: bool | None = None
+    north: bool | None = None
+    south: bool | None = None
+    west: bool | None = None
+
+
+@dataclass
+class Waterloggable:
+    waterlogged: bool | None = None

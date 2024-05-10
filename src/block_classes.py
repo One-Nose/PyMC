@@ -3,7 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
+from .minecraft_block import (
+    ConnectedBlock,
+    MinecraftBlock,
+    OptionalTypedBlock,
+    SimpleBlock,
+    TypedBlock,
+    Waterloggable,
+)
 
 type Color = Literal['black', 'blue', 'brown']
 type CoralType = Literal['brain', 'bubble']
@@ -51,11 +58,10 @@ class Amethyst:
     BUDDING = SimpleBlock('budding_amethyst')
 
     @dataclass
-    class Cluster(MinecraftBlock):
+    class Cluster(Waterloggable, MinecraftBlock):
         id = 'amethyst_cluster'
 
         facing: Direction | None = None
-        waterlogged: bool | None = None
 
 
 ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
@@ -118,10 +124,8 @@ class Barrel(MinecraftBlock):
 
 
 @dataclass
-class Barrier(MinecraftBlock):
+class Barrier(Waterloggable, MinecraftBlock):
     id = 'barrier'
-
-    waterlogged: bool | None = None
 
 
 @dataclass
@@ -281,22 +285,20 @@ CALCITE = SimpleBlock('calcite')
 
 
 @dataclass
-class Campfire(MinecraftBlock):
+class Campfire(Waterloggable, MinecraftBlock):
     id = 'campfire'
 
     facing: HorizontalDirection | None = None
     lit: bool | None = None
     signal_fire: bool | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
-class Candle(OptionalTypedBlock[Color]):
+class Candle(Waterloggable, OptionalTypedBlock[Color]):
     type_name = 'candle'
 
     candles: Literal[1, 2, 3, 4] | None = None
     lit: bool | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
@@ -316,20 +318,18 @@ CAULDRON = SimpleBlock('cauldron')
 
 
 @dataclass
-class Chain(MinecraftBlock):
+class Chain(Waterloggable, MinecraftBlock):
     id = 'chain'
 
     axis: Axis | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
-class Chest(MinecraftBlock):
+class Chest(Waterloggable, MinecraftBlock):
     id = 'chest'
 
     facing: HorizontalDirection | None = None
     type: Literal['left', 'right', 'single'] | None = None
-    waterlogged: bool | None = None
 
 
 class Chorus:
@@ -368,27 +368,22 @@ class Concrete(TypedBlock[Color]):
 
 
 @dataclass
-class Coral(TypedBlock[CoralType]):
+class Coral(Waterloggable, TypedBlock[CoralType]):
     type_name = 'coral'
-
-    waterlogged: bool | None = None
 
     @dataclass
     class Block(TypedBlock[CoralType]):
         type_name = 'coral_block'
 
     @dataclass
-    class Fan(TypedBlock[CoralType]):
+    class Fan(Waterloggable, TypedBlock[CoralType]):
         type_name = 'coral_fan'
 
-        waterlogged: bool | None = None
-
         @dataclass
-        class Wall(TypedBlock[CoralType]):
+        class Wall(Waterloggable, TypedBlock[CoralType]):
             type_name = 'coral_wall_fan'
 
             facing: HorizontalDirection | None = None
-            waterlogged: bool | None = None
 
 
 @dataclass
@@ -413,30 +408,22 @@ class Door(TypedBlock[WoodType]):
 
 class Dripleaf:
     @dataclass
-    class Big(MinecraftBlock):
+    class Big(Waterloggable, MinecraftBlock):
         id = 'big_dripleaf'
 
         facing: HorizontalDirection | None = None
         tilt: Literal['full', 'none', 'partial', 'unstable'] | None = None
-        waterlogged: bool | None = None
 
         @dataclass
-        class Stem(MinecraftBlock):
+        class Stem(Waterloggable, MinecraftBlock):
             id = 'big_dripleaf_stem'
 
             facing: HorizontalDirection | None = None
-            waterlogged: bool | None = None
 
 
 @dataclass
-class Fence(TypedBlock[WoodType]):
+class Fence(Waterloggable, ConnectedBlock, TypedBlock[WoodType]):
     type_name = 'fence'
-
-    east: bool | None = None
-    north: bool | None = None
-    south: bool | None = None
-    waterlogged: bool | None = None
-    west: bool | None = None
 
     @dataclass
     class Gate(TypedBlock[WoodType]):
@@ -455,24 +442,15 @@ class Flower:
 
 
 @dataclass
-class _GlassPane(MinecraftBlock):
-    east: bool | None = None
-    north: bool | None = None
-    south: bool | None = None
-    waterlogged: bool | None = None
-    west: bool | None = None
-
-
-@dataclass
 class _Glass(MinecraftBlock):
     id = 'glass'
 
     @dataclass
-    class Pane(_GlassPane):
+    class Pane(Waterloggable, ConnectedBlock, MinecraftBlock):
         id = 'glass_pane'
 
         @dataclass
-        class Stained(_GlassPane, TypedBlock[Color]):
+        class Stained(Waterloggable, ConnectedBlock, TypedBlock[Color]):
             type_name = 'stained_glass_pane'
 
     @dataclass
@@ -501,12 +479,11 @@ ICE = _Ice()
 
 
 @dataclass
-class Leaves(TypedBlock[Tree | Literal['azalea']]):
+class Leaves(Waterloggable, TypedBlock[Tree | Literal['azalea']]):
     type_name = 'leaves'
 
     distance: Literal[1, 2, 3, 4, 5, 6, 7] | None = None
     persistent: bool | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
@@ -524,15 +501,11 @@ class Mushroom(TypedBlock[MushroomType]):
     type_name = 'mushroom'
 
     @dataclass
-    class Block(TypedBlock[MushroomType]):
+    class Block(ConnectedBlock, TypedBlock[MushroomType]):
         type_name = 'mushroom_block'
 
         down: bool | None = None
-        east: bool | None = None
-        north: bool | None = None
-        south: bool | None = None
         up: bool | None = None
-        west: bool | None = None
 
 
 @dataclass
@@ -582,7 +555,7 @@ QUARTZ_BLOCK = _QuartzBlock()
 
 
 @dataclass
-class Rail(MinecraftBlock):
+class Rail(Waterloggable, MinecraftBlock):
     id = 'rail'
 
     shape: (
@@ -590,15 +563,13 @@ class Rail(MinecraftBlock):
         | Literal['north_east', 'north_west', 'south_east', 'south_west']
         | None
     ) = None
-    waterlogged: bool | None = None
 
     @dataclass
-    class Activator(MinecraftBlock):
+    class Activator(Waterloggable, MinecraftBlock):
         id = 'activator_rail'
 
         powered: bool | None = None
         shape: StraightRailShape | None = None
-        waterlogged: bool | None = None
 
 
 @dataclass
@@ -618,10 +589,9 @@ class Sapling(TypedBlock[StandardTree]):
 
 
 @dataclass
-class _SculkSensor(MinecraftBlock):
+class _SculkSensor(Waterloggable, MinecraftBlock):
     power: Nibble | None = None
     sculk_sensor_phase: Literal['active', 'cooldown', 'inactive'] | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
@@ -650,45 +620,40 @@ class ShulkerBox(OptionalTypedBlock[Color]):
 
 
 @dataclass
-class Sign(TypedBlock[WoodType]):
+class Sign(Waterloggable, TypedBlock[WoodType]):
     type_name = 'sign'
 
     rotation: Nibble | None = None
-    waterlogged: bool | None = None
 
     @dataclass
-    class Hanging(TypedBlock[WoodType]):
+    class Hanging(Waterloggable, TypedBlock[WoodType]):
         type_name = 'hanging_sign'
 
         attached: bool | None = None
         rotation: Nibble | None = None
-        waterlogged: bool | None = None
 
         @dataclass
-        class Wall(TypedBlock[WoodType]):
+        class Wall(Waterloggable, TypedBlock[WoodType]):
             type_name = 'wall_hanging_sign'
 
             facing: HorizontalDirection | None = None
-            waterlogged: bool | None = None
 
     @dataclass
-    class Wall(TypedBlock[WoodType]):
+    class Wall(Waterloggable, TypedBlock[WoodType]):
         type_name = 'wall_sign'
 
         facing: HorizontalDirection | None = None
-        waterlogged: bool | None = None
 
 
 @dataclass
-class Slab(TypedBlock[SlabStairsBlock]):
+class Slab(Waterloggable, TypedBlock[SlabStairsBlock]):
     type_name = 'slab'
 
     type: Half | Literal['double'] | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
-class Stairs(TypedBlock[SlabStairsBlock]):
+class Stairs(Waterloggable, TypedBlock[SlabStairsBlock]):
     type_name = 'stairs'
 
     facing: HorizontalDirection | None = None
@@ -697,7 +662,6 @@ class Stairs(TypedBlock[SlabStairsBlock]):
         Literal['inner_left', 'inner_right', 'outer_left', 'outer_right', 'straight']
         | None
     ) = None
-    waterlogged: bool | None = None
 
 
 class Stem:
@@ -750,25 +714,20 @@ class Terracotta(OptionalTypedBlock[Color]):
 
 
 @dataclass
-class Trapdoor(TypedBlock[WoodType]):
+class Trapdoor(Waterloggable, TypedBlock[WoodType]):
     type_name = 'trapdoor'
 
     facing: HorizontalDirection | None = None
     half: Half | None = None
     open: bool | None = None
     powered: bool | None = None
-    waterlogged: bool | None = None
 
 
 @dataclass
-class Vines(MinecraftBlock):
+class Vines(ConnectedBlock, MinecraftBlock):
     id = 'vine'
 
-    east: bool | None = None
-    north: bool | None = None
-    south: bool | None = None
     up: bool | None = None
-    west: bool | None = None
 
     @dataclass
     class Cave(MinecraftBlock):
@@ -785,14 +744,13 @@ class Vines(MinecraftBlock):
 
 
 @dataclass
-class Wall(TypedBlock[StoneType]):
+class Wall(Waterloggable, TypedBlock[StoneType]):
     type_name = 'wall'
 
     east: WallHeight | None = None
     north: WallHeight | None = None
     south: WallHeight | None = None
     up: bool | None = None
-    waterlogged: bool | None = None
     west: WallHeight | None = None
 
 
