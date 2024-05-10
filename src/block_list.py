@@ -1,6 +1,5 @@
 # 1.20.6
 
-BUDDING_AMETHYST = None
 CACTUS = None
 CALCITE = None
 CAMPFIRE = None

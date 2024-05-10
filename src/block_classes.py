@@ -40,6 +40,7 @@ AIR = SimpleBlock('air')
 
 class Amethyst:
     BLOCK = SimpleBlock('amethyst_block')
+    BUDDING = SimpleBlock('budding_amethyst')
 
     @dataclass
     class Cluster(MinecraftBlock):
