@@ -6,7 +6,7 @@ from typing import Literal
 from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
 
 type Color = Literal['black', 'blue', 'brown']
-type CoralType = Literal['brain']
+type CoralType = Literal['brain', 'bubble']
 type Fungus = Literal['crimson', 'warped']
 type MushroomType = Literal['brown']
 type StandardTree = Literal[
@@ -228,6 +228,15 @@ class BrewingStand(MinecraftBlock):
 
 
 BRICKS = SimpleBlock('bricks')
+
+
+@dataclass
+class BubbleColumn(MinecraftBlock):
+    id = 'bubble_column'
+
+    drag: bool | None = None
+
+    block_states = ('drag',)
 
 
 @dataclass
