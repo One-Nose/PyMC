@@ -301,17 +301,16 @@ class Fence(TypedBlock[WoodType]):
 
     block_states = 'east', 'north', 'south', 'waterlogged', 'west'
 
+    @dataclass
+    class Gate(TypedBlock[WoodType]):
+        type_name = 'fence_gate'
 
-@dataclass
-class FenceGate(TypedBlock[WoodType]):
-    type_name = 'fence_gate'
+        facing: HorizontalDirection | None = None
+        in_wall: bool | None = None
+        open: bool | None = None
+        powered: bool | None = None
 
-    facing: HorizontalDirection | None = None
-    in_wall: bool | None = None
-    open: bool | None = None
-    powered: bool | None = None
-
-    block_states = 'facing', 'in_wall', 'open', 'powered'
+        block_states = 'facing', 'in_wall', 'open', 'powered'
 
 
 class Flower:
