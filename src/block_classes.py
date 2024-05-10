@@ -5,9 +5,10 @@ from typing import Literal
 
 from .minecraft_block import MinecraftBlock, OptionalTypedBlock, SimpleBlock, TypedBlock
 
-type Color = Literal['black', 'blue']
+type Color = Literal['black', 'blue', 'brown']
 type CoralType = Literal['brain']
 type Fungus = Literal['crimson', 'warped']
+type MushroomType = Literal['brown']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
@@ -447,6 +448,24 @@ class Log(TypedBlock[Tree]):
 
 
 MELON = SimpleBlock('melon')
+
+
+@dataclass
+class Mushroom(TypedBlock[MushroomType]):
+    type_name = 'mushroom'
+
+    @dataclass
+    class Block(TypedBlock[MushroomType]):
+        type_name = 'mushroom_block'
+
+        east: bool | None = None
+        down: bool | None = None
+        north: bool | None = None
+        south: bool | None = None
+        up: bool | None = None
+        west: bool | None = None
+
+        block_states = 'east', 'down', 'north', 'south', 'up', 'west'
 
 
 @dataclass
