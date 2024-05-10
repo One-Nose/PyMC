@@ -57,8 +57,6 @@ class Amethyst:
         facing: Direction | None = None
         waterlogged: bool | None = None
 
-        block_states = 'facing', 'waterlogged'
-
 
 ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
 ANDESITE = SimpleBlock('andesite')
@@ -70,15 +68,11 @@ class Anvil(MinecraftBlock):
 
     facing: HorizontalDirection | None = None
 
-    block_states = ('facing',)
-
     @dataclass
     class Chipped(MinecraftBlock):
         id = 'chipped_anvil'
 
         facing: HorizontalDirection | None = None
-
-        block_states = ('facing',)
 
 
 AZALEA = SimpleBlock('azalea')
@@ -92,8 +86,6 @@ class Bamboo(MinecraftBlock):
     leaves: Literal['large', 'none', 'small'] | None = None
     stage: Literal[0, 1] | None = None
 
-    block_states = 'age', 'leaves', 'stage'
-
     MOSAIC = SimpleBlock('bamboo_mosaic')
     SHOOT = SimpleBlock('bamboo_sapling')
 
@@ -103,8 +95,6 @@ class Bamboo(MinecraftBlock):
 
         axis: Axis | None = None
 
-        block_states = ('axis',)
-
 
 @dataclass
 class Banner(TypedBlock[Color]):
@@ -112,15 +102,11 @@ class Banner(TypedBlock[Color]):
 
     rotation: Nibble | None = None
 
-    block_states = ('rotation',)
-
     @dataclass
     class Wall(TypedBlock[Color]):
         type_name = 'wall_banner'
 
         facing: HorizontalDirection | None = None
-
-        block_states = ('facing',)
 
 
 @dataclass
@@ -130,8 +116,6 @@ class Barrel(MinecraftBlock):
     facing: Direction | None = None
     open: bool | None = None
 
-    block_states = 'facing', 'open'
-
 
 @dataclass
 class Barrier(MinecraftBlock):
@@ -139,16 +123,12 @@ class Barrier(MinecraftBlock):
 
     waterlogged: bool | None = None
 
-    block_states = ('waterlogged',)
-
 
 @dataclass
 class Basalt(MinecraftBlock):
     id = 'basalt'
 
     axis: Axis | None = None
-
-    block_states = ('axis',)
 
 
 BEACON = SimpleBlock('beacon')
@@ -162,8 +142,6 @@ class Bed(TypedBlock[Color]):
     occupied: bool | None = None
     part: Literal['foot', 'head'] | None = None
 
-    block_states = 'facing', 'occupied', 'part'
-
 
 BEDROCK = SimpleBlock('bedrock')
 
@@ -172,8 +150,6 @@ BEDROCK = SimpleBlock('bedrock')
 class _BeeHouse(MinecraftBlock):
     facing: HorizontalDirection | None = None
     honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
-
-    block_states = 'facing', 'honey_level'
 
 
 @dataclass
@@ -192,8 +168,6 @@ class Beetroots(MinecraftBlock):
 
     age: Literal[0, 1, 2, 3] | None = None
 
-    block_states = ('age',)
-
 
 @dataclass
 class Bell(MinecraftBlock):
@@ -202,8 +176,6 @@ class Bell(MinecraftBlock):
     attachment: Literal['ceiling', 'double_wall', 'floor', 'single_wall'] | None = None
     facing: HorizontalDirection | None = None
     powered: bool | None = None
-
-    block_states = 'attachment', 'facing', 'powered'
 
 
 class _PolisedBlackstone(MinecraftBlock):
@@ -229,16 +201,12 @@ class BlastFurnace(MinecraftBlock):
     facing: HorizontalDirection | None = None
     lit: bool | None = None
 
-    block_states = 'facing', 'lit'
-
 
 @dataclass
 class BoneBlock(MinecraftBlock):
     id = 'bone_block'
 
     axis: Axis | None = None
-
-    block_states = ('axis',)
 
 
 @dataclass
@@ -257,16 +225,6 @@ class _Bookshelf(MinecraftBlock):
         slot_4_occupied: bool | None = None
         slot_5_occupied: bool | None = None
 
-        block_states = (
-            'facing',
-            'slot_0_occupied',
-            'slot_1_occupied',
-            'slot_2_occupied',
-            'slot_3_occupied',
-            'slot_4_occupied',
-            'slot_5_occupied',
-        )
-
 
 BOOKSHELF = _Bookshelf()
 
@@ -279,8 +237,6 @@ class BrewingStand(MinecraftBlock):
     has_bottle_1: bool | None = None
     has_bottle_2: bool | None = None
 
-    block_states = 'has_bottle_0', 'has_bottle_1', 'has_bottle_2'
-
 
 BRICKS = SimpleBlock('bricks')
 
@@ -291,8 +247,6 @@ class BubbleColumn(MinecraftBlock):
 
     drag: bool | None = None
 
-    block_states = ('drag',)
-
 
 @dataclass
 class Button(TypedBlock[WoodType]):
@@ -302,16 +256,12 @@ class Button(TypedBlock[WoodType]):
     facing: HorizontalDirection | None = None
     powered: bool | None = None
 
-    block_states = 'face', 'facing', 'powered'
-
 
 @dataclass
 class Cactus(MinecraftBlock):
     id = 'cactus'
 
     age: Nibble | None = None
-
-    block_states = ('age',)
 
 
 @dataclass
@@ -320,15 +270,11 @@ class Cake(MinecraftBlock):
 
     bites: Literal[0, 1, 2, 3, 4, 5, 6] | None = None
 
-    block_states = ('bites',)
-
     @dataclass
     class Candle(OptionalTypedBlock[Color]):
         type_name = 'candle_cake'
 
         lit: bool | None = None
-
-        block_states = ('lit',)
 
 
 CALCITE = SimpleBlock('calcite')
@@ -343,8 +289,6 @@ class Campfire(MinecraftBlock):
     signal_fire: bool | None = None
     waterlogged: bool | None = None
 
-    block_states = 'facing', 'lit', 'signal_fire', 'waterlogged'
-
 
 @dataclass
 class Candle(OptionalTypedBlock[Color]):
@@ -353,8 +297,6 @@ class Candle(OptionalTypedBlock[Color]):
     candles: Literal[1, 2, 3, 4] | None = None
     lit: bool | None = None
     waterlogged: bool | None = None
-
-    block_states = 'candles', 'lit', 'waterlogged'
 
 
 @dataclass
@@ -368,8 +310,6 @@ class Carrots(MinecraftBlock):
 
     age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
-    block_states = ('age',)
-
 
 CARTOGRAPHY_TABLE = SimpleBlock('cartography_table')
 CAULDRON = SimpleBlock('cauldron')
@@ -382,8 +322,6 @@ class Chain(MinecraftBlock):
     axis: Axis | None = None
     waterlogged: bool | None = None
 
-    block_states = 'axis', 'waterlogged'
-
 
 @dataclass
 class Chest(MinecraftBlock):
@@ -393,8 +331,6 @@ class Chest(MinecraftBlock):
     type: Literal['left', 'right', 'single'] | None = None
     waterlogged: bool | None = None
 
-    block_states = 'facing', 'type', 'waterlogged'
-
 
 class Chorus:
     @dataclass
@@ -403,20 +339,12 @@ class Chorus:
 
         age: Literal[0, 1, 2, 3, 4, 5] | None = None
 
-        block_states = ('age',)
-
     @dataclass
     class Plant(MinecraftBlock):
         id = 'chorus_plant'
 
         down: bool | None = None
-        east: bool | None = None
-        north: bool | None = None
-        south: bool | None = None
         up: bool | None = None
-        west: bool | None = None
-
-        block_states = 'down', 'east', 'north', 'south', 'up', 'west'
 
 
 CLAY = SimpleBlock('clay')
@@ -428,8 +356,6 @@ class CommandBlock(OptionalTypedBlock[Literal['chain']]):
 
     conditional: bool | None = None
     facing: Direction | None = None
-
-    block_states = 'conditional', 'facing'
 
 
 @dataclass
@@ -447,8 +373,6 @@ class Coral(TypedBlock[CoralType]):
 
     waterlogged: bool | None = None
 
-    block_states = ('waterlogged',)
-
     @dataclass
     class Block(TypedBlock[CoralType]):
         type_name = 'coral_block'
@@ -459,8 +383,6 @@ class Coral(TypedBlock[CoralType]):
 
         waterlogged: bool | None = None
 
-        block_states = ('waterlogged',)
-
         @dataclass
         class Wall(TypedBlock[CoralType]):
             type_name = 'coral_wall_fan'
@@ -468,16 +390,12 @@ class Coral(TypedBlock[CoralType]):
             facing: HorizontalDirection | None = None
             waterlogged: bool | None = None
 
-            block_states = 'facing', 'waterlogged'
-
 
 @dataclass
 class Deepslate(MinecraftBlock):
     id = 'deepslate'
 
     axis: Axis | None = None
-
-    block_states = ('axis',)
 
     CHISELED = SimpleBlock('chiseled_deepslate')
 
@@ -492,8 +410,6 @@ class Door(TypedBlock[WoodType]):
     open: bool | None = None
     powered: bool | None = None
 
-    block_states = 'facing', 'half', 'hinge', 'open', 'powered'
-
 
 class Dripleaf:
     @dataclass
@@ -504,16 +420,12 @@ class Dripleaf:
         tilt: Literal['full', 'none', 'partial', 'unstable'] | None = None
         waterlogged: bool | None = None
 
-        block_states = 'facing', 'tilt', 'waterlogged'
-
         @dataclass
         class Stem(MinecraftBlock):
             id = 'big_dripleaf_stem'
 
             facing: HorizontalDirection | None = None
             waterlogged: bool | None = None
-
-            block_states = 'facing', 'waterlogged'
 
 
 @dataclass
@@ -526,8 +438,6 @@ class Fence(TypedBlock[WoodType]):
     waterlogged: bool | None = None
     west: bool | None = None
 
-    block_states = 'east', 'north', 'south', 'waterlogged', 'west'
-
     @dataclass
     class Gate(TypedBlock[WoodType]):
         type_name = 'fence_gate'
@@ -536,8 +446,6 @@ class Fence(TypedBlock[WoodType]):
         in_wall: bool | None = None
         open: bool | None = None
         powered: bool | None = None
-
-        block_states = 'facing', 'in_wall', 'open', 'powered'
 
 
 class Flower:
@@ -553,8 +461,6 @@ class _GlassPane(MinecraftBlock):
     south: bool | None = None
     waterlogged: bool | None = None
     west: bool | None = None
-
-    block_states = 'east', 'north', 'south', 'waterlogged', 'west'
 
 
 @dataclass
@@ -583,8 +489,6 @@ class Hyphae(TypedBlock[Fungus]):
 
     axis: Axis | None = None
 
-    block_states = ('axis',)
-
 
 @dataclass
 class _Ice(MinecraftBlock):
@@ -604,16 +508,12 @@ class Leaves(TypedBlock[Tree | Literal['azalea']]):
     persistent: bool | None = None
     waterlogged: bool | None = None
 
-    block_states = 'distance', 'persistent', 'waterlogged'
-
 
 @dataclass
 class Log(TypedBlock[Tree]):
     type_name = 'log'
 
     axis: Axis | None = None
-
-    block_states = ('axis',)
 
 
 MELON = SimpleBlock('melon')
@@ -627,14 +527,12 @@ class Mushroom(TypedBlock[MushroomType]):
     class Block(TypedBlock[MushroomType]):
         type_name = 'mushroom_block'
 
-        east: bool | None = None
         down: bool | None = None
+        east: bool | None = None
         north: bool | None = None
         south: bool | None = None
         up: bool | None = None
         west: bool | None = None
-
-        block_states = 'east', 'down', 'north', 'south', 'up', 'west'
 
 
 @dataclass
@@ -658,8 +556,6 @@ class PressurePlate(TypedBlock[WoodType]):
 
     powered: bool | None = None
 
-    block_states = ('powered',)
-
 
 @dataclass
 class _Pumpkin(MinecraftBlock):
@@ -670,8 +566,6 @@ class _Pumpkin(MinecraftBlock):
         id = 'carved_pumpkin'
 
         facing: HorizontalDirection | None = None
-
-        block_states = ('facing',)
 
 
 PUMPKIN = _Pumpkin()
@@ -698,8 +592,6 @@ class Rail(MinecraftBlock):
     ) = None
     waterlogged: bool | None = None
 
-    block_states = 'shape', 'waterlogged'
-
     @dataclass
     class Activator(MinecraftBlock):
         id = 'activator_rail'
@@ -707,8 +599,6 @@ class Rail(MinecraftBlock):
         powered: bool | None = None
         shape: StraightRailShape | None = None
         waterlogged: bool | None = None
-
-        block_states = 'powered', 'shape', 'waterlogged'
 
 
 @dataclass
@@ -726,8 +616,6 @@ class Sapling(TypedBlock[StandardTree]):
 
     stage: Literal[0, 1] | None = None
 
-    block_states = ('stage',)
-
 
 @dataclass
 class _SculkSensor(MinecraftBlock):
@@ -744,15 +632,11 @@ class _Sculk(MinecraftBlock):
     class Sensor(_SculkSensor):
         id = 'sculk_sensor'
 
-        block_states = 'power', 'sculk_sensor_phase', 'waterlogged'
-
         @dataclass
         class Calibrated(_SculkSensor):
             id = 'calibrated_sculk_sensor'
 
             facing: HorizontalDirection | None = None
-
-            block_states = 'facing', 'power', 'sculk_sensor_phase', 'waterlogged'
 
 
 SKULK = _Sculk()
@@ -764,8 +648,6 @@ class ShulkerBox(OptionalTypedBlock[Color]):
 
     facing: Direction | None = None
 
-    block_states = ('facing',)
-
 
 @dataclass
 class Sign(TypedBlock[WoodType]):
@@ -773,8 +655,6 @@ class Sign(TypedBlock[WoodType]):
 
     rotation: Nibble | None = None
     waterlogged: bool | None = None
-
-    block_states = 'rotation', 'waterlogged'
 
     @dataclass
     class Hanging(TypedBlock[WoodType]):
@@ -784,16 +664,12 @@ class Sign(TypedBlock[WoodType]):
         rotation: Nibble | None = None
         waterlogged: bool | None = None
 
-        block_states = 'attached', 'rotation', 'waterlogged'
-
         @dataclass
         class Wall(TypedBlock[WoodType]):
             type_name = 'wall_hanging_sign'
 
             facing: HorizontalDirection | None = None
             waterlogged: bool | None = None
-
-            block_states = 'facing', 'waterlogged'
 
     @dataclass
     class Wall(TypedBlock[WoodType]):
@@ -802,8 +678,6 @@ class Sign(TypedBlock[WoodType]):
         facing: HorizontalDirection | None = None
         waterlogged: bool | None = None
 
-        block_states = 'facing', 'waterlogged'
-
 
 @dataclass
 class Slab(TypedBlock[SlabStairsBlock]):
@@ -811,8 +685,6 @@ class Slab(TypedBlock[SlabStairsBlock]):
 
     type: Half | Literal['double'] | None = None
     waterlogged: bool | None = None
-
-    block_states = 'type', 'waterlogged'
 
 
 @dataclass
@@ -827,8 +699,6 @@ class Stairs(TypedBlock[SlabStairsBlock]):
     ) = None
     waterlogged: bool | None = None
 
-    block_states = 'facing', 'half', 'shape', 'waterlogged'
-
 
 class Stem:
     @dataclass
@@ -837,8 +707,6 @@ class Stem:
 
         age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
-        block_states = ('age',)
-
         @dataclass
         class Attached(TypedBlock[StemBlock]):
             type_name = 'stem'
@@ -846,15 +714,11 @@ class Stem:
 
             facing: HorizontalDirection | None = None
 
-            block_states = ('facing',)
-
     @dataclass
     class Fungus(TypedBlock[Fungus]):
         type_name = 'stem'
 
         axis: Axis | None = None
-
-        block_states = ('axis',)
 
 
 @dataclass
@@ -884,8 +748,6 @@ class Terracotta(OptionalTypedBlock[Color]):
 
         facing: HorizontalDirection | None = None
 
-        block_states = ('facing',)
-
 
 @dataclass
 class Trapdoor(TypedBlock[WoodType]):
@@ -896,8 +758,6 @@ class Trapdoor(TypedBlock[WoodType]):
     open: bool | None = None
     powered: bool | None = None
     waterlogged: bool | None = None
-
-    block_states = 'facing', 'half', 'open', 'powered', 'waterlogged'
 
 
 @dataclass
@@ -910,8 +770,6 @@ class Vines(MinecraftBlock):
     up: bool | None = None
     west: bool | None = None
 
-    block_states = 'east', 'north', 'south', 'up', 'west'
-
     @dataclass
     class Cave(MinecraftBlock):
         id = 'cave_vines'
@@ -919,15 +777,11 @@ class Vines(MinecraftBlock):
         berries: bool | None = None
         age: Nibble | Literal[16, 17, 18, 19, 20, 21, 22, 23, 24, 25] | None = None
 
-        block_states = 'berries', 'age'
-
         @dataclass
         class Plant(MinecraftBlock):
             id = 'cave_vines_plant'
 
             berries: bool | None = None
-
-            block_states = ('berries',)
 
 
 @dataclass
@@ -941,16 +795,12 @@ class Wall(TypedBlock[StoneType]):
     waterlogged: bool | None = None
     west: WallHeight | None = None
 
-    block_states = 'east', 'north', 'south', 'up', 'waterlogged', 'west'
-
 
 @dataclass
 class Wood(TypedBlock[Tree]):
     type_name = 'wood'
 
     axis: Axis | None = None
-
-    block_states = ('axis',)
 
 
 @dataclass
