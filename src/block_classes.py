@@ -56,7 +56,6 @@ type Axis = Literal['x', 'y', 'z']
 type Direction = HorizontalDirection | Literal['down', 'up']
 type Half = Literal['bottom', 'top']
 type HorizontalDirection = Literal['east', 'north', 'south', 'west']
-type Nibble = Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 type StraightRailShape = Literal[
     'ascending_east',
     'ascending_north',
@@ -65,6 +64,9 @@ type StraightRailShape = Literal[
     'east_west',
     'north_south',
 ]
+type UInt2 = Literal[0, 1, 2, 3]
+type UInt3 = UInt2 | Literal[4, 5, 6, 7]
+type UInt4 = UInt3 | Literal[8, 9, 10, 11, 12, 13, 14, 15]
 type WallHeight = Literal['low', 'none', 'high']
 
 
@@ -107,7 +109,7 @@ class Anvil(OptionalVariantBlock[Literal['chipped', 'damaged']]):
 
 
 @dataclass
-class Azalea(MinecraftBlock):
+class Azalea(OptionalVariantBlock[Literal['flowering']]):
     id = 'azalea'
 
 
@@ -138,7 +140,7 @@ class Bamboo(MinecraftBlock):
 class Banner(VariantBlock[Color]):
     id = 'banner'
 
-    rotation: Nibble | None = None
+    rotation: UInt4 | None = None
 
     @dataclass
     class Wall(VariantBlock[Color]):
@@ -189,14 +191,14 @@ class Bedrock(MinecraftBlock):
 @dataclass
 class BeeHouse(VariantBlock[Literal['bee_nest', 'beehive']]):
     facing: HorizontalDirection | None = None
-    honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
+    honey_level: UInt2 | Literal[4, 5] | None = None
 
 
 @dataclass
 class Beetroots(MinecraftBlock):
     id = 'beetroots'
 
-    age: Literal[0, 1, 2, 3] | None = None
+    age: UInt2 | None = None
 
 
 @dataclass
@@ -213,14 +215,6 @@ class Blackstone(
     VariantBlock[Literal['chiseled_polished', 'cracked_polished', 'polished']]
 ):
     id = 'blackstone'
-
-
-@dataclass
-class BlastFurnace(MinecraftBlock):
-    id = 'blast_furnace'
-
-    facing: HorizontalDirection | None = None
-    lit: bool | None = None
 
 
 @dataclass
@@ -281,14 +275,14 @@ class Button(VariantBlock[WoodType]):
 class Cactus(MinecraftBlock):
     id = 'cactus'
 
-    age: Nibble | None = None
+    age: UInt4 | None = None
 
 
 @dataclass
 class Cake(MinecraftBlock):
     id = 'cake'
 
-    bites: Literal[0, 1, 2, 3, 4, 5, 6] | None = None
+    bites: UInt2 | Literal[4, 5, 6] | None = None
 
     @dataclass
     class Candle(OptionalVariantBlock[Color]):
@@ -328,7 +322,7 @@ class Carpet(VariantBlock[Color]):
 class Carrots(MinecraftBlock):
     id = 'carrots'
 
-    age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
+    age: UInt3 | None = None
 
 
 @dataclass
@@ -367,7 +361,7 @@ class Chorus:
     class Flower(MinecraftBlock):
         id = 'chorus_flower'
 
-        age: Literal[0, 1, 2, 3, 4, 5] | None = None
+        age: UInt2 | Literal[4, 5] | None = None
 
     @dataclass
     class Plant(MinecraftBlock):
@@ -422,7 +416,7 @@ class CommandBlock(OptionalVariantBlock[Literal['chain']]):
 class Composter(MinecraftBlock):
     id = 'composter'
 
-    level: Literal[0, 1, 2, 3, 4, 5, 6, 7, 8] | None = None
+    level: UInt3 | Literal[8] | None = None
 
 
 @dataclass
@@ -485,7 +479,7 @@ class DaylightDetector(MinecraftBlock):
     id = 'daylight_detector'
 
     inverted: bool | None = None
-    power: Nibble | None = None
+    power: UInt4 | None = None
 
 
 @dataclass
@@ -649,6 +643,13 @@ class End:
 
 
 @dataclass
+class Farmland(MinecraftBlock):
+    id = 'farmland'
+
+    moisture: UInt3 | None = None
+
+
+@dataclass
 class Fence(Waterloggable, ConnectedBlock, VariantBlock[WoodType]):
     id = 'fence'
 
@@ -663,17 +664,50 @@ class Fence(Waterloggable, ConnectedBlock, VariantBlock[WoodType]):
 
 
 @dataclass
+class Fern(MinecraftBlock):
+    id = 'fern'
+
+
+@dataclass
+class Fire(ConnectedBlock, MinecraftBlock):
+    id = 'fire'
+
+    age: UInt4 | None = None
+    up: bool | None = None
+
+
+@dataclass
+class FletchingTable(MinecraftBlock):
+    id = 'fletching_table'
+
+
+@dataclass
 class Flower(
     VariantBlock[
         Literal['allium', 'azure_bluet', 'blue_orchid', 'cornflower', 'dandelion']
     ]
 ):
-    pass
+    @dataclass
+    class Pot(MinecraftBlock):
+        id = 'flower_pot'
+
+
+@dataclass
+class Frogspawn(MinecraftBlock):
+    id = 'frogspawn'
 
 
 @dataclass
 class Fungus(VariantBlock[FungusType]):
     id = 'fungus'
+
+
+@dataclass
+class Furnace(OptionalVariantBlock[Literal['blast']]):
+    id = 'furnace'
+
+    facing: HorizontalDirection | None = None
+    lit: bool | None = None
 
 
 @dataclass
@@ -704,7 +738,7 @@ class Head(VariantBlock[HeadType]):
     id = 'head'
 
     powered: bool | None = None
-    rotation: Nibble | None = None
+    rotation: UInt4 | None = None
 
     @dataclass
     class Wall(VariantBlock[HeadType]):
@@ -725,6 +759,12 @@ class Hyphae(VariantBlock[FungusType]):
 class Ice(OptionalVariantBlock[Literal['blue']]):
     id = 'ice'
 
+    @dataclass
+    class Frosted(MinecraftBlock):
+        id = 'frosted_ice'
+
+        age: UInt2 | None = None
+
 
 class Iron:
     @dataclass
@@ -739,7 +779,7 @@ class LapisLazuli:
 
 
 @dataclass
-class Leaves(Waterloggable, VariantBlock[Tree | Literal['azalea']]):
+class Leaves(Waterloggable, VariantBlock[Tree | Literal['azalea', 'flowering_azalea']]):
     id = 'leaves'
 
     distance: Literal[1, 2, 3, 4, 5, 6, 7] | None = None
@@ -881,7 +921,7 @@ class Sapling(VariantBlock[StandardTree]):
 
 @dataclass
 class _SculkSensor(Waterloggable, MinecraftBlock):
-    power: Nibble | None = None
+    power: UInt4 | None = None
     sculk_sensor_phase: Literal['active', 'cooldown', 'inactive'] | None = None
 
 
@@ -911,14 +951,14 @@ class ShulkerBox(OptionalVariantBlock[Color]):
 class Sign(Waterloggable, VariantBlock[WoodType]):
     id = 'sign'
 
-    rotation: Nibble | None = None
+    rotation: UInt4 | None = None
 
     @dataclass
     class Hanging(Waterloggable, VariantBlock[WoodType]):
         id = 'hanging_sign'
 
         attached: bool | None = None
-        rotation: Nibble | None = None
+        rotation: UInt4 | None = None
 
         @dataclass
         class Wall(Waterloggable, VariantBlock[WoodType]):
@@ -957,7 +997,7 @@ class Stem:
     class Crop(VariantBlock[StemBlock]):
         id = 'stem'
 
-        age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
+        age: UInt3 | None = None
 
         @dataclass
         class Attached(VariantBlock[StemBlock]):
@@ -1014,7 +1054,7 @@ class Vines(ConnectedBlock, MinecraftBlock):
         id = 'cave_vines'
 
         berries: bool | None = None
-        age: Nibble | Literal[16, 17, 18, 19, 20, 21, 22, 23, 24, 25] | None = None
+        age: UInt4 | Literal[16, 17, 18, 19, 20, 21, 22, 23, 24, 25] | None = None
 
         @dataclass
         class Plant(MinecraftBlock):
