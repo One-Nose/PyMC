@@ -6,13 +6,24 @@ from typing import Literal
 from .minecraft_block import (
     ConnectedBlock,
     MinecraftBlock,
-    OptionalTypedBlock,
-    TypedBlock,
+    OptionalVariantBlock,
+    VariantBlock,
     Waterloggable,
 )
 
 type Color = Literal['black', 'blue', 'brown', 'cyan']
-type CoralType = Literal['brain', 'dead_brain', 'bubble', 'dead_bubble']
+type CoralType = Literal[
+    'brain',
+    'dead_brain',
+    'bubble',
+    'dead_bubble',
+    'fire',
+    'dead_fire',
+    'horn',
+    'dead_horn',
+    'tube',
+    'dead_tube',
+]
 type FungusType = Literal['crimson', 'warped']
 type HeadType = Literal['creeper']
 type MushroomType = Literal['brown']
@@ -26,7 +37,12 @@ type SlabStairsBlock = WoodType | StoneType | Literal[
 ]
 type StemBlock = Literal['melon']
 type StoneType = Literal[
-    'andesite', 'blackstone', 'brick', 'cobbled_deepslate', 'cobblestone'
+    'andesite',
+    'blackstone',
+    'brick',
+    'cobbled_deepslate',
+    'cobblestone',
+    'deepslate_brick',
 ]
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | FungusType | Literal['bamboo']
@@ -49,8 +65,8 @@ type WallHeight = Literal['low', 'none', 'high']
 
 
 @dataclass
-class Air(OptionalTypedBlock[Literal['cave']]):
-    type_name = 'air'
+class Air(OptionalVariantBlock[Literal['cave']]):
+    id = 'air'
 
 
 class Amethyst:
@@ -80,7 +96,7 @@ class Andesite(MinecraftBlock):
 
 
 @dataclass
-class Anvil(OptionalTypedBlock[Literal['chipped', 'damaged']]):
+class Anvil(OptionalVariantBlock[Literal['chipped', 'damaged']]):
     id = 'anvil'
 
     facing: HorizontalDirection | None = None
@@ -115,14 +131,14 @@ class Bamboo(MinecraftBlock):
 
 
 @dataclass
-class Banner(TypedBlock[Color]):
-    type_name = 'banner'
+class Banner(VariantBlock[Color]):
+    id = 'banner'
 
     rotation: Nibble | None = None
 
     @dataclass
-    class Wall(TypedBlock[Color]):
-        type_name = 'wall_banner'
+    class Wall(VariantBlock[Color]):
+        id = 'wall_banner'
 
         facing: HorizontalDirection | None = None
 
@@ -153,8 +169,8 @@ class Beacon(MinecraftBlock):
 
 
 @dataclass
-class Bed(TypedBlock[Color]):
-    type_name = 'bed'
+class Bed(VariantBlock[Color]):
+    id = 'bed'
 
     facing: HorizontalDirection | None = None
     occupied: bool | None = None
@@ -167,7 +183,7 @@ class Bedrock(MinecraftBlock):
 
 
 @dataclass
-class BeeHouse(TypedBlock[Literal['bee_nest', 'beehive']]):
+class BeeHouse(VariantBlock[Literal['bee_nest', 'beehive']]):
     facing: HorizontalDirection | None = None
     honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
 
@@ -190,9 +206,9 @@ class Bell(MinecraftBlock):
 
 @dataclass
 class Blackstone(
-    TypedBlock[Literal['chiseled_polished', 'cracked_polished', 'polished']]
+    VariantBlock[Literal['chiseled_polished', 'cracked_polished', 'polished']]
 ):
-    type_name = 'blackstone'
+    id = 'blackstone'
 
 
 @dataclass
@@ -249,8 +265,8 @@ class BubbleColumn(MinecraftBlock):
 
 
 @dataclass
-class Button(TypedBlock[WoodType]):
-    type_name = 'button'
+class Button(VariantBlock[WoodType]):
+    id = 'button'
 
     face: Literal['ceiling', 'floor', 'wall'] | None = None
     facing: HorizontalDirection | None = None
@@ -271,8 +287,8 @@ class Cake(MinecraftBlock):
     bites: Literal[0, 1, 2, 3, 4, 5, 6] | None = None
 
     @dataclass
-    class Candle(OptionalTypedBlock[Color]):
-        type_name = 'candle_cake'
+    class Candle(OptionalVariantBlock[Color]):
+        id = 'candle_cake'
 
         lit: bool | None = None
 
@@ -292,16 +308,16 @@ class Campfire(Waterloggable, MinecraftBlock):
 
 
 @dataclass
-class Candle(Waterloggable, OptionalTypedBlock[Color]):
-    type_name = 'candle'
+class Candle(Waterloggable, OptionalVariantBlock[Color]):
+    id = 'candle'
 
     candles: Literal[1, 2, 3, 4] | None = None
     lit: bool | None = None
 
 
 @dataclass
-class Carpet(TypedBlock[Color]):
-    type_name = 'carpet'
+class Carpet(VariantBlock[Color]):
+    id = 'carpet'
 
 
 @dataclass
@@ -357,7 +373,7 @@ class Clay(MinecraftBlock):
 
 
 @dataclass
-class CommandBlock(OptionalTypedBlock[Literal['chain']]):
+class CommandBlock(OptionalVariantBlock[Literal['chain']]):
     id = 'command_block'
 
     conditional: bool | None = None
@@ -370,7 +386,7 @@ class Coal:
         id = 'coal_block'
 
     @dataclass
-    class Ore(MinecraftBlock):
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
         id = 'coal_ore'
 
 
@@ -400,12 +416,12 @@ class Composter(MinecraftBlock):
 
 
 @dataclass
-class Concrete(TypedBlock[Color]):
-    type_name = 'concrete'
+class Concrete(VariantBlock[Color]):
+    id = 'concrete'
 
     @dataclass
-    class Powder(TypedBlock[Color]):
-        type_name = 'concrete_powder'
+    class Powder(VariantBlock[Color]):
+        id = 'concrete_powder'
 
 
 @dataclass
@@ -423,25 +439,25 @@ class Copper:
         id = 'cut_copper'
 
     @dataclass
-    class Ore(MinecraftBlock):
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
         id = 'copper_ore'
 
 
 @dataclass
-class Coral(Waterloggable, TypedBlock[CoralType]):
-    type_name = 'coral'
+class Coral(Waterloggable, VariantBlock[CoralType]):
+    id = 'coral'
 
     @dataclass
-    class Block(TypedBlock[CoralType]):
-        type_name = 'coral_block'
+    class Block(VariantBlock[CoralType]):
+        id = 'coral_block'
 
     @dataclass
-    class Fan(Waterloggable, TypedBlock[CoralType]):
-        type_name = 'coral_fan'
+    class Fan(Waterloggable, VariantBlock[CoralType]):
+        id = 'coral_fan'
 
         @dataclass
-        class Wall(Waterloggable, TypedBlock[CoralType]):
-            type_name = 'coral_wall_fan'
+        class Wall(Waterloggable, VariantBlock[CoralType]):
+            id = 'coral_wall_fan'
 
             facing: HorizontalDirection | None = None
 
@@ -460,32 +476,51 @@ class DaylightDetector(MinecraftBlock):
 
 
 @dataclass
+class DeadBush(MinecraftBlock):
+    id = 'dead_bush'
+
+
+@dataclass
+class DecoratedPot(Waterloggable, MinecraftBlock):
+    id = 'decorated_pot'
+
+    facing: HorizontalDirection | None = None
+    cracked: bool | None = None
+
+
+@dataclass
 class Deepslate(MinecraftBlock):
     id = 'deepslate'
 
     axis: Axis | None = None
 
     @dataclass
-    class Bricks(OptionalTypedBlock[Literal['cracked']]):
-        type_name = 'deepslate_bricks'
+    class Bricks(OptionalVariantBlock[Literal['cracked']]):
+        id = 'deepslate_bricks'
 
     @dataclass
-    class Tiles(OptionalTypedBlock[Literal['cracked']]):
-        type_name = 'deepslate_tiles'
+    class Tiles(OptionalVariantBlock[Literal['cracked']]):
+        id = 'deepslate_tiles'
 
     @dataclass
-    class Variant(TypedBlock[Literal['chiseled', 'cobbled']]):
-        type_name = 'deepslate'
+    class Variant(VariantBlock[Literal['chiseled', 'cobbled']]):
+        id = 'deepslate'
+
+
+class Diamond:
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'diamond_ore'
 
 
 @dataclass
-class Dirt(OptionalTypedBlock[Literal['coarse']]):
-    type_name = 'dirt'
+class Dirt(OptionalVariantBlock[Literal['coarse']]):
+    id = 'dirt'
 
 
 @dataclass
-class Door(TypedBlock[WoodType]):
-    type_name = 'door'
+class Door(VariantBlock[WoodType]):
+    id = 'door'
 
     facing: HorizontalDirection | None = None
     half: Literal['lower', 'upper'] | None = None
@@ -510,12 +545,12 @@ class Dripleaf:
 
 
 @dataclass
-class Fence(Waterloggable, ConnectedBlock, TypedBlock[WoodType]):
-    type_name = 'fence'
+class Fence(Waterloggable, ConnectedBlock, VariantBlock[WoodType]):
+    id = 'fence'
 
     @dataclass
-    class Gate(TypedBlock[WoodType]):
-        type_name = 'fence_gate'
+    class Gate(VariantBlock[WoodType]):
+        id = 'fence_gate'
 
         facing: HorizontalDirection | None = None
         in_wall: bool | None = None
@@ -525,7 +560,7 @@ class Fence(Waterloggable, ConnectedBlock, TypedBlock[WoodType]):
 
 @dataclass
 class Flower(
-    TypedBlock[
+    VariantBlock[
         Literal['allium', 'azure_bluet', 'blue_orchid', 'cornflower', 'dandelion']
     ]
 ):
@@ -533,8 +568,8 @@ class Flower(
 
 
 @dataclass
-class Fungus(TypedBlock[FungusType]):
-    type_name = 'fungus'
+class Fungus(VariantBlock[FungusType]):
+    id = 'fungus'
 
 
 @dataclass
@@ -546,52 +581,52 @@ class Glass(MinecraftBlock):
         id = 'glass_pane'
 
         @dataclass
-        class Stained(Waterloggable, ConnectedBlock, TypedBlock[Color]):
-            type_name = 'stained_glass_pane'
+        class Stained(Waterloggable, ConnectedBlock, VariantBlock[Color]):
+            id = 'stained_glass_pane'
 
     @dataclass
-    class Stained(TypedBlock[Color]):
-        type_name = 'stained_glass'
+    class Stained(VariantBlock[Color]):
+        id = 'stained_glass'
 
 
 @dataclass
-class Head(TypedBlock[HeadType]):
-    type_name = 'head'
+class Head(VariantBlock[HeadType]):
+    id = 'head'
 
     powered: bool | None = None
     rotation: Nibble | None = None
 
     @dataclass
-    class Wall(TypedBlock[HeadType]):
-        type_name = 'wall_head'
+    class Wall(VariantBlock[HeadType]):
+        id = 'wall_head'
 
         powered: bool | None = None
         facing: HorizontalDirection | None = None
 
 
 @dataclass
-class Hyphae(TypedBlock[FungusType]):
-    type_name = 'hyphae'
+class Hyphae(VariantBlock[FungusType]):
+    id = 'hyphae'
 
     axis: Axis | None = None
 
 
 @dataclass
-class Ice(OptionalTypedBlock[Literal['blue']]):
-    type_name = 'ice'
+class Ice(OptionalVariantBlock[Literal['blue']]):
+    id = 'ice'
 
 
 @dataclass
-class Leaves(Waterloggable, TypedBlock[Tree | Literal['azalea']]):
-    type_name = 'leaves'
+class Leaves(Waterloggable, VariantBlock[Tree | Literal['azalea']]):
+    id = 'leaves'
 
     distance: Literal[1, 2, 3, 4, 5, 6, 7] | None = None
     persistent: bool | None = None
 
 
 @dataclass
-class Log(TypedBlock[Tree]):
-    type_name = 'log'
+class Log(VariantBlock[Tree]):
+    id = 'log'
 
     axis: Axis | None = None
 
@@ -602,47 +637,47 @@ class Melon(MinecraftBlock):
 
 
 @dataclass
-class Mushroom(TypedBlock[MushroomType]):
-    type_name = 'mushroom'
+class Mushroom(VariantBlock[MushroomType]):
+    id = 'mushroom'
 
     @dataclass
-    class Block(ConnectedBlock, TypedBlock[MushroomType]):
-        type_name = 'mushroom_block'
+    class Block(ConnectedBlock, VariantBlock[MushroomType]):
+        id = 'mushroom_block'
 
         down: bool | None = None
         up: bool | None = None
 
 
 @dataclass
-class NetherBricks(OptionalTypedBlock[Literal['chiseled', 'cracked']]):
-    type_name = 'nether_bricks'
+class NetherBricks(OptionalVariantBlock[Literal['chiseled', 'cracked']]):
+    id = 'nether_bricks'
 
 
 @dataclass
-class Nylium(TypedBlock[FungusType]):
-    type_name = 'nylium'
+class Nylium(VariantBlock[FungusType]):
+    id = 'nylium'
 
 
 @dataclass
-class Obsidian(OptionalTypedBlock[Literal['crying']]):
-    type_name = 'obsidian'
+class Obsidian(OptionalVariantBlock[Literal['crying']]):
+    id = 'obsidian'
 
 
 @dataclass
-class Planks(TypedBlock[WoodType]):
-    type_name = 'planks'
+class Planks(VariantBlock[WoodType]):
+    id = 'planks'
 
 
 @dataclass
-class PressurePlate(TypedBlock[WoodType]):
-    type_name = 'pressure_plate'
+class PressurePlate(VariantBlock[WoodType]):
+    id = 'pressure_plate'
 
     powered: bool | None = None
 
 
 @dataclass
-class Prismarine(OptionalTypedBlock[Literal['dark']]):
-    type_name = 'prismarine'
+class Prismarine(OptionalVariantBlock[Literal['dark']]):
+    id = 'prismarine'
 
 
 @dataclass
@@ -657,8 +692,8 @@ class Pumpkin(MinecraftBlock):
 
 
 @dataclass
-class QuartzBlock(OptionalTypedBlock[Literal['chiseled']]):
-    type_name = 'quartz_block'
+class QuartzBlock(OptionalVariantBlock[Literal['chiseled']]):
+    id = 'quartz_block'
 
 
 @dataclass
@@ -690,28 +725,28 @@ class Redstone:
 
 
 @dataclass
-class Roots(TypedBlock[FungusType]):
-    type_name = 'roots'
+class Roots(VariantBlock[FungusType]):
+    id = 'roots'
 
 
 @dataclass
-class Sandstone(OptionalTypedBlock[SandType]):
-    type_name = 'sandstone'
+class Sandstone(OptionalVariantBlock[SandType]):
+    id = 'sandstone'
 
     @dataclass
-    class Chiseled(OptionalTypedBlock[SandType]):
-        type_name = 'sandstone'
+    class Chiseled(OptionalVariantBlock[SandType]):
+        id = 'sandstone'
         prefix = 'chiseled'
 
     @dataclass
-    class Cut(OptionalTypedBlock[SandType]):
-        type_name = 'sandstone'
+    class Cut(OptionalVariantBlock[SandType]):
+        id = 'sandstone'
         prefix = 'cut'
 
 
 @dataclass
-class Sapling(TypedBlock[StandardTree]):
-    type_name = 'sapling'
+class Sapling(VariantBlock[StandardTree]):
+    id = 'sapling'
 
     stage: Literal[0, 1] | None = None
 
@@ -738,48 +773,48 @@ class Sculk(MinecraftBlock):
 
 
 @dataclass
-class ShulkerBox(OptionalTypedBlock[Color]):
-    type_name = 'shulker_box'
+class ShulkerBox(OptionalVariantBlock[Color]):
+    id = 'shulker_box'
 
     facing: Direction | None = None
 
 
 @dataclass
-class Sign(Waterloggable, TypedBlock[WoodType]):
-    type_name = 'sign'
+class Sign(Waterloggable, VariantBlock[WoodType]):
+    id = 'sign'
 
     rotation: Nibble | None = None
 
     @dataclass
-    class Hanging(Waterloggable, TypedBlock[WoodType]):
-        type_name = 'hanging_sign'
+    class Hanging(Waterloggable, VariantBlock[WoodType]):
+        id = 'hanging_sign'
 
         attached: bool | None = None
         rotation: Nibble | None = None
 
         @dataclass
-        class Wall(Waterloggable, TypedBlock[WoodType]):
-            type_name = 'wall_hanging_sign'
+        class Wall(Waterloggable, VariantBlock[WoodType]):
+            id = 'wall_hanging_sign'
 
             facing: HorizontalDirection | None = None
 
     @dataclass
-    class Wall(Waterloggable, TypedBlock[WoodType]):
-        type_name = 'wall_sign'
+    class Wall(Waterloggable, VariantBlock[WoodType]):
+        id = 'wall_sign'
 
         facing: HorizontalDirection | None = None
 
 
 @dataclass
-class Slab(Waterloggable, TypedBlock[SlabBlock]):
-    type_name = 'slab'
+class Slab(Waterloggable, VariantBlock[SlabBlock]):
+    id = 'slab'
 
     type: Half | Literal['double'] | None = None
 
 
 @dataclass
-class Stairs(Waterloggable, TypedBlock[SlabStairsBlock]):
-    type_name = 'stairs'
+class Stairs(Waterloggable, VariantBlock[SlabStairsBlock]):
+    id = 'stairs'
 
     facing: HorizontalDirection | None = None
     half: Half | None = None
@@ -791,21 +826,21 @@ class Stairs(Waterloggable, TypedBlock[SlabStairsBlock]):
 
 class Stem:
     @dataclass
-    class Crop(TypedBlock[StemBlock]):
-        type_name = 'stem'
+    class Crop(VariantBlock[StemBlock]):
+        id = 'stem'
 
         age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
         @dataclass
-        class Attached(TypedBlock[StemBlock]):
-            type_name = 'stem'
+        class Attached(VariantBlock[StemBlock]):
+            id = 'stem'
             prefix = 'attached'
 
             facing: HorizontalDirection | None = None
 
     @dataclass
-    class Fungus(TypedBlock[FungusType]):
-        type_name = 'stem'
+    class Fungus(VariantBlock[FungusType]):
+        id = 'stem'
 
         axis: Axis | None = None
 
@@ -815,24 +850,24 @@ class Stone(MinecraftBlock):
     id = 'stone'
 
     @dataclass
-    class Bricks(OptionalTypedBlock[Literal['chiseled', 'cracked']]):
-        type_name = 'stone_bricks'
+    class Bricks(OptionalVariantBlock[Literal['chiseled', 'cracked']]):
+        id = 'stone_bricks'
 
 
 @dataclass
-class Terracotta(OptionalTypedBlock[Color]):
-    type_name = 'terracotta'
+class Terracotta(OptionalVariantBlock[Color]):
+    id = 'terracotta'
 
     @dataclass
-    class Glazed(TypedBlock[Color]):
-        type_name = 'glazed_terracotta'
+    class Glazed(VariantBlock[Color]):
+        id = 'glazed_terracotta'
 
         facing: HorizontalDirection | None = None
 
 
 @dataclass
-class Trapdoor(Waterloggable, TypedBlock[WoodType]):
-    type_name = 'trapdoor'
+class Trapdoor(Waterloggable, VariantBlock[WoodType]):
+    id = 'trapdoor'
 
     facing: HorizontalDirection | None = None
     half: Half | None = None
@@ -861,8 +896,8 @@ class Vines(ConnectedBlock, MinecraftBlock):
 
 
 @dataclass
-class Wall(Waterloggable, TypedBlock[StoneType]):
-    type_name = 'wall'
+class Wall(Waterloggable, VariantBlock[StoneType]):
+    id = 'wall'
 
     east: WallHeight | None = None
     north: WallHeight | None = None
@@ -872,12 +907,12 @@ class Wall(Waterloggable, TypedBlock[StoneType]):
 
 
 @dataclass
-class Wood(TypedBlock[Tree]):
-    type_name = 'wood'
+class Wood(VariantBlock[Tree]):
+    id = 'wood'
 
     axis: Axis | None = None
 
 
 @dataclass
-class Wool(TypedBlock[Color]):
-    type_name = 'wool'
+class Wool(VariantBlock[Color]):
+    id = 'wool'
