@@ -1,6 +1,6 @@
 from pytest import raises
 
-from src.block_classes import AIR, ANDESITE, GLASS, Door, Planks, Rail, ShulkerBox, Stem
+from src.block_classes import Air, Andesite, Door, Glass, Planks, Rail, ShulkerBox, Stem
 from src.command import Kill, SetBlock, Teleport
 from src.context import Context
 from src.entity import Entity
@@ -93,12 +93,15 @@ def test_context_combine_error(context: Context):
 
 
 def test_set_block(context: Context, position: Position):
-    assert SetBlock(position, AIR).to_string(context) == 'setblock ~ ~ ~ minecraft:air'
+    assert (
+        SetBlock(position, Air('cave')).to_string(context)
+        == 'setblock ~ ~ ~ minecraft:cave_air'
+    )
 
 
 def test_set_block_below(context: Context, below_entity: RelativePosition):
     assert (
-        SetBlock(below_entity, ANDESITE).to_string(context)
+        SetBlock(below_entity, Andesite()).to_string(context)
         == 'execute positioned as @s run setblock ~ ~-1 ~ minecraft:andesite'
     )
 
@@ -156,13 +159,13 @@ def test_black_shulker_box(context: Context, position: Position):
 
 def test_glass_pane(context: Context, position: Position):
     assert (
-        SetBlock(position, GLASS.Pane(south=False)).to_string(context)
+        SetBlock(position, Glass.Pane(south=False)).to_string(context)
         == 'setblock ~ ~ ~ minecraft:glass_pane[south=false]'
     )
 
 
 def test_stained_glass_pane(context: Context, position: Position):
     assert (
-        SetBlock(position, GLASS.Pane.Stained('black', west=True)).to_string(context)
+        SetBlock(position, Glass.Pane.Stained('black', west=True)).to_string(context)
         == 'setblock ~ ~ ~ minecraft:black_stained_glass_pane[west=true]'
     )
