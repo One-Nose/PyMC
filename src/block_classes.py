@@ -12,7 +12,7 @@ from .minecraft_block import (
 )
 
 type Color = Literal['black', 'blue', 'brown', 'cyan']
-type CoralType = Literal['brain', 'bubble']
+type CoralType = Literal['brain', 'dead_brain', 'bubble', 'dead_bubble']
 type FungusType = Literal['crimson', 'warped']
 type HeadType = Literal['creeper']
 type MushroomType = Literal['brown']
