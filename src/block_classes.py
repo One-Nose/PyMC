@@ -12,19 +12,23 @@ from .minecraft_block import (
     Waterloggable,
 )
 
-type Color = Literal['black', 'blue', 'brown']
+type Color = Literal['black', 'blue', 'brown', 'cyan']
 type CoralType = Literal['brain', 'bubble']
-type Fungus = Literal['crimson', 'warped']
+type FungusType = Literal['crimson', 'warped']
+type HeadType = Literal['creeper']
 type MushroomType = Literal['brown']
 type SandType = Literal['red']
 type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
-type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic']
+type SlabBlock = SlabStairsBlock | Literal['cut_red_sandstone', 'cut_sandstone']
+type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic', 'cut_copper']
 type StemBlock = Literal['melon']
-type StoneType = Literal['andesite', 'blackstone', 'brick']
+type StoneType = Literal[
+    'andesite', 'blackstone', 'brick', 'cobbled_deepslate', 'cobblestone'
+]
 type Tree = StandardTree | Literal['mangrove']
-type WoodType = Tree | Fungus | Literal['bamboo']
+type WoodType = Tree | FungusType | Literal['bamboo']
 
 
 type Axis = Literal['x', 'y', 'z']
@@ -186,6 +190,7 @@ class _PolisedBlackstone(MinecraftBlock):
     id = 'polished_blackstone'
 
     CHISELED = SimpleBlock('chiseled_polished_blackstone')
+    CRACKED = SimpleBlock('cracked_polished_blackstone_bricks')
 
 
 @dataclass
@@ -358,6 +363,30 @@ class CommandBlock(OptionalTypedBlock[Literal['chain']]):
     facing: Direction | None = None
 
 
+class Coal:
+    BLOCK = SimpleBlock('coal_block')
+    ORE = SimpleBlock('coal_ore')
+
+
+COBBLESTONE = SimpleBlock('cobblestone')
+COBWEB = SimpleBlock('cobweb')
+
+
+@dataclass
+class Cocoa(MinecraftBlock):
+    id = 'cocoa'
+
+    age: Literal[0, 1, 2] | None = None
+    facing: HorizontalDirection | None = None
+
+
+@dataclass
+class Composter(MinecraftBlock):
+    id = 'composter'
+
+    level: Literal[0, 1, 2, 3, 4, 5, 6, 7, 8] | None = None
+
+
 @dataclass
 class Concrete(TypedBlock[Color]):
     type_name = 'concrete'
@@ -365,6 +394,17 @@ class Concrete(TypedBlock[Color]):
     @dataclass
     class Powder(TypedBlock[Color]):
         type_name = 'concrete_powder'
+
+
+@dataclass
+class Conduit(Waterloggable, MinecraftBlock):
+    id = 'conduit'
+
+
+class Copper:
+    BLOCK = SimpleBlock('copper_block')
+    CUT = SimpleBlock('cut_copper')
+    ORE = SimpleBlock('copper_ore')
 
 
 @dataclass
@@ -386,13 +426,43 @@ class Coral(Waterloggable, TypedBlock[CoralType]):
             facing: HorizontalDirection | None = None
 
 
+CRAFTING_TABLE = SimpleBlock('crafting_table')
+
+
+@dataclass
+class _DeepslateBricks(MinecraftBlock):
+    id = 'deepslate_bricks'
+
+    CRACKED = SimpleBlock('cracked_deepslate_bricks')
+
+
+@dataclass
+class _DeepslateTiles(MinecraftBlock):
+    id = 'deepslate_tiles'
+
+    CRACKED = SimpleBlock('cracked_deepslate_tiles')
+
+
 @dataclass
 class Deepslate(MinecraftBlock):
     id = 'deepslate'
 
     axis: Axis | None = None
 
+    BRICKS = _DeepslateBricks()
     CHISELED = SimpleBlock('chiseled_deepslate')
+    COBBLED = SimpleBlock('cobbled_deepslate')
+    TILES = _DeepslateTiles()
+
+
+@dataclass
+class _Dirt(MinecraftBlock):
+    id = 'dirt'
+
+    COARSE = SimpleBlock('coarse_dirt')
+
+
+DIRT = _Dirt()
 
 
 @dataclass
@@ -439,6 +509,12 @@ class Flower:
     ALLIUM = SimpleBlock('allium')
     AZURE_BLUET = SimpleBlock('azure_bluet')
     BLUE_ORCHID = SimpleBlock('blue_orchid')
+    CORNFLOWER = SimpleBlock('cornflower')
+
+
+@dataclass
+class Fungus(TypedBlock[FungusType]):
+    type_name = 'fungus'
 
 
 @dataclass
@@ -462,7 +538,22 @@ GLASS = _Glass()
 
 
 @dataclass
-class Hyphae(TypedBlock[Fungus]):
+class Head(TypedBlock[HeadType]):
+    type_name = 'head'
+
+    powered: bool | None = None
+    rotation: Nibble | None = None
+
+    @dataclass
+    class Wall(TypedBlock[HeadType]):
+        type_name = 'wall_head'
+
+        powered: bool | None = None
+        facing: HorizontalDirection | None = None
+
+
+@dataclass
+class Hyphae(TypedBlock[FungusType]):
     type_name = 'hyphae'
 
     axis: Axis | None = None
@@ -513,9 +604,25 @@ class _NetherBricks(MinecraftBlock):
     id = 'nether_bricks'
 
     CHISELED = SimpleBlock('chiseled_nether_bricks')
+    CRACKED = SimpleBlock('cracked_nether_bricks')
 
 
 NETHER_BRICKS = _NetherBricks()
+
+
+@dataclass
+class Nylium(TypedBlock[FungusType]):
+    type_name = 'nylium'
+
+
+@dataclass
+class _Obsidian(MinecraftBlock):
+    id = 'obsidian'
+
+    CRYING = SimpleBlock('crying_obsidian')
+
+
+OBSIDIAN = _Obsidian()
 
 
 @dataclass
@@ -572,13 +679,34 @@ class Rail(Waterloggable, MinecraftBlock):
         shape: StraightRailShape | None = None
 
 
+class Redstone:
+    @dataclass
+    class Comparator(MinecraftBlock):
+        id = 'comparator'
+
+        facing: HorizontalDirection | None = None
+        mode: Literal['compare', 'subtract'] | None = None
+        powered: bool | None = None
+
+
+@dataclass
+class Roots(TypedBlock[FungusType]):
+    type_name = 'roots'
+
+
 @dataclass
 class Sandstone(OptionalTypedBlock[SandType]):
     type_name = 'sandstone'
 
+    @dataclass
     class Chiseled(OptionalTypedBlock[SandType]):
         type_name = 'sandstone'
         prefix = 'chiseled'
+
+    @dataclass
+    class Cut(OptionalTypedBlock[SandType]):
+        type_name = 'sandstone'
+        prefix = 'cut'
 
 
 @dataclass
@@ -646,7 +774,7 @@ class Sign(Waterloggable, TypedBlock[WoodType]):
 
 
 @dataclass
-class Slab(Waterloggable, TypedBlock[SlabStairsBlock]):
+class Slab(Waterloggable, TypedBlock[SlabBlock]):
     type_name = 'slab'
 
     type: Half | Literal['double'] | None = None
@@ -679,7 +807,7 @@ class Stem:
             facing: HorizontalDirection | None = None
 
     @dataclass
-    class Fungus(TypedBlock[Fungus]):
+    class Fungus(TypedBlock[FungusType]):
         type_name = 'stem'
 
         axis: Axis | None = None
@@ -690,13 +818,14 @@ class _StoneBricks(MinecraftBlock):
     id = 'stone_bricks'
 
     CHISELED = SimpleBlock('chiseled_stone_bricks')
+    CRACKED = SimpleBlock('cracked_stone_bricks')
 
 
 @dataclass
 class _Stone(MinecraftBlock):
     id = 'stone'
 
-    STONE_BRICKS = _StoneBricks()
+    BRICKS = _StoneBricks()
 
 
 STONE = _Stone()
