@@ -12,6 +12,7 @@ from .minecraft_block import (
 )
 
 type Color = Literal['black', 'blue', 'brown', 'cyan']
+type CopperType = Literal['exposed']
 type CoralType = Literal[
     'brain',
     'dead_brain',
@@ -25,7 +26,7 @@ type CoralType = Literal[
     'dead_tube',
 ]
 type FungusType = Literal['crimson', 'warped']
-type HeadType = Literal['creeper']
+type HeadType = Literal['creeper', 'dragon']
 type MushroomType = Literal['brown']
 type SandType = Literal['red']
 type StandardTree = Literal[
@@ -33,7 +34,7 @@ type StandardTree = Literal[
 ]
 type SlabBlock = SlabStairsBlock | Literal['cut_red_sandstone', 'cut_sandstone']
 type SlabStairsBlock = WoodType | StoneType | Literal[
-    'bamboo_mosaic', 'cut_copper', 'dark_prismarine'
+    'bamboo_mosaic', 'cut_copper', 'dark_prismarine', 'exposed_cut_copper'
 ]
 type StemBlock = Literal['melon']
 type StoneType = Literal[
@@ -44,6 +45,8 @@ type StoneType = Literal[
     'cobblestone',
     'deepslate_brick',
     'deepslate_tile',
+    'diorite',
+    'end_stone_brick',
 ]
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | FungusType | Literal['bamboo']
@@ -352,6 +355,12 @@ class Chest(Waterloggable, MinecraftBlock):
     facing: HorizontalDirection | None = None
     type: Literal['left', 'right', 'single'] | None = None
 
+    @dataclass
+    class Ender(Waterloggable, MinecraftBlock):
+        id = 'ender_chest'
+
+        facing: HorizontalDirection | None = None
+
 
 class Chorus:
     @dataclass
@@ -371,14 +380,6 @@ class Chorus:
 @dataclass
 class Clay(MinecraftBlock):
     id = 'clay'
-
-
-@dataclass
-class CommandBlock(OptionalVariantBlock[Literal['chain']]):
-    id = 'command_block'
-
-    conditional: bool | None = None
-    facing: Direction | None = None
 
 
 class Coal:
@@ -410,6 +411,14 @@ class Cocoa(MinecraftBlock):
 
 
 @dataclass
+class CommandBlock(OptionalVariantBlock[Literal['chain']]):
+    id = 'command_block'
+
+    conditional: bool | None = None
+    facing: Direction | None = None
+
+
+@dataclass
 class Composter(MinecraftBlock):
     id = 'composter'
 
@@ -430,13 +439,16 @@ class Conduit(Waterloggable, MinecraftBlock):
     id = 'conduit'
 
 
-class Copper:
+@dataclass
+class Copper(VariantBlock[CopperType]):
+    id = 'copper'
+
     @dataclass
     class Block(MinecraftBlock):
         id = 'copper_block'
 
     @dataclass
-    class Cut(MinecraftBlock):
+    class Cut(OptionalVariantBlock[CopperType]):
         id = 'cut_copper'
 
     @dataclass
@@ -510,13 +522,34 @@ class Deepslate(MinecraftBlock):
 
 class Diamond:
     @dataclass
+    class Block(MinecraftBlock):
+        id = 'diamond_block'
+
+    @dataclass
     class Ore(OptionalVariantBlock[Literal['deepslate']]):
         id = 'diamond_ore'
 
 
 @dataclass
+class Diorite(MinecraftBlock):
+    id = 'diorite'
+
+
+@dataclass
 class Dirt(OptionalVariantBlock[Literal['coarse']]):
     id = 'dirt'
+
+    @dataclass
+    class Path(MinecraftBlock):
+        id = 'dirt_path'
+
+
+@dataclass
+class Dispenser(MinecraftBlock):
+    id = 'dispenser'
+
+    facing: Direction | None = None
+    triggered: bool | None = None
 
 
 @dataclass
@@ -528,6 +561,16 @@ class Door(VariantBlock[WoodType]):
     hinge: Literal['left', 'right'] | None = None
     open: bool | None = None
     powered: bool | None = None
+
+
+@dataclass
+class DragonEgg(MinecraftBlock):
+    id = 'dragon_egg'
+
+
+@dataclass
+class DriedKelpBlock(MinecraftBlock):
+    id = 'dried_kelp_block'
 
 
 class Dripleaf:
@@ -545,10 +588,64 @@ class Dripleaf:
             facing: HorizontalDirection | None = None
 
 
+class Dripstone:
+    @dataclass
+    class Block(MinecraftBlock):
+        id = 'dripstone_block'
+
+
+@dataclass
+class Dropper(MinecraftBlock):
+    id = 'dropper'
+
+    facing: Direction | None = None
+    triggered: bool | None = None
+
+
 class Emerald:
+    @dataclass
+    class Block(MinecraftBlock):
+        id = 'emerald_block'
+
     @dataclass
     class Ore(OptionalVariantBlock[Literal['deepslate']]):
         id = 'emerald_ore'
+
+
+@dataclass
+class EnchantingTable(MinecraftBlock):
+    id = 'enchanting_table'
+
+
+class End:
+    @dataclass
+    class Gateway(MinecraftBlock):
+        id = 'end_gateway'
+
+    @dataclass
+    class Portal(MinecraftBlock):
+        id = 'end_portal'
+
+        @dataclass
+        class Frame(MinecraftBlock):
+            id = 'end_portal_frame'
+
+            eye: bool | None = None
+            facing: HorizontalDirection | None = None
+
+    @dataclass
+    class Rod(MinecraftBlock):
+        id = 'end_rod'
+
+        facing: Direction | None = None
+
+    @dataclass
+    class Stone(MinecraftBlock):
+        id = 'end_stone'
+
+        @dataclass
+        class Bricks(MinecraftBlock):
+            id = 'end_stone_bricks'
 
 
 @dataclass
@@ -732,8 +829,8 @@ class Rail(Waterloggable, MinecraftBlock):
     ) = None
 
     @dataclass
-    class Activator(Waterloggable, MinecraftBlock):
-        id = 'activator_rail'
+    class Special(Waterloggable, VariantBlock[Literal['activator', 'detector']]):
+        id = 'rail'
 
         powered: bool | None = None
         shape: StraightRailShape | None = None

@@ -124,7 +124,9 @@ def test_block_state(context: Context, position: Position):
 
 def test_ascending_rail(context: Context, position: Position):
     assert (
-        SetBlock(position, Rail.Activator(shape='ascending_south')).to_string(context)
+        SetBlock(
+            position, Rail.Special('activator', shape='ascending_south')
+        ).to_string(context)
         == 'setblock ~ ~ ~ minecraft:activator_rail[shape=ascending_south]'
     )
 
