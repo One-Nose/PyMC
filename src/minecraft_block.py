@@ -21,15 +21,25 @@ class SimpleBlock(MinecraftBlock):
 
 @dataclass
 class TypedBlock[T: str | None](MinecraftBlock):
-    type_name: str = field(init=False, metadata={'is_state': False})
+    type_name: str | None = field(
+        init=False, default=None, metadata={'is_state': False}
+    )
     prefix: str | None = field(init=False, default=None, metadata={'is_state': False})
     block_type: InitVar[T] = field(metadata={'is_state': False})
 
     def __post_init__(self, block_type: T) -> None:
-        self.id = ('' if block_type is None else block_type + '_') + self.type_name
+        parts: list[str] = []
 
         if self.prefix is not None:
-            self.id = self.prefix + '_' + self.id
+            parts.append(self.prefix)
+
+        if block_type is not None:
+            parts.append(block_type)
+
+        if self.type_name is not None:
+            parts.append(self.type_name)
+
+        self.id = '_'.join(parts)
 
         super().__post_init__()
 

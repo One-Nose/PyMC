@@ -22,7 +22,9 @@ type StandardTree = Literal[
     'oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'cherry'
 ]
 type SlabBlock = SlabStairsBlock | Literal['cut_red_sandstone', 'cut_sandstone']
-type SlabStairsBlock = WoodType | StoneType | Literal['bamboo_mosaic', 'cut_copper']
+type SlabStairsBlock = WoodType | StoneType | Literal[
+    'bamboo_mosaic', 'cut_copper', 'dark_prismarine'
+]
 type StemBlock = Literal['melon']
 type StoneType = Literal[
     'andesite', 'blackstone', 'brick', 'cobbled_deepslate', 'cobblestone'
@@ -73,16 +75,10 @@ ANDESITE = SimpleBlock('andesite')
 
 
 @dataclass
-class Anvil(MinecraftBlock):
+class Anvil(OptionalTypedBlock[Literal['chipped', 'damaged']]):
     id = 'anvil'
 
     facing: HorizontalDirection | None = None
-
-    @dataclass
-    class Chipped(MinecraftBlock):
-        id = 'chipped_anvil'
-
-        facing: HorizontalDirection | None = None
 
 
 AZALEA = SimpleBlock('azalea')
@@ -430,6 +426,14 @@ CRAFTING_TABLE = SimpleBlock('crafting_table')
 
 
 @dataclass
+class DaylightDetector(MinecraftBlock):
+    id = 'daylight_detector'
+
+    inverted: bool | None = None
+    power: Nibble | None = None
+
+
+@dataclass
 class _DeepslateBricks(MinecraftBlock):
     id = 'deepslate_bricks'
 
@@ -505,11 +509,13 @@ class Fence(Waterloggable, ConnectedBlock, TypedBlock[WoodType]):
         powered: bool | None = None
 
 
-class Flower:
-    ALLIUM = SimpleBlock('allium')
-    AZURE_BLUET = SimpleBlock('azure_bluet')
-    BLUE_ORCHID = SimpleBlock('blue_orchid')
-    CORNFLOWER = SimpleBlock('cornflower')
+@dataclass
+class Flower(
+    TypedBlock[
+        Literal['allium', 'azure_bluet', 'blue_orchid', 'cornflower', 'dandelion']
+    ]
+):
+    pass
 
 
 @dataclass
@@ -635,6 +641,11 @@ class PressurePlate(TypedBlock[WoodType]):
     type_name = 'pressure_plate'
 
     powered: bool | None = None
+
+
+@dataclass
+class Prismarine(OptionalTypedBlock[Literal['dark']]):
+    type_name = 'prismarine'
 
 
 @dataclass
