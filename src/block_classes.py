@@ -54,9 +54,11 @@ class Air(OptionalTypedBlock[Literal['cave']]):
 
 
 class Amethyst:
+    @dataclass
     class Block(MinecraftBlock):
         id = 'amethyst_block'
 
+    @dataclass
     class Budding(MinecraftBlock):
         id = 'budding_amethyst'
 
@@ -67,10 +69,12 @@ class Amethyst:
         facing: Direction | None = None
 
 
+@dataclass
 class AncientDebris(MinecraftBlock):
     id = 'ancient_debris'
 
 
+@dataclass
 class Andesite(MinecraftBlock):
     id = 'andesite'
 
@@ -82,6 +86,7 @@ class Anvil(OptionalTypedBlock[Literal['chipped', 'damaged']]):
     facing: HorizontalDirection | None = None
 
 
+@dataclass
 class Azalea(MinecraftBlock):
     id = 'azalea'
 
@@ -94,9 +99,11 @@ class Bamboo(MinecraftBlock):
     leaves: Literal['large', 'none', 'small'] | None = None
     stage: Literal[0, 1] | None = None
 
+    @dataclass
     class Mosaic(MinecraftBlock):
         id = 'bamboo_mosaic'
 
+    @dataclass
     class Shoot(MinecraftBlock):
         id = 'bamboo_sapling'
 
@@ -140,6 +147,7 @@ class Basalt(MinecraftBlock):
     axis: Axis | None = None
 
 
+@dataclass
 class Beacon(MinecraftBlock):
     id = 'beacon'
 
@@ -153,6 +161,7 @@ class Bed(TypedBlock[Color]):
     part: Literal['foot', 'head'] | None = None
 
 
+@dataclass
 class Bedrock(MinecraftBlock):
     id = 'bedrock'
 
@@ -227,6 +236,7 @@ class BrewingStand(MinecraftBlock):
     has_bottle_2: bool | None = None
 
 
+@dataclass
 class Bricks(MinecraftBlock):
     id = 'bricks'
 
@@ -267,6 +277,7 @@ class Cake(MinecraftBlock):
         lit: bool | None = None
 
 
+@dataclass
 class Calcite(MinecraftBlock):
     id = 'calcite'
 
@@ -300,10 +311,12 @@ class Carrots(MinecraftBlock):
     age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
 
+@dataclass
 class CartographyTable(MinecraftBlock):
     id = 'cartography_table'
 
 
+@dataclass
 class Cauldron(MinecraftBlock):
     id = 'cauldron'
 
@@ -338,6 +351,7 @@ class Chorus:
         up: bool | None = None
 
 
+@dataclass
 class Clay(MinecraftBlock):
     id = 'clay'
 
@@ -351,17 +365,21 @@ class CommandBlock(OptionalTypedBlock[Literal['chain']]):
 
 
 class Coal:
+    @dataclass
     class Block(MinecraftBlock):
         id = 'coal_block'
 
+    @dataclass
     class Ore(MinecraftBlock):
         id = 'coal_ore'
 
 
+@dataclass
 class Cobblestone(MinecraftBlock):
     id = 'cobblestone'
 
 
+@dataclass
 class Cobweb(MinecraftBlock):
     id = 'cobweb'
 
@@ -396,12 +414,15 @@ class Conduit(Waterloggable, MinecraftBlock):
 
 
 class Copper:
+    @dataclass
     class Block(MinecraftBlock):
         id = 'copper_block'
 
+    @dataclass
     class Cut(MinecraftBlock):
         id = 'cut_copper'
 
+    @dataclass
     class Ore(MinecraftBlock):
         id = 'copper_ore'
 
@@ -425,6 +446,7 @@ class Coral(Waterloggable, TypedBlock[CoralType]):
             facing: HorizontalDirection | None = None
 
 
+@dataclass
 class CraftingTable(MinecraftBlock):
     id = 'crafting_table'
 
@@ -574,6 +596,7 @@ class Log(TypedBlock[Tree]):
     axis: Axis | None = None
 
 
+@dataclass
 class Melon(MinecraftBlock):
     id = 'melon'
 
