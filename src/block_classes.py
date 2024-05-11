@@ -7,7 +7,6 @@ from .minecraft_block import (
     ConnectedBlock,
     MinecraftBlock,
     OptionalTypedBlock,
-    SimpleBlock,
     TypedBlock,
     Waterloggable,
 )
@@ -50,18 +49,16 @@ type WallHeight = Literal['low', 'none', 'high']
 
 
 @dataclass
-class _Air(MinecraftBlock):
-    id = 'air'
-
-    CAVE = SimpleBlock('cave_air')
-
-
-AIR = _Air()
+class Air(OptionalTypedBlock[Literal['cave']]):
+    type_name = 'air'
 
 
 class Amethyst:
-    BLOCK = SimpleBlock('amethyst_block')
-    BUDDING = SimpleBlock('budding_amethyst')
+    class Block(MinecraftBlock):
+        id = 'amethyst_block'
+
+    class Budding(MinecraftBlock):
+        id = 'budding_amethyst'
 
     @dataclass
     class Cluster(Waterloggable, MinecraftBlock):
@@ -70,8 +67,12 @@ class Amethyst:
         facing: Direction | None = None
 
 
-ANCIENT_DEBRIS = SimpleBlock('ancient_debris')
-ANDESITE = SimpleBlock('andesite')
+class AncientDebris(MinecraftBlock):
+    id = 'ancient_debris'
+
+
+class Andesite(MinecraftBlock):
+    id = 'andesite'
 
 
 @dataclass
@@ -81,7 +82,8 @@ class Anvil(OptionalTypedBlock[Literal['chipped', 'damaged']]):
     facing: HorizontalDirection | None = None
 
 
-AZALEA = SimpleBlock('azalea')
+class Azalea(MinecraftBlock):
+    id = 'azalea'
 
 
 @dataclass
@@ -92,8 +94,11 @@ class Bamboo(MinecraftBlock):
     leaves: Literal['large', 'none', 'small'] | None = None
     stage: Literal[0, 1] | None = None
 
-    MOSAIC = SimpleBlock('bamboo_mosaic')
-    SHOOT = SimpleBlock('bamboo_sapling')
+    class Mosaic(MinecraftBlock):
+        id = 'bamboo_mosaic'
+
+    class Shoot(MinecraftBlock):
+        id = 'bamboo_sapling'
 
     @dataclass
     class Block(MinecraftBlock):
@@ -135,7 +140,8 @@ class Basalt(MinecraftBlock):
     axis: Axis | None = None
 
 
-BEACON = SimpleBlock('beacon')
+class Beacon(MinecraftBlock):
+    id = 'beacon'
 
 
 @dataclass
@@ -147,23 +153,14 @@ class Bed(TypedBlock[Color]):
     part: Literal['foot', 'head'] | None = None
 
 
-BEDROCK = SimpleBlock('bedrock')
+class Bedrock(MinecraftBlock):
+    id = 'bedrock'
 
 
 @dataclass
-class _BeeHouse(MinecraftBlock):
+class BeeHouse(TypedBlock[Literal['bee_nest', 'beehive']]):
     facing: HorizontalDirection | None = None
     honey_level: Literal[0, 1, 2, 3, 4, 5] | None = None
-
-
-@dataclass
-class BeeNest(_BeeHouse):
-    id = 'bee_nest'
-
-
-@dataclass
-class Beehive(_BeeHouse):
-    id = 'beehive'
 
 
 @dataclass
@@ -182,21 +179,11 @@ class Bell(MinecraftBlock):
     powered: bool | None = None
 
 
-class _PolisedBlackstone(MinecraftBlock):
-    id = 'polished_blackstone'
-
-    CHISELED = SimpleBlock('chiseled_polished_blackstone')
-    CRACKED = SimpleBlock('cracked_polished_blackstone_bricks')
-
-
 @dataclass
-class _Blackstone(MinecraftBlock):
-    id = 'blackstone'
-
-    POLISHED = _PolisedBlackstone()
-
-
-BLACKSTONE = _Blackstone()
+class Blackstone(
+    TypedBlock[Literal['chiseled_polished', 'cracked_polished', 'polished']]
+):
+    type_name = 'blackstone'
 
 
 @dataclass
@@ -215,7 +202,7 @@ class BoneBlock(MinecraftBlock):
 
 
 @dataclass
-class _Bookshelf(MinecraftBlock):
+class Bookshelf(MinecraftBlock):
     id = 'bookshelf'
 
     @dataclass
@@ -231,9 +218,6 @@ class _Bookshelf(MinecraftBlock):
         slot_5_occupied: bool | None = None
 
 
-BOOKSHELF = _Bookshelf()
-
-
 @dataclass
 class BrewingStand(MinecraftBlock):
     id = 'brewing_stand'
@@ -243,7 +227,8 @@ class BrewingStand(MinecraftBlock):
     has_bottle_2: bool | None = None
 
 
-BRICKS = SimpleBlock('bricks')
+class Bricks(MinecraftBlock):
+    id = 'bricks'
 
 
 @dataclass
@@ -282,7 +267,8 @@ class Cake(MinecraftBlock):
         lit: bool | None = None
 
 
-CALCITE = SimpleBlock('calcite')
+class Calcite(MinecraftBlock):
+    id = 'calcite'
 
 
 @dataclass
@@ -314,8 +300,12 @@ class Carrots(MinecraftBlock):
     age: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None
 
 
-CARTOGRAPHY_TABLE = SimpleBlock('cartography_table')
-CAULDRON = SimpleBlock('cauldron')
+class CartographyTable(MinecraftBlock):
+    id = 'cartography_table'
+
+
+class Cauldron(MinecraftBlock):
+    id = 'cauldron'
 
 
 @dataclass
@@ -348,7 +338,8 @@ class Chorus:
         up: bool | None = None
 
 
-CLAY = SimpleBlock('clay')
+class Clay(MinecraftBlock):
+    id = 'clay'
 
 
 @dataclass
@@ -360,12 +351,19 @@ class CommandBlock(OptionalTypedBlock[Literal['chain']]):
 
 
 class Coal:
-    BLOCK = SimpleBlock('coal_block')
-    ORE = SimpleBlock('coal_ore')
+    class Block(MinecraftBlock):
+        id = 'coal_block'
+
+    class Ore(MinecraftBlock):
+        id = 'coal_ore'
 
 
-COBBLESTONE = SimpleBlock('cobblestone')
-COBWEB = SimpleBlock('cobweb')
+class Cobblestone(MinecraftBlock):
+    id = 'cobblestone'
+
+
+class Cobweb(MinecraftBlock):
+    id = 'cobweb'
 
 
 @dataclass
@@ -398,9 +396,14 @@ class Conduit(Waterloggable, MinecraftBlock):
 
 
 class Copper:
-    BLOCK = SimpleBlock('copper_block')
-    CUT = SimpleBlock('cut_copper')
-    ORE = SimpleBlock('copper_ore')
+    class Block(MinecraftBlock):
+        id = 'copper_block'
+
+    class Cut(MinecraftBlock):
+        id = 'cut_copper'
+
+    class Ore(MinecraftBlock):
+        id = 'copper_ore'
 
 
 @dataclass
@@ -422,7 +425,8 @@ class Coral(Waterloggable, TypedBlock[CoralType]):
             facing: HorizontalDirection | None = None
 
 
-CRAFTING_TABLE = SimpleBlock('crafting_table')
+class CraftingTable(MinecraftBlock):
+    id = 'crafting_table'
 
 
 @dataclass
@@ -434,39 +438,27 @@ class DaylightDetector(MinecraftBlock):
 
 
 @dataclass
-class _DeepslateBricks(MinecraftBlock):
-    id = 'deepslate_bricks'
-
-    CRACKED = SimpleBlock('cracked_deepslate_bricks')
-
-
-@dataclass
-class _DeepslateTiles(MinecraftBlock):
-    id = 'deepslate_tiles'
-
-    CRACKED = SimpleBlock('cracked_deepslate_tiles')
-
-
-@dataclass
 class Deepslate(MinecraftBlock):
     id = 'deepslate'
 
     axis: Axis | None = None
 
-    BRICKS = _DeepslateBricks()
-    CHISELED = SimpleBlock('chiseled_deepslate')
-    COBBLED = SimpleBlock('cobbled_deepslate')
-    TILES = _DeepslateTiles()
+    @dataclass
+    class Bricks(OptionalTypedBlock[Literal['cracked']]):
+        type_name = 'deepslate_bricks'
+
+    @dataclass
+    class Tiles(OptionalTypedBlock[Literal['cracked']]):
+        type_name = 'deepslate_tiles'
+
+    @dataclass
+    class Variant(TypedBlock[Literal['chiseled', 'cobbled']]):
+        type_name = 'deepslate'
 
 
 @dataclass
-class _Dirt(MinecraftBlock):
-    id = 'dirt'
-
-    COARSE = SimpleBlock('coarse_dirt')
-
-
-DIRT = _Dirt()
+class Dirt(OptionalTypedBlock[Literal['coarse']]):
+    type_name = 'dirt'
 
 
 @dataclass
@@ -524,7 +516,7 @@ class Fungus(TypedBlock[FungusType]):
 
 
 @dataclass
-class _Glass(MinecraftBlock):
+class Glass(MinecraftBlock):
     id = 'glass'
 
     @dataclass
@@ -538,9 +530,6 @@ class _Glass(MinecraftBlock):
     @dataclass
     class Stained(TypedBlock[Color]):
         type_name = 'stained_glass'
-
-
-GLASS = _Glass()
 
 
 @dataclass
@@ -566,13 +555,8 @@ class Hyphae(TypedBlock[FungusType]):
 
 
 @dataclass
-class _Ice(MinecraftBlock):
-    id = 'ice'
-
-    BLUE = SimpleBlock('blue_ice')
-
-
-ICE = _Ice()
+class Ice(OptionalTypedBlock[Literal['blue']]):
+    type_name = 'ice'
 
 
 @dataclass
@@ -590,7 +574,8 @@ class Log(TypedBlock[Tree]):
     axis: Axis | None = None
 
 
-MELON = SimpleBlock('melon')
+class Melon(MinecraftBlock):
+    id = 'melon'
 
 
 @dataclass
@@ -606,14 +591,8 @@ class Mushroom(TypedBlock[MushroomType]):
 
 
 @dataclass
-class _NetherBricks(MinecraftBlock):
-    id = 'nether_bricks'
-
-    CHISELED = SimpleBlock('chiseled_nether_bricks')
-    CRACKED = SimpleBlock('cracked_nether_bricks')
-
-
-NETHER_BRICKS = _NetherBricks()
+class NetherBricks(OptionalTypedBlock[Literal['chiseled', 'cracked']]):
+    type_name = 'nether_bricks'
 
 
 @dataclass
@@ -622,13 +601,8 @@ class Nylium(TypedBlock[FungusType]):
 
 
 @dataclass
-class _Obsidian(MinecraftBlock):
-    id = 'obsidian'
-
-    CRYING = SimpleBlock('crying_obsidian')
-
-
-OBSIDIAN = _Obsidian()
+class Obsidian(OptionalTypedBlock[Literal['crying']]):
+    type_name = 'obsidian'
 
 
 @dataclass
@@ -649,7 +623,7 @@ class Prismarine(OptionalTypedBlock[Literal['dark']]):
 
 
 @dataclass
-class _Pumpkin(MinecraftBlock):
+class Pumpkin(MinecraftBlock):
     id = 'pumpkin'
 
     @dataclass
@@ -659,17 +633,9 @@ class _Pumpkin(MinecraftBlock):
         facing: HorizontalDirection | None = None
 
 
-PUMPKIN = _Pumpkin()
-
-
 @dataclass
-class _QuartzBlock(MinecraftBlock):
-    id = 'quartz_block'
-
-    CHISELED = SimpleBlock('chiseled_quartz_block')
-
-
-QUARTZ_BLOCK = _QuartzBlock()
+class QuartzBlock(OptionalTypedBlock[Literal['chiseled']]):
+    type_name = 'quartz_block'
 
 
 @dataclass
@@ -734,7 +700,7 @@ class _SculkSensor(Waterloggable, MinecraftBlock):
 
 
 @dataclass
-class _Sculk(MinecraftBlock):
+class Sculk(MinecraftBlock):
     id = 'sculk'
 
     @dataclass
@@ -746,9 +712,6 @@ class _Sculk(MinecraftBlock):
             id = 'calibrated_sculk_sensor'
 
             facing: HorizontalDirection | None = None
-
-
-SKULK = _Sculk()
 
 
 @dataclass
@@ -825,21 +788,12 @@ class Stem:
 
 
 @dataclass
-class _StoneBricks(MinecraftBlock):
-    id = 'stone_bricks'
-
-    CHISELED = SimpleBlock('chiseled_stone_bricks')
-    CRACKED = SimpleBlock('cracked_stone_bricks')
-
-
-@dataclass
-class _Stone(MinecraftBlock):
+class Stone(MinecraftBlock):
     id = 'stone'
 
-    BRICKS = _StoneBricks()
-
-
-STONE = _Stone()
+    @dataclass
+    class Bricks(OptionalTypedBlock[Literal['chiseled', 'cracked']]):
+        type_name = 'stone_bricks'
 
 
 @dataclass

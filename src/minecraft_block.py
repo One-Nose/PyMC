@@ -15,11 +15,6 @@ class MinecraftBlock(Block):
 
 
 @dataclass
-class SimpleBlock(MinecraftBlock):
-    id: str = field(init=True, metadata={'is_state': False})
-
-
-@dataclass
 class TypedBlock[T: str | None](MinecraftBlock):
     type_name: str | None = field(
         init=False, default=None, metadata={'is_state': False}
