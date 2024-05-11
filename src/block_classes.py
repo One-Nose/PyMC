@@ -43,6 +43,7 @@ type StoneType = Literal[
     'cobbled_deepslate',
     'cobblestone',
     'deepslate_brick',
+    'deepslate_tile',
 ]
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | FungusType | Literal['bamboo']
@@ -544,6 +545,12 @@ class Dripleaf:
             facing: HorizontalDirection | None = None
 
 
+class Emerald:
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'emerald_ore'
+
+
 @dataclass
 class Fence(Waterloggable, ConnectedBlock, VariantBlock[WoodType]):
     id = 'fence'
@@ -589,6 +596,12 @@ class Glass(MinecraftBlock):
         id = 'stained_glass'
 
 
+class Gold:
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'gold_ore'
+
+
 @dataclass
 class Head(VariantBlock[HeadType]):
     id = 'head'
@@ -614,6 +627,18 @@ class Hyphae(VariantBlock[FungusType]):
 @dataclass
 class Ice(OptionalVariantBlock[Literal['blue']]):
     id = 'ice'
+
+
+class Iron:
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'iron_ore'
+
+
+class LapisLazuli:
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'lapis_ore'
 
 
 @dataclass
@@ -722,6 +747,12 @@ class Redstone:
         facing: HorizontalDirection | None = None
         mode: Literal['compare', 'subtract'] | None = None
         powered: bool | None = None
+
+    @dataclass
+    class Ore(OptionalVariantBlock[Literal['deepslate']]):
+        id = 'redstone_ore'
+
+        lit: bool | None = None
 
 
 @dataclass
