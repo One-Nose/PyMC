@@ -11,7 +11,7 @@ from .minecraft_block import (
     Waterloggable,
 )
 
-type Color = Literal['black', 'blue', 'brown', 'cyan']
+type Color = Literal['black', 'blue', 'brown', 'cyan', 'gray', 'green']
 type CopperType = Literal['exposed']
 type CoralType = Literal[
     'brain',
@@ -47,6 +47,7 @@ type StoneType = Literal[
     'deepslate_tile',
     'diorite',
     'end_stone_brick',
+    'granite',
 ]
 type Tree = StandardTree | Literal['mangrove']
 type WoodType = Tree | FungusType | Literal['bamboo']
@@ -212,7 +213,7 @@ class Bell(MinecraftBlock):
 
 @dataclass
 class Blackstone(
-    VariantBlock[Literal['chiseled_polished', 'cracked_polished', 'polished']]
+    VariantBlock[Literal['chiseled_polished', 'cracked_polished', 'gilded', 'polished']]
 ):
     id = 'blackstone'
 
@@ -727,10 +728,64 @@ class Glass(MinecraftBlock):
         id = 'stained_glass'
 
 
+@dataclass
+class GlowLichen(Waterloggable, ConnectedBlock, MinecraftBlock):
+    id = 'glow_lichen'
+
+    down: bool | None = None
+    up: bool | None = None
+
+
+@dataclass
+class Glowstone(MinecraftBlock):
+    id = 'glowstone'
+
+
 class Gold:
+    @dataclass
+    class Block(MinecraftBlock):
+        id = 'gold_block'
+
     @dataclass
     class Ore(OptionalVariantBlock[Literal['deepslate']]):
         id = 'gold_ore'
+
+
+@dataclass
+class Granite(MinecraftBlock):
+    id = 'granite'
+
+
+class Grass:
+    @dataclass
+    class Block(MinecraftBlock):
+        id = 'grass_block'
+
+        snowy: bool | None = None
+
+    @dataclass
+    class Short(MinecraftBlock):
+        id = 'short_grass'
+
+
+@dataclass
+class Gravel(MinecraftBlock):
+    id = 'gravel'
+
+
+@dataclass
+class Grindstone(MinecraftBlock):
+    id = 'grindstone'
+
+    face: Literal['ceiling', 'floor', 'wall'] | None = None
+    facing: HorizontalDirection | None = None
+
+
+@dataclass
+class HayBale(MinecraftBlock):
+    id = 'hay_block'
+
+    axis: Axis | None = None
 
 
 @dataclass
@@ -746,6 +801,24 @@ class Head(VariantBlock[HeadType]):
 
         powered: bool | None = None
         facing: HorizontalDirection | None = None
+
+
+@dataclass
+class HoneyBlock(MinecraftBlock):
+    id = 'honey_block'
+
+
+@dataclass
+class HoneycombBlock(MinecraftBlock):
+    id = 'honeycomb_block'
+
+
+@dataclass
+class Hopper(MinecraftBlock):
+    id = 'hopper'
+
+    enabled: bool | None = None
+    facing: HorizontalDirection | Literal['down'] | None = None
 
 
 @dataclass
@@ -836,6 +909,12 @@ class PressurePlate(VariantBlock[WoodType]):
 
     powered: bool | None = None
 
+    @dataclass
+    class Weighted(VariantBlock[Literal['heavy', 'light']]):
+        id = 'weighted_pressure_plate'
+
+        power: UInt4 | None = None
+
 
 @dataclass
 class Prismarine(OptionalVariantBlock[Literal['dark']]):
@@ -895,6 +974,10 @@ class Redstone:
 @dataclass
 class Roots(VariantBlock[FungusType]):
     id = 'roots'
+
+    @dataclass
+    class Hanging(MinecraftBlock):
+        id = 'hanging_roots'
 
 
 @dataclass
