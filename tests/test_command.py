@@ -1,6 +1,6 @@
 from pytest import raises
 
-from src.block_classes import Air, Andesite, Door, Glass, Planks, Rail, ShulkerBox, Stem
+from src.block import block
 from src.command import Kill, SetBlock, Teleport
 from src.context import Context
 from src.entity import Entity
@@ -94,80 +94,82 @@ def test_context_combine_error(context: Context):
 
 def test_set_block(context: Context, position: Position):
     assert (
-        SetBlock(position, Air('cave')).to_string(context)
+        SetBlock(position, block('cave_air')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:cave_air'
     )
 
 
 def test_set_block_below(context: Context, below_entity: RelativePosition):
     assert (
-        SetBlock(below_entity, Andesite()).to_string(context)
+        SetBlock(below_entity, block('andesite')).to_string(context)
         == 'execute positioned as @s run setblock ~ ~-1 ~ minecraft:andesite'
     )
 
 
 def test_place_planks(context: Context, position: Position):
     assert (
-        SetBlock(position, Planks('oak')).to_string(context)
+        SetBlock(position, block('oak_planks')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:oak_planks'
     )
 
 
 def test_block_state(context: Context, position: Position):
     assert (
-        SetBlock(position, Door('bamboo', open=False, facing='north')).to_string(
+        SetBlock(position, block('bamboo_door', open=False, facing='north')).to_string(
             context
         )
-        == 'setblock ~ ~ ~ minecraft:bamboo_door[facing=north, open=false]'
+        == 'setblock ~ ~ ~ minecraft:bamboo_door[open=false, facing=north]'
     )
 
 
 def test_ascending_rail(context: Context, position: Position):
     assert (
-        SetBlock(
-            position, Rail.Special('activator', shape='ascending_south')
-        ).to_string(context)
+        SetBlock(position, block('activator_rail', shape='ascending_south')).to_string(
+            context
+        )
         == 'setblock ~ ~ ~ minecraft:activator_rail[shape=ascending_south]'
     )
 
 
 def test_attached_stem(context: Context, position: Position):
     assert (
-        SetBlock(position, Stem.Crop.Attached('melon')).to_string(context)
+        SetBlock(position, block('attached_melon_stem')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:attached_melon_stem'
     )
 
 
 def test_shulker_box(context: Context, position: Position):
     assert (
-        SetBlock(position, ShulkerBox()).to_string(context)
+        SetBlock(position, block('shulker_box')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:shulker_box'
     )
 
 
 def test_facing_shulker_box(context: Context, position: Position):
     assert (
-        SetBlock(position, ShulkerBox(facing='east')).to_string(context)
+        SetBlock(position, block('shulker_box', facing='east')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:shulker_box[facing=east]'
     )
 
 
 def test_black_shulker_box(context: Context, position: Position):
     assert (
-        SetBlock(position, ShulkerBox('black')).to_string(context)
+        SetBlock(position, block('black_shulker_box')).to_string(context)
         == 'setblock ~ ~ ~ minecraft:black_shulker_box'
     )
 
 
 def test_glass_pane(context: Context, position: Position):
     assert (
-        SetBlock(position, Glass.Pane(south=False)).to_string(context)
+        SetBlock(position, block('glass_pane', south=False)).to_string(context)
         == 'setblock ~ ~ ~ minecraft:glass_pane[south=false]'
     )
 
 
 def test_stained_glass_pane(context: Context, position: Position):
     assert (
-        SetBlock(position, Glass.Pane.Stained('black', west=True)).to_string(context)
+        SetBlock(position, block('black_stained_glass_pane', west=True)).to_string(
+            context
+        )
         == 'setblock ~ ~ ~ minecraft:black_stained_glass_pane[west=true]'
     )

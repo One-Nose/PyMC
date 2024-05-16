@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from itertools import chain
 from typing import TYPE_CHECKING
 
-from .block import Block
+from .block_class import Block
 from .context import Context, ContextProvider, ProviderReference
 from .context_node import ContextNode
 from .entity import AnyEntity
