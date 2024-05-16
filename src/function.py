@@ -2,7 +2,7 @@ from .command import Command, FunctionCommand
 from .context import Context
 from .datapack import DataPack
 from .exception import BadFunctionCall
-from .resource_path import ResourceLocation, ResourcePath
+from .resource_path import ResourceLocation, ResourcePath, ResourcePathLike
 
 
 class Function:
@@ -13,10 +13,10 @@ class Function:
     _commands: list[Command]
 
     def __init__(
-        self, datapack: DataPack, path: ResourcePath, context: Context
+        self, datapack: DataPack, path: ResourcePathLike, context: Context
     ) -> None:
         self._datapack = datapack
-        self._path = path
+        self._path = ResourcePath(path)
         self._context = context
 
         self._commands = []

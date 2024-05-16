@@ -1,7 +1,7 @@
 from dataclasses import InitVar, dataclass, field
 
 from .block import Block
-from .resource_path import ResourceLocation, ResourcePath, ResourceString
+from .resource_path import ResourceLocation
 
 
 @dataclass
@@ -10,9 +10,7 @@ class MinecraftBlock(Block):
 
     def __post_init__(self) -> None:
         assert self.id is not None
-        self.block_id = ResourceLocation(
-            ResourceString('minecraft'), ResourcePath(ResourceString(self.id))
-        )
+        self.block_id = ResourceLocation(self.id)
 
 
 @dataclass

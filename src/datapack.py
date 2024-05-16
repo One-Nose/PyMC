@@ -1,8 +1,8 @@
-from .resource_path import ResourceString
+from .resource_path import ResourceString, ResourceStringLike
 
 
 class DataPack:
     namespace: ResourceString
 
-    def __init__(self, namespace: str) -> None:
+    def __init__(self, namespace: ResourceStringLike) -> None:
         self.namespace = ResourceString(namespace)

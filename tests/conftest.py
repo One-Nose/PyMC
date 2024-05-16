@@ -6,7 +6,7 @@ from src.datapack import DataPack
 from src.entity import Entity
 from src.function import Function
 from src.position import Position, PositionedAs, RelativePosition
-from src.resource_path import ResourcePath, ResourceString
+from src.resource_path import ResourcePath
 
 
 @fixture
@@ -28,7 +28,7 @@ def context(entity, position) -> Context:
 def func(context) -> Function:
     return Function(
         DataPack('test'),
-        ResourcePath(ResourceString('foo'), ResourceString('bar')),
+        ResourcePath('foo', 'bar'),
         context,
     )
 
