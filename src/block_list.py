@@ -1,8 +1,5 @@
 # 1.20.6
 
-JACK_O_LANTERN = None
-JIGSAW = None
-JUKEBOX = None
 KELP = None
 KELP_PLANT = None
 LADDER = None

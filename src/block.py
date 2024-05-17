@@ -466,6 +466,7 @@ def block(
         'gray_glazed_terracotta',
         'green_wall_banner',
         'green_glazed_terracotta',
+        'jack_o_lantern',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -903,6 +904,31 @@ def block(
     enabled: bool = ...,
     facing: HorizontalDirection | Literal['down'] = ...,
 ) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['jigsaw'],
+    *,
+    orientation: Literal[
+        'down_east',
+        'down_north',
+        'down_south',
+        'down_west',
+        'east_up',
+        'north_up',
+        'south_up',
+        'up_east',
+        'up_north',
+        'up_south',
+        'up_west',
+        'west_up',
+    ] = ...,
+) -> Block: ...
+
+
+@overload
+def block(id: Literal['jukebox'], *, has_record: bool = ...) -> Block: ...
 
 
 @overload
