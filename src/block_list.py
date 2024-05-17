@@ -1,7 +1,5 @@
 # 1.20.6
 
-KELP = None
-KELP_PLANT = None
 LADDER = None
 LANTERN = None
 LAPIS_BLOCK = None

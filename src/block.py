@@ -932,6 +932,10 @@ def block(id: Literal['jukebox'], *, has_record: bool = ...) -> Block: ...
 
 
 @overload
+def block(id: Literal['kelp'], *, age: NaturalNumberBelow26 = ...) -> Block: ...
+
+
+@overload
 def block(
     id: Literal['rail'],
     *,
@@ -1126,6 +1130,7 @@ def block(
         'iron_block',
         'iron_ore',
         'jungle_planks',
+        'kelp_plant',
         'lapis_ore',
         'mangrove_planks',
         'melon',
