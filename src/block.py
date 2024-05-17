@@ -95,6 +95,7 @@ def block(
         'light_blue_stained_glass_pane',
         'light_gray_stained_glass_pane',
         'lime_stained_glass_pane',
+        'magenta_stained_glass_pane',
         'mangrove_fence',
         'oak_fence',
         'spruce_fence',
@@ -197,6 +198,7 @@ def block(
         'jungle_wood',
         'mangrove_log',
         'mangrove_wood',
+        'muddy_mangrove_roots',
         'oak_log',
         'oak_wood',
         'spruce_log',
@@ -293,6 +295,9 @@ def block(
         'granite_slab',
         'jungle_slab',
         'mangrove_slab',
+        'mossy_cobblestone_slab',
+        'mossy_stone_brick_slab',
+        'mud_brick_slab',
         'oak_slab',
         'spruce_slab',
         'warped_slab',
@@ -328,6 +333,9 @@ def block(
         'granite_stairs',
         'jungle_stairs',
         'mangrove_stairs',
+        'mossy_cobblestone_stairs',
+        'mossy_stone_brick_stairs',
+        'mud_brick_stairs',
         'oak_stairs',
         'spruce_stairs',
         'warped_stairs',
@@ -423,7 +431,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['amethyst_cluster', 'large_amethyst_bud'],
+    id: Literal['amethyst_cluster', 'large_amethyst_bud', 'medium_amethyst_bud'],
     *,
     facing: Direction = ...,
     waterlogged: bool = ...,
@@ -443,14 +451,17 @@ def block(
         'diorite_wall',
         'end_stone_brick_wall',
         'granite_wall',
+        'mossy_cobblestone_wall',
+        'mossy_stone_brick_wall',
+        'mud_brick_wall',
     ],
     *,
     east: WallHeight = ...,
     north: WallHeight = ...,
     south: WallHeight = ...,
     up: bool = ...,
-    west: WallHeight = ...,
     waterlogged: bool = ...,
+    west: WallHeight = ...,
 ) -> Block: ...
 
 
@@ -481,6 +492,8 @@ def block(
         'light_gray_wall_banner',
         'lime_glazed_terracotta',
         'lime_wall_banner',
+        'magenta_glazed_terracotta',
+        'magenta_wall_banner',
         'loom',
     ],
     *,
@@ -527,6 +540,7 @@ def block(
         'fire_coral_fan',
         'horn_coral',
         'horn_coral_fan',
+        'mangrove_roots',
         'tube_coral',
         'tube_coral_fan',
     ],
@@ -582,6 +596,7 @@ def block(
         'light_blue_banner',
         'light_gray_banner',
         'lime_banner',
+        'magenta_banner',
     ],
     *,
     rotation: NaturalNumberBelow16 = ...,
@@ -600,6 +615,7 @@ def block(
         'light_blue_bed',
         'light_gray_bed',
         'lime_bed',
+        'magenta_bed',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -621,6 +637,7 @@ def block(
         'light_blue_candle',
         'light_gray_candle',
         'lime_candle',
+        'magenta_candle',
     ],
     *,
     candles: Literal[1, 2, 3, 4] = ...,
@@ -643,6 +660,7 @@ def block(
         'light_blue_candle_cake',
         'light_gray_candle_cake',
         'lime_candle_cake',
+        'magenta_candle_cake',
         'redstone_ore',
     ],
     *,
@@ -663,6 +681,7 @@ def block(
         'light_blue_shulker_box',
         'light_gray_shulker_box',
         'lime_shulker_box',
+        'magenta_shulker_box',
         'shulker_box',
     ],
     *,
@@ -691,7 +710,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['brown_mushroom_block', 'chorus_plant'],
+    id: Literal['brown_mushroom_block', 'chorus_plant', 'mushroom_stem'],
     *,
     down: bool = ...,
     east: bool = ...,
@@ -907,7 +926,7 @@ def block(
 
 
 @overload
-def block(id: Literal['grass_block'], *, snowy: bool = ...) -> Block: ...
+def block(id: Literal['grass_block', 'mycelium'], *, snowy: bool = ...) -> Block: ...
 
 
 @overload
@@ -1004,6 +1023,26 @@ def block(
     facing: Direction = ...,
     powered: bool = ...,
     waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['mangrove_propagule'],
+    *,
+    age: NaturalNumberBelow4 = ...,
+    hanging: bool = ...,
+    stage: Literal[0, 1] = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['moving_piston'],
+    *,
+    facing: Direction = ...,
+    type: Literal['normal', 'sticky'] = ...,
 ) -> Block: ...
 
 
@@ -1227,8 +1266,21 @@ def block(
         'lime_terracotta',
         'lime_wool',
         'lodestone',
+        'magenta_carpet',
+        'magenta_concrete',
+        'magenta_concrete_powder',
+        'magenta_stained_glass',
+        'magenta_terracotta',
+        'magenta_wool',
+        'magma_block',
         'mangrove_planks',
         'melon',
+        'moss_block',
+        'moss_carpet',
+        'mossy_cobblestone',
+        'mossy_stone_bricks',
+        'mud',
+        'mud_bricks',
         'nether_bricks',
         'oak_planks',
         'obsidian',
