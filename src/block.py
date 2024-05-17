@@ -146,7 +146,7 @@ def block(
     *,
     attached: bool = ...,
     rotation: NaturalNumberBelow16 = ...,
-    waterlogged: NaturalNumberBelow16 = ...,
+    waterlogged: bool = ...,
 ) -> Block: ...
 
 
