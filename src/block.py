@@ -36,6 +36,7 @@ def block(
         'crimson_button',
         'dark_oak_button',
         'jungle_button',
+        'lever',
         'mangrove_button',
         'oak_button',
         'spruce_button',
@@ -91,6 +92,9 @@ def block(
         'green_stained_glass_pane',
         'iron_bars',
         'jungle_fence',
+        'light_blue_stained_glass_pane',
+        'light_gray_stained_glass_pane',
+        'lime_stained_glass_pane',
         'mangrove_fence',
         'oak_fence',
         'spruce_fence',
@@ -390,6 +394,7 @@ def block(
         'horn_coral_wall_fan',
         'jungle_wall_hanging_sign',
         'jungle_wall_sign',
+        'ladder',
         'mangrove_wall_hanging_sign',
         'mangrove_wall_sign',
         'oak_wall_hanging_sign',
@@ -418,7 +423,10 @@ def block(
 
 @overload
 def block(
-    id: Literal['amethyst_cluster'], *, facing: Direction = ..., waterlogged: bool = ...
+    id: Literal['amethyst_cluster', 'large_amethyst_bud'],
+    *,
+    facing: Direction = ...,
+    waterlogged: bool = ...,
 ) -> Block: ...
 
 
@@ -451,22 +459,29 @@ def block(
     id: Literal[
         'anvil',
         'attached_melon_stem',
-        'black_wall_banner',
         'black_glazed_terracotta',
-        'blue_wall_banner',
+        'black_wall_banner',
         'blue_glazed_terracotta',
-        'brown_wall_banner',
+        'blue_wall_banner',
         'brown_glazed_terracotta',
+        'brown_wall_banner',
         'carved_pumpkin',
         'chipped_anvil',
-        'cyan_wall_banner',
         'cyan_glazed_terracotta',
+        'cyan_wall_banner',
         'damaged_anvil',
-        'gray_wall_banner',
         'gray_glazed_terracotta',
-        'green_wall_banner',
+        'gray_wall_banner',
         'green_glazed_terracotta',
+        'green_wall_banner',
         'jack_o_lantern',
+        'light_blue_glazed_terracotta',
+        'light_blue_wall_banner',
+        'light_gray_glazed_terracotta',
+        'light_gray_wall_banner',
+        'lime_glazed_terracotta',
+        'lime_wall_banner',
+        'loom',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -564,6 +579,9 @@ def block(
         'cyan_banner',
         'gray_banner',
         'green_banner',
+        'light_blue_banner',
+        'light_gray_banner',
+        'lime_banner',
     ],
     *,
     rotation: NaturalNumberBelow16 = ...,
@@ -579,6 +597,9 @@ def block(
         'cyan_bed',
         'gray_bed',
         'green_bed',
+        'light_blue_bed',
+        'light_gray_bed',
+        'lime_bed',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -597,6 +618,9 @@ def block(
         'cyan_candle',
         'gray_candle',
         'green_candle',
+        'light_blue_candle',
+        'light_gray_candle',
+        'lime_candle',
     ],
     *,
     candles: Literal[1, 2, 3, 4] = ...,
@@ -616,6 +640,9 @@ def block(
         'deepslate_redstone_ore',
         'gray_candle_cake',
         'green_candle_cake',
+        'light_blue_candle_cake',
+        'light_gray_candle_cake',
+        'lime_candle_cake',
         'redstone_ore',
     ],
     *,
@@ -633,6 +660,9 @@ def block(
         'end_rod',
         'gray_shulker_box',
         'green_shulker_box',
+        'light_blue_shulker_box',
+        'light_gray_shulker_box',
+        'lime_shulker_box',
         'shulker_box',
     ],
     *,
@@ -937,6 +967,48 @@ def block(id: Literal['kelp'], *, age: NaturalNumberBelow26 = ...) -> Block: ...
 
 @overload
 def block(
+    id: Literal['lantern'], *, hanging: bool = ..., waterlogged: bool = ...
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['large_fern', 'lilac'], *, half: Literal['lower', 'upper'] = ...
+) -> Block: ...
+
+
+@overload
+def block(id: Literal['lava'], *, level: NaturalNumberBelow16 = ...) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['lectern'],
+    *,
+    facing: HorizontalDirection = ...,
+    has_book: bool = ...,
+    powered: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['light'], *, level: NaturalNumberBelow16 = ..., waterlogged: bool = ...
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['lightning_rod'],
+    *,
+    facing: Direction = ...,
+    powered: bool = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
     id: Literal['rail'],
     *,
     shape: (
@@ -1131,7 +1203,30 @@ def block(
         'iron_ore',
         'jungle_planks',
         'kelp_plant',
+        'lapis_block',
         'lapis_ore',
+        'lava_cauldron',
+        'light_blue_carpet',
+        'light_blue_concrete',
+        'light_blue_concrete_powder',
+        'light_blue_stained_glass',
+        'light_blue_terracotta',
+        'light_blue_wool',
+        'light_gray_carpet',
+        'light_gray_concrete',
+        'light_gray_concrete_powder',
+        'light_gray_stained_glass',
+        'light_gray_terracotta',
+        'light_gray_wool',
+        'lily_of_the_valley',
+        'lily_pad',
+        'lime_carpet',
+        'lime_concrete',
+        'lime_concrete_powder',
+        'lime_stained_glass',
+        'lime_terracotta',
+        'lime_wool',
+        'lodestone',
         'mangrove_planks',
         'melon',
         'nether_bricks',
