@@ -40,7 +40,9 @@ def block(
         'lever',
         'mangrove_button',
         'oak_button',
+        'polished_blackstone_button',
         'spruce_button',
+        'stone_button',
         'warped_button',
     ],
     *,
@@ -211,6 +213,8 @@ def block(
         'oak_wood',
         'ochre_froglight',
         'pearlescent_froglight',
+        'polished_basalt',
+        'purpur_pillar',
         'spruce_log',
         'spruce_wood',
         'verdant_froglight',
@@ -234,7 +238,9 @@ def block(
         'jungle_pressure_plate',
         'mangrove_pressure_plate',
         'oak_pressure_plate',
+        'polished_blackstone_pressure_plate',
         'spruce_pressure_plate',
+        'stone_pressure_plate',
         'warped_pressure_plate',
     ],
     *,
@@ -312,6 +318,7 @@ def block(
         'nether_brick_slab',
         'oak_slab',
         'oxidized_cut_copper_slab',
+        'petrified_oak_slab',
         'polished_andesite_slab',
         'polished_blackstone_brick_slab',
         'polished_blackstone_slab',
@@ -484,7 +491,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['activator_rail', 'detector_rail'],
+    id: Literal['activator_rail', 'detector_rail', 'powered_rail'],
     *,
     powered: bool = ...,
     shape: StraightRailShape = ...,
@@ -518,6 +525,14 @@ def block(
         'mossy_stone_brick_wall',
         'mud_brick_wall',
         'nether_brick_wall',
+        'polished_blackstone_brick_wall',
+        'polished_blackstone_wall',
+        'polished_deepslate_wall',
+        'prismarine_wall',
+        'red_nether_brick_wall',
+        'red_sandstone_wall',
+        'sandstone_wall',
+        'stone_brick_wall',
     ],
     *,
     east: WallHeight = ...,
@@ -865,7 +880,9 @@ def block(
 
 @overload
 def block(
-    id: Literal['carrots', 'melon_stem'], *, age: NaturalNumberBelow8 = ...
+    id: Literal['carrots', 'melon_stem', 'potatoes', 'pumpkin_stem'],
+    *,
+    age: NaturalNumberBelow8 = ...,
 ) -> Block: ...
 
 
@@ -950,7 +967,15 @@ def block(id: Literal['composter'], *, level: NaturalNumberBelow9 = ...) -> Bloc
 
 @overload
 def block(
-    id: Literal['creeper_head', 'dragon_head'],
+    id: Literal[
+        'creeper_head',
+        'dragon_head',
+        'piglin_head',
+        'player_head',
+        'skeleton_skull',
+        'wither_skeleton_skull',
+        'zombie_head',
+    ],
     *,
     powered: bool = ...,
     rotation: NaturalNumberBelow16 = ...,
@@ -959,7 +984,15 @@ def block(
 
 @overload
 def block(
-    id: Literal['creeper_wall_head', 'dragon_wall_head'],
+    id: Literal[
+        'creeper_wall_head',
+        'dragon_wall_head',
+        'piglin_wall_head',
+        'player_wall_head',
+        'skeleton_wall_skull',
+        'wither_skeleton_wall_skull',
+        'zombie_wall_head',
+    ],
     *,
     powered: bool = ...,
     facing: HorizontalDirection = ...,
@@ -1034,7 +1067,9 @@ def block(
 
 
 @overload
-def block(id: Literal['grass_block', 'mycelium'], *, snowy: bool = ...) -> Block: ...
+def block(
+    id: Literal['grass_block', 'mycelium', 'podzol'], *, snowy: bool = ...
+) -> Block: ...
 
 
 @overload
@@ -1100,7 +1135,9 @@ def block(
 
 @overload
 def block(
-    id: Literal['large_fern', 'lilac'], *, half: Literal['lower', 'upper'] = ...
+    id: Literal['large_fern', 'lilac', 'peony', 'pitcher_plant'],
+    *,
+    half: Literal['lower', 'upper'] = ...,
 ) -> Block: ...
 
 
@@ -1195,6 +1232,49 @@ def block(
 @overload
 def block(
     id: Literal['observer'], *, facing: Direction = ..., powered: bool = ...
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['pink_petals'],
+    *,
+    facing: Direction = ...,
+    flower_amount: Literal[1, 2, 3, 4] = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['piston'], *, extended: bool = ..., facing: Direction = ...
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['piston_head'],
+    *,
+    facing: Direction = ...,
+    short: bool = ...,
+    type: Literal['normal', 'sticky'],
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['pointed_dripstone'],
+    *,
+    thickness: Literal['base', 'frustum', 'middle', 'tip', 'tip_merge'] = ...,
+    vertical_direction: Literal['up', 'down'] = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['powder_snow_cauldron', 'water_cauldron'],
+    *,
+    level: NaturalNumberBelow4 = ...,
 ) -> Block: ...
 
 
@@ -1452,6 +1532,8 @@ def block(
         'oxeye_daisy',
         'oxidized_copper',
         'oxidized_cut_copper',
+        'packed_ice',
+        'packed_mud',
         'pink_carpet',
         'pink_concrete',
         'pink_concrete_powder',
@@ -1459,8 +1541,50 @@ def block(
         'pink_terracotta',
         'pink_tulip',
         'pink_wool',
+        'polished_andesite',
         'polished_blackstone',
+        'polished_blackstone_bricks',
+        'polished_deepslate',
+        'polished_diorite',
+        'polished_granite',
+        'poppy',
+        'potted_acacia_sapling',
+        'potted_allium',
+        'potted_azalea_bush',
+        'potted_azure_bluet',
+        'potted_bamboo',
+        'potted_birch_sapling',
+        'potted_blue_orchid',
+        'potted_brown_mushroom',
+        'potted_cactus',
+        'potted_cherry_sapling',
+        'potted_cornflower',
+        'potted_crimson_fungus',
+        'potted_crimson_roots',
+        'potted_dandelion',
+        'potted_dark_oak_sapling',
+        'potted_dead_bush',
+        'potted_fern',
+        'potted_flowering_azalea_bush',
+        'potted_jungle_sapling',
+        'potted_lily_of_the_valley',
+        'potted_mangrove_propagule',
+        'potted_oak_sapling',
+        'potted_orange_tulip',
+        'potted_oxeye_daisy',
+        'potted_pink_tulip',
+        'potted_poppy',
+        'potted_red_mushroom',
+        'potted_red_tulip',
+        'potted_spruce_sapling',
+        'potted_torchflower',
+        'potted_warped_fungus',
+        'potted_warped_roots',
+        'potted_white_tulip',
+        'potted_wither_rose',
+        'powder_snow',
         'prismarine',
+        'prismarine_bricks',
         'pumpkin',
         'purple_carpet',
         'purple_concrete',
@@ -1468,6 +1592,7 @@ def block(
         'purple_stained_glass',
         'purple_terracotta',
         'purple_wool',
+        'purpur_block',
         'quartz_block',
         'red_carpet',
         'red_concrete',
