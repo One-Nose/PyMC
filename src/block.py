@@ -20,9 +20,10 @@ type NaturalNumberBelow7 = NaturalNumberBelow6 | Literal[6]
 type NaturalNumberBelow8 = NaturalNumberBelow7 | Literal[7]
 type NaturalNumberBelow9 = NaturalNumberBelow8 | Literal[8]
 type NaturalNumberBelow16 = NaturalNumberBelow9 | Literal[9, 10, 11, 12, 13, 14, 15]
-type NaturalNumberBelow26 = NaturalNumberBelow16 | Literal[
-    16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+type NaturalNumberBelow25 = NaturalNumberBelow16 | Literal[
+    16, 17, 18, 19, 20, 21, 22, 23, 24
 ]
+type NaturalNumberBelow26 = NaturalNumberBelow25 | Literal[25]
 type WallHeight = Literal['low', 'none', 'high']
 
 
@@ -97,6 +98,7 @@ def block(
         'lime_stained_glass_pane',
         'magenta_stained_glass_pane',
         'mangrove_fence',
+        'nether_brick_fence',
         'oak_fence',
         'spruce_fence',
         'warped_fence',
@@ -298,6 +300,7 @@ def block(
         'mossy_cobblestone_slab',
         'mossy_stone_brick_slab',
         'mud_brick_slab',
+        'nether_brick_slab',
         'oak_slab',
         'spruce_slab',
         'warped_slab',
@@ -336,6 +339,7 @@ def block(
         'mossy_cobblestone_stairs',
         'mossy_stone_brick_stairs',
         'mud_brick_stairs',
+        'nether_brick_stairs',
         'oak_stairs',
         'spruce_stairs',
         'warped_stairs',
@@ -454,6 +458,7 @@ def block(
         'mossy_cobblestone_wall',
         'mossy_stone_brick_wall',
         'mud_brick_wall',
+        'nether_brick_wall',
     ],
     *,
     east: WallHeight = ...,
@@ -560,7 +565,9 @@ def block(
 
 @overload
 def block(
-    id: Literal['beetroots', 'frosted_ice'], *, age: NaturalNumberBelow4 = ...
+    id: Literal['beetroots', 'frosted_ice', 'nether_wart'],
+    *,
+    age: NaturalNumberBelow4 = ...,
 ) -> Block: ...
 
 
@@ -1047,6 +1054,44 @@ def block(
 
 
 @overload
+def block(id: Literal['nether_portal'], *, axis: Literal['x', 'z'] = ...) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['note_block'],
+    *,
+    instrument: Literal[
+        'banjo',
+        'basedrum',
+        'bass',
+        'bell',
+        'bit',
+        'chime',
+        'cow_bell',
+        'creeper',
+        'custom_head',
+        'didgeridoo',
+        'dragon',
+        'flute',
+        'guitar',
+        'harp',
+        'hat',
+        'iron_xylophone',
+        'piglin',
+        'pling',
+        'skeleton',
+        'snare',
+        'wither_skeleton',
+        'xylophone',
+        'zombie',
+    ] = ...,
+    note: NaturalNumberBelow25 = ...,
+    powered: bool = ...,
+) -> Block: ...
+
+
+@overload
 def block(
     id: Literal['rail'],
     *,
@@ -1282,6 +1327,12 @@ def block(
         'mud',
         'mud_bricks',
         'nether_bricks',
+        'nether_gold_ore',
+        'nether_quartz_ore',
+        'nether_sprouts',
+        'nether_wart_block',
+        'netherite_block',
+        'netherrack',
         'oak_planks',
         'obsidian',
         'polished_blackstone',
