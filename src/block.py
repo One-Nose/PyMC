@@ -15,7 +15,8 @@ type StraightRailShape = Literal[
     'north_south',
 ]
 type NaturalNumberBelow4 = Literal[0, 1, 2, 3]
-type NaturalNumberBelow6 = NaturalNumberBelow4 | Literal[4, 5]
+type NaturalNumberBelow5 = NaturalNumberBelow4 | Literal[4]
+type NaturalNumberBelow6 = NaturalNumberBelow5 | Literal[5]
 type NaturalNumberBelow7 = NaturalNumberBelow6 | Literal[6]
 type NaturalNumberBelow8 = NaturalNumberBelow7 | Literal[7]
 type NaturalNumberBelow9 = NaturalNumberBelow8 | Literal[8]
@@ -1258,6 +1259,15 @@ def block(
     facing: Direction = ...,
     short: bool = ...,
     type: Literal['normal', 'sticky'],
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['pitcher_crop'],
+    *,
+    age: NaturalNumberBelow5 = ...,
+    half: Literal['lower', 'upper'],
 ) -> Block: ...
 
 
