@@ -40,6 +40,17 @@ class RelativePosition(PositionReference):
         return ' '.join('~' if offset == 0 else f'~{offset}' for offset in self._offset)
 
 
+class AbsolutePosition(PositionReference):
+    _coors: tuple[float, float, float]
+
+    def __init__(self, coors: tuple[float, float, float]) -> None:
+        super().__init__(Context())
+        self._coors = coors
+
+    def to_string(self) -> str:
+        return ' '.join(str(coor) for coor in self._coors)
+
+
 class Position(PositionProvider):
     def __init__(self) -> None:
         super().__init__(Context(position=self))

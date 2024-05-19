@@ -6,7 +6,7 @@ from src.context import Context
 from src.entity import Entity, EveryEntity
 from src.exception import BadFunctionCall, ContextCombineError, FlatteningError
 from src.function import Function
-from src.position import Position, PositionedAs, RelativePosition
+from src.position import AbsolutePosition, Position, PositionedAs, RelativePosition
 
 
 def test_kill(context: Context, kill: Kill):
@@ -185,4 +185,13 @@ def test_func_everybody(func: Function, context: Context, position: Position):
             Context(entity=EveryEntity().as_provider(), position=position)
         ).to_string(context)
         == 'execute as @e run function test:foo/bar'
+    )
+
+
+def test_absolute_position():
+    assert (
+        SetBlock(
+            AbsolutePosition((0, -10, 20)), block('green_bed', facing='east')
+        ).to_string(Context())
+        == 'setblock 0 -10 20 minecraft:green_bed[facing=east]'
     )
