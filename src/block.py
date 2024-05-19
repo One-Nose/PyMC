@@ -6,14 +6,7 @@ from .block_class import Block
 
 type Direction = HorizontalDirection | Literal['down', 'up']
 type HorizontalDirection = Literal['east', 'north', 'south', 'west']
-type StraightRailShape = Literal[
-    'ascending_east',
-    'ascending_north',
-    'ascending_south',
-    'ascending_west',
-    'east_west',
-    'north_south',
-]
+
 type NaturalNumberBelow4 = Literal[0, 1, 2, 3]
 type NaturalNumberBelow5 = NaturalNumberBelow4 | Literal[4]
 type NaturalNumberBelow6 = NaturalNumberBelow5 | Literal[5]
@@ -25,7 +18,6 @@ type NaturalNumberBelow25 = NaturalNumberBelow16 | Literal[
     16, 17, 18, 19, 20, 21, 22, 23, 24
 ]
 type NaturalNumberBelow26 = NaturalNumberBelow25 | Literal[25]
-type WallHeight = Literal['low', 'none', 'high']
 
 
 @overload
@@ -262,7 +254,7 @@ def block(
         'spruce_sapling',
     ],
     *,
-    stage: Literal[0, 1],
+    stage: Literal[0, 1] = ...,
 ) -> Block: ...
 
 
@@ -496,7 +488,14 @@ def block(
     id: Literal['activator_rail', 'detector_rail', 'powered_rail'],
     *,
     powered: bool = ...,
-    shape: StraightRailShape = ...,
+    shape: Literal[
+        'ascending_east',
+        'ascending_north',
+        'ascending_south',
+        'ascending_west',
+        'east_west',
+        'north_south',
+    ] = ...,
     waterlogged: bool = ...,
 ) -> Block: ...
 
@@ -537,12 +536,12 @@ def block(
         'stone_brick_wall',
     ],
     *,
-    east: WallHeight = ...,
-    north: WallHeight = ...,
-    south: WallHeight = ...,
+    east: Literal['low', 'none', 'high'] = ...,
+    north: Literal['low', 'none', 'high'] = ...,
+    south: Literal['low', 'none', 'high'] = ...,
     up: bool = ...,
     waterlogged: bool = ...,
-    west: WallHeight = ...,
+    west: Literal['low', 'none', 'high'] = ...,
 ) -> Block: ...
 
 
@@ -778,7 +777,9 @@ def block(
         'pink_candle_cake',
         'purple_candle_cake',
         'red_candle_cake',
+        'redstone_lamp',
         'redstone_ore',
+        'redstone_torch',
         'white_candle_cake',
         'yellow_candle_cake',
     ],
@@ -816,7 +817,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['blast_furnace', 'furnace'],
+    id: Literal['blast_furnace', 'furnace', 'redstone_wall_torch'],
     *,
     facing: HorizontalDirection = ...,
     lit: bool = ...,
@@ -835,7 +836,9 @@ def block(
 
 @overload
 def block(
-    id: Literal['brown_mushroom_block', 'chorus_plant', 'mushroom_stem'],
+    id: Literal[
+        'brown_mushroom_block', 'chorus_plant', 'mushroom_stem', 'red_mushroom_block'
+    ],
     *,
     down: bool = ...,
     east: bool = ...,
@@ -909,7 +912,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['chain_command_block', 'command_block'],
+    id: Literal['chain_command_block', 'command_block', 'repeating_command_block'],
     *,
     conditional: bool = ...,
     facing: Direction = ...,
@@ -1137,7 +1140,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['large_fern', 'lilac', 'peony', 'pitcher_plant'],
+    id: Literal['large_fern', 'lilac', 'peony', 'pitcher_plant', 'rose_bush'],
     *,
     half: Literal['lower', 'upper'] = ...,
 ) -> Block: ...
@@ -1258,7 +1261,7 @@ def block(
     *,
     facing: Direction = ...,
     short: bool = ...,
-    type: Literal['normal', 'sticky'],
+    type: Literal['normal', 'sticky'] = ...,
 ) -> Block: ...
 
 
@@ -1267,7 +1270,7 @@ def block(
     id: Literal['pitcher_crop'],
     *,
     age: NaturalNumberBelow5 = ...,
-    half: Literal['lower', 'upper'],
+    half: Literal['lower', 'upper'] = ...,
 ) -> Block: ...
 
 
@@ -1276,7 +1279,7 @@ def block(
     id: Literal['pointed_dripstone'],
     *,
     thickness: Literal['base', 'frustum', 'middle', 'tip', 'tip_merge'] = ...,
-    vertical_direction: Literal['up', 'down'] = ...,
+    vertical_direction: Literal['down', 'up'] = ...,
     waterlogged: bool = ...,
 ) -> Block: ...
 
@@ -1293,11 +1296,48 @@ def block(
 def block(
     id: Literal['rail'],
     *,
-    shape: (
-        StraightRailShape
-        | Literal['north_east', 'north_west', 'south_east', 'south_west']
-    ) = ...,
+    shape: Literal[
+        'ascending_east',
+        'ascending_north',
+        'ascending_south',
+        'ascending_west',
+        'east_west',
+        'north_east',
+        'north_south',
+        'north_west',
+        'south_east',
+        'south_west',
+    ] = ...,
     waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['redstone_wire'],
+    *,
+    east: Literal['none', 'side', 'up'] = ...,
+    north: Literal['none', 'side', 'up'] = ...,
+    power: NaturalNumberBelow16 = ...,
+    south: Literal['none', 'side', 'up'] = ...,
+    west: Literal['none', 'side', 'up'] = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['repeater'],
+    *,
+    delay: Literal[1, 2, 3, 4] = ...,
+    facing: HorizontalDirection = ...,
+    locked: bool = ...,
+    powered: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['respawn_anchor'], *, charges: NaturalNumberBelow5 = ...
 ) -> Block: ...
 
 
@@ -1606,14 +1646,24 @@ def block(
         'purpur_block',
         'quartz_block',
         'quartz_bricks',
+        'raw_copper_block',
+        'raw_gold_block',
+        'raw_iron_block',
         'red_carpet',
         'red_concrete',
         'red_concrete_powder',
+        'red_mushroom',
+        'red_nether_bricks',
+        'red_sand',
         'red_stained_glass',
         'red_terracotta',
         'red_tulip',
         'red_wool',
         'red_sandstone',
+        'redstone_block',
+        'reinforced_deepslate',
+        'rooted_dirt',
+        'sand',
         'sandstone',
         'sculk',
         'short_grass',
