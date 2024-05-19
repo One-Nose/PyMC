@@ -916,7 +916,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['carrots', 'melon_stem', 'potatoes', 'pumpkin_stem'],
+    id: Literal['carrots', 'melon_stem', 'potatoes', 'pumpkin_stem', 'wheat'],
     *,
     age: NaturalNumberBelow8 = ...,
 ) -> Block: ...
@@ -952,7 +952,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['chest'],
+    id: Literal['chest', 'trapped_chest'],
     *,
     facing: HorizontalDirection = ...,
     type: Literal['left', 'right', 'single'] = ...,
@@ -1119,7 +1119,9 @@ def block(
 
 @overload
 def block(
-    id: Literal['heavy_weighted_pressure_plate', 'light_weighted_pressure_plate'],
+    id: Literal[
+        'heavy_weighted_pressure_plate', 'light_weighted_pressure_plate', 'target'
+    ],
     *,
     power: NaturalNumberBelow16 = ...,
 ) -> Block: ...
@@ -1160,7 +1162,11 @@ def block(id: Literal['jukebox'], *, has_record: bool = ...) -> Block: ...
 
 
 @overload
-def block(id: Literal['kelp'], *, age: NaturalNumberBelow26 = ...) -> Block: ...
+def block(
+    id: Literal['kelp', 'twisting_vines', 'weeping_vines'],
+    *,
+    age: NaturalNumberBelow26 = ...,
+) -> Block: ...
 
 
 @overload
@@ -1180,8 +1186,9 @@ def block(
         'peony',
         'pitcher_plant',
         'rose_bush',
-        'tall_seagrass',
         'sunflower',
+        'tall_grass',
+        'tall_seagrass',
     ],
     *,
     half: Literal['lower', 'upper'] = ...,
@@ -1189,7 +1196,9 @@ def block(
 
 
 @overload
-def block(id: Literal['lava'], *, level: NaturalNumberBelow16 = ...) -> Block: ...
+def block(
+    id: Literal['lava', 'water'], *, level: NaturalNumberBelow16 = ...
+) -> Block: ...
 
 
 @overload
@@ -1462,6 +1471,47 @@ def block(
     id: Literal['suspicious_gravel', 'suspicious_sand'],
     *,
     dusted: NaturalNumberBelow4 = ...,
+) -> Block: ...
+
+
+@overload
+def block(id: Literal['tnt'], *, unstable: bool = ...) -> Block: ...
+
+
+@overload
+def block(id: Literal['torchflower_crop'], *, age: Literal[0, 1] = ...) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['tripwire'],
+    *,
+    attached: bool = ...,
+    disarmed: bool = ...,
+    east: bool = ...,
+    north: bool = ...,
+    powered: bool = ...,
+    south: bool = ...,
+    west: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['tripwire_hook'],
+    *,
+    attached: bool = ...,
+    facing: HorizontalDirection = ...,
+    powered: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['turtle_egg'],
+    *,
+    eggs: Literal[1, 2, 3, 4] = ...,
+    hatch: Literal[0, 1, 2] = ...,
 ) -> Block: ...
 
 
@@ -1804,12 +1854,18 @@ def block(
         'stone_bricks',
         'structure_void',
         'terracotta',
+        'tinted_glass',
         'torch',
+        'torchflower',
         'tube_coral_block',
+        'tuff',
+        'twisting_vines_plant',
+        'void_air',
         'warped_fungus',
         'warped_nylium',
         'warped_planks',
         'warped_roots',
+        'warped_wart_block',
         'waxed_copper_block',
         'waxed_cut_copper',
         'waxed_exposed_copper',
@@ -1820,6 +1876,7 @@ def block(
         'waxed_weathered_cut_copper',
         'weathered_copper',
         'weathered_cut_copper',
+        'weeping_vines_plant',
         'wet_sponge',
         'white_carpet',
         'white_concrete',
@@ -1828,6 +1885,7 @@ def block(
         'white_terracotta',
         'white_tulip',
         'white_wool',
+        'wither_rose',
         'yellow_carpet',
         'yellow_concrete',
         'yellow_concrete_powder',
