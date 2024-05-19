@@ -3,7 +3,7 @@ from pytest import raises
 from src.block import block
 from src.command import Kill, SetBlock, Teleport
 from src.context import Context
-from src.entity import Entity
+from src.entity import Entity, EveryEntity
 from src.exception import BadFunctionCall, ContextCombineError, FlatteningError
 from src.function import Function
 from src.position import Position, PositionedAs, RelativePosition
@@ -172,4 +172,17 @@ def test_stained_glass_pane(context: Context, position: Position):
             context
         )
         == 'setblock ~ ~ ~ minecraft:black_stained_glass_pane[west=true]'
+    )
+
+
+def test_kill_everybody():
+    assert Kill(EveryEntity()).to_string(Context()) == 'kill @e'
+
+
+def test_func_everybody(func: Function, context: Context, position: Position):
+    assert (
+        func.to_command(
+            Context(entity=EveryEntity().as_provider(), position=position)
+        ).to_string(context)
+        == 'execute as @e run function test:foo/bar'
     )

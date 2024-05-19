@@ -26,6 +26,14 @@ class DirectEntityReference(EntityReference):
         return '@s'
 
 
+class EveryEntity(EntityReference):
+    def __init__(self) -> None:
+        super().__init__(Context())
+
+    def to_string(self) -> str:
+        return '@e'
+
+
 class Entity(EntityProvider):
     def __init__(self) -> None:
         super().__init__(Context(entity=self))
