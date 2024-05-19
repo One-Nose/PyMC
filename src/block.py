@@ -211,6 +211,27 @@ def block(
         'quartz_pillar',
         'spruce_log',
         'spruce_wood',
+        'stripped_acacia_log',
+        'stripped_acacia_wood',
+        'stripped_bamboo_block',
+        'stripped_birch_log',
+        'stripped_birch_wood',
+        'stripped_cherry_log',
+        'stripped_cherry_wood',
+        'stripped_crimson_hyphae',
+        'stripped_crimson_stem',
+        'stripped_dark_oak_log',
+        'stripped_dark_oak_wood',
+        'stripped_jungle_log',
+        'stripped_jungle_wood',
+        'stripped_mangrove_log',
+        'stripped_mangrove_wood',
+        'stripped_oak_log',
+        'stripped_oak_wood',
+        'stripped_spruce_log',
+        'stripped_spruce_wood',
+        'stripped_warped_hyphae',
+        'stripped_warped_stem',
         'verdant_froglight',
         'warped_hyphae',
         'warped_stem',
@@ -502,7 +523,12 @@ def block(
 
 @overload
 def block(
-    id: Literal['amethyst_cluster', 'large_amethyst_bud', 'medium_amethyst_bud'],
+    id: Literal[
+        'amethyst_cluster',
+        'large_amethyst_bud',
+        'medium_amethyst_bud',
+        'small_amethyst_bud',
+    ],
     *,
     facing: Direction = ...,
     waterlogged: bool = ...,
@@ -583,6 +609,9 @@ def block(
         'purple_wall_banner',
         'red_glazed_terracotta',
         'red_wall_banner',
+        'soul_wall_torch',
+        'stonecutter',
+        'wall_torch',
         'white_glazed_terracotta',
         'white_wall_banner',
         'yellow_glazed_terracotta',
@@ -652,7 +681,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['beetroots', 'frosted_ice', 'nether_wart'],
+    id: Literal['beetroots', 'frosted_ice', 'nether_wart', 'sweet_berry_bush'],
     *,
     age: NaturalNumberBelow4 = ...,
 ) -> Block: ...
@@ -817,7 +846,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['blast_furnace', 'furnace', 'redstone_wall_torch'],
+    id: Literal['blast_furnace', 'furnace', 'redstone_wall_torch', 'smoker'],
     *,
     facing: HorizontalDirection = ...,
     lit: bool = ...,
@@ -854,7 +883,9 @@ def block(id: Literal['bubble_column'], *, drag: bool = ...) -> Block: ...
 
 
 @overload
-def block(id: Literal['cactus'], *, age: NaturalNumberBelow16 = ...) -> Block: ...
+def block(
+    id: Literal['cactus', 'sugar_cane'], *, age: NaturalNumberBelow16 = ...
+) -> Block: ...
 
 
 @overload
@@ -874,7 +905,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['campfire'],
+    id: Literal['campfire', 'soul_campfire'],
     *,
     facing: HorizontalDirection = ...,
     lit: bool = ...,
@@ -1059,7 +1090,7 @@ def block(
 
 @overload
 def block(
-    id: Literal['glow_lichen'],
+    id: Literal['glow_lichen', 'sculk_vein'],
     *,
     down: bool = ...,
     east: bool = ...,
@@ -1134,13 +1165,24 @@ def block(id: Literal['kelp'], *, age: NaturalNumberBelow26 = ...) -> Block: ...
 
 @overload
 def block(
-    id: Literal['lantern'], *, hanging: bool = ..., waterlogged: bool = ...
+    id: Literal['lantern', 'soul_lantern'],
+    *,
+    hanging: bool = ...,
+    waterlogged: bool = ...,
 ) -> Block: ...
 
 
 @overload
 def block(
-    id: Literal['large_fern', 'lilac', 'peony', 'pitcher_plant', 'rose_bush'],
+    id: Literal[
+        'large_fern',
+        'lilac',
+        'peony',
+        'pitcher_plant',
+        'rose_bush',
+        'tall_seagrass',
+        'sunflower',
+    ],
     *,
     half: Literal['lower', 'upper'] = ...,
 ) -> Block: ...
@@ -1251,7 +1293,10 @@ def block(
 
 @overload
 def block(
-    id: Literal['piston'], *, extended: bool = ..., facing: Direction = ...
+    id: Literal['piston', 'sticky_piston'],
+    *,
+    extended: bool = ...,
+    facing: Direction = ...,
 ) -> Block: ...
 
 
@@ -1343,11 +1388,80 @@ def block(
 
 @overload
 def block(
+    id: Literal['scaffolding'],
+    *,
+    bottom: bool = ...,
+    distance: NaturalNumberBelow8 = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(id: Literal['sculk_catalyst'], *, bloom: bool = ...) -> Block: ...
+
+
+@overload
+def block(
     id: Literal['sculk_sensor'],
     *,
     power: NaturalNumberBelow16 = ...,
     sculk_sensor_phase: Literal['active', 'cooldown', 'inactive'] = ...,
     waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['sculk_shrieker'],
+    *,
+    can_summon: bool = ...,
+    shrieking: bool = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['sea_pickle'],
+    *,
+    pickles: Literal[1, 2, 3, 4] = ...,
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['small_dripleaf'],
+    *,
+    facing: HorizontalDirection = ...,
+    half: Literal['lower', 'upper'],
+    waterlogged: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(id: Literal['sniffer_egg'], *, hatch: Literal[0, 1, 2] = ...) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['snow'], *, layers: Literal[1, 2, 3, 4, 5, 6, 7, 8] = ...
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['structure_block'],
+    *,
+    mode: Literal['corner', 'data', 'load', 'save'] = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['suspicious_gravel', 'suspicious_sand'],
+    *,
+    dusted: NaturalNumberBelow4 = ...,
 ) -> Block: ...
 
 
@@ -1655,22 +1769,42 @@ def block(
         'red_mushroom',
         'red_nether_bricks',
         'red_sand',
+        'red_sandstone',
         'red_stained_glass',
         'red_terracotta',
         'red_tulip',
         'red_wool',
-        'red_sandstone',
         'redstone_block',
         'reinforced_deepslate',
         'rooted_dirt',
         'sand',
         'sandstone',
         'sculk',
+        'sea_lantern',
+        'seagrass',
         'short_grass',
+        'shroomlight',
+        'slime_block',
+        'smithing_table',
+        'smooth_basalt',
+        'smooth_quartz',
+        'smooth_red_sandstone',
+        'smooth_sandstone',
+        'smooth_stone',
+        'snow_block',
+        'soul_fire',
+        'soul_sand',
+        'soul_soil',
+        'soul_torch',
+        'spawner',
+        'sponge',
+        'spore_blossom',
         'spruce_planks',
         'stone',
         'stone_bricks',
+        'structure_void',
         'terracotta',
+        'torch',
         'tube_coral_block',
         'warped_fungus',
         'warped_nylium',
@@ -1686,6 +1820,7 @@ def block(
         'waxed_weathered_cut_copper',
         'weathered_copper',
         'weathered_cut_copper',
+        'wet_sponge',
         'white_carpet',
         'white_concrete',
         'white_concrete_powder',
