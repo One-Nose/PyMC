@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import NamedTuple
+
 from .context import Context, ContextProvider, ProviderReference
 from .entity import DirectEntityReference, EntityProvider
 
@@ -27,17 +29,31 @@ class DirectPositionReference(PositionReference):
         return '~ ~ ~'
 
 
+class PositionValue(NamedTuple):
+    value: float
+    is_absolute: bool
+
+
 class RelativePosition(PositionReference):
-    _offset: tuple[float, float, float]
+    _offset: tuple[PositionValue, PositionValue, PositionValue]
 
     def __init__(
-        self, position: AnyPosition, offset: tuple[float, float, float]
+        self,
+        position: AnyPosition,
+        offset: tuple[PositionValue, PositionValue, PositionValue],
     ) -> None:
         super().__init__(Context(position=position.as_provider()))
         self._offset = offset
 
     def to_string(self) -> str:
-        return ' '.join('~' if offset == 0 else f'~{offset}' for offset in self._offset)
+        return ' '.join(
+            (
+                str(coor.value)
+                if coor.is_absolute
+                else '~' if coor.value == 0 else f'~{coor.value}'
+            )
+            for coor in self._offset
+        )
 
 
 class AbsolutePosition(PositionReference):

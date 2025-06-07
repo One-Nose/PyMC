@@ -34,6 +34,15 @@ def test_relative_position(
     )
 
 
+def test_semi_relative_position(
+    context: Context, entity: Entity, semi_relative_position: RelativePosition
+):
+    assert (
+        Teleport(entity, semi_relative_position).to_string(context)
+        == 'teleport @s 3 ~ ~-1'
+    )
+
+
 def test_teleport_below_entity(
     context: Context, entity: Entity, below_entity: RelativePosition
 ):

@@ -5,7 +5,7 @@ from src.context import Context
 from src.datapack import DataPack
 from src.entity import Entity
 from src.function import Function
-from src.position import Position, PositionedAs, RelativePosition
+from src.position import Position, PositionedAs, PositionValue, RelativePosition
 from src.resource_path import ResourcePath
 
 
@@ -40,12 +40,38 @@ def positioned_as_entity(entity) -> PositionedAs:
 
 @fixture
 def relative_position(position) -> RelativePosition:
-    return RelativePosition(position, (0, +1, -2))
+    return RelativePosition(
+        position,
+        (
+            PositionValue(0, False),
+            PositionValue(+1, False),
+            PositionValue(-2, False),
+        ),
+    )
+
+
+@fixture
+def semi_relative_position(position) -> RelativePosition:
+    return RelativePosition(
+        position,
+        (
+            PositionValue(3, True),
+            PositionValue(0, False),
+            PositionValue(-1, False),
+        ),
+    )
 
 
 @fixture
 def below_entity(positioned_as_entity) -> RelativePosition:
-    return RelativePosition(positioned_as_entity, (0, -1, 0))
+    return RelativePosition(
+        positioned_as_entity,
+        (
+            PositionValue(0, False),
+            PositionValue(-1, False),
+            PositionValue(0, False),
+        ),
+    )
 
 
 @fixture
