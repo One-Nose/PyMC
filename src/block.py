@@ -6,6 +6,20 @@ from .block_class import Block
 
 type Direction = HorizontalDirection | Literal['down', 'up']
 type HorizontalDirection = Literal['east', 'north', 'south', 'west']
+type Orientation = Literal[
+    'down_east',
+    'down_north',
+    'down_south',
+    'down_west',
+    'east_up',
+    'north_up',
+    'south_up',
+    'up_east',
+    'up_north',
+    'up_south',
+    'up_west',
+    'west_up',
+]
 
 type NaturalNumberBelow4 = Literal[0, 1, 2, 3]
 type NaturalNumberBelow5 = NaturalNumberBelow4 | Literal[4]
@@ -52,14 +66,22 @@ def block(
         'bamboo_door',
         'birch_door',
         'cherry_door',
+        'copper_door',
         'crimson_door',
         'dark_oak_door',
+        'exposed_copper_door',
         'iron_door',
         'jungle_door',
         'mangrove_door',
         'oak_door',
+        'oxidized_copper_door',
         'spruce_door',
         'warped_door',
+        'waxed_copper_door',
+        'waxed_exposed_copper_door',
+        'waxed_oxidized_copper_door',
+        'waxed_weathered_copper_door',
+        'weathered_copper_door',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -340,6 +362,7 @@ def block(
         'polished_deepslate_slab',
         'polished_diorite_slab',
         'polished_granite_slab',
+        'polished_tuff_slab',
         'prismarine_brick_slab',
         'prismarine_slab',
         'purpur_slab',
@@ -354,6 +377,8 @@ def block(
         'spruce_slab',
         'stone_brick_slab',
         'stone_slab',
+        'tuff_brick_slab',
+        'tuff_slab',
         'warped_slab',
         'waxed_cut_copper_slab',
         'waxed_exposed_cut_copper_slab',
@@ -405,6 +430,7 @@ def block(
         'polished_deepslate_stairs',
         'polished_diorite_stairs',
         'polished_granite_stairs',
+        'polished_tuff_stairs',
         'prismarine_brick_stairs',
         'prismarine_stairs',
         'purpur_stairs',
@@ -418,6 +444,8 @@ def block(
         'spruce_stairs',
         'stone_brick_stairs',
         'stone_stairs',
+        'tuff_brick_stairs',
+        'tuff_stairs',
         'warped_stairs',
         'waxed_cut_copper_stairs',
         'waxed_exposed_cut_copper_stairs',
@@ -442,14 +470,22 @@ def block(
         'bamboo_trapdoor',
         'birch_trapdoor',
         'cherry_trapdoor',
+        'copper_trapdoor',
         'crimson_trapdoor',
         'dark_oak_trapdoor',
+        'exposed_copper_trapdoor',
         'iron_trapdoor',
         'jungle_trapdoor',
         'mangrove_trapdoor',
         'oak_trapdoor',
+        'oxidized_copper_trapdoor',
         'spruce_trapdoor',
         'warped_trapdoor',
+        'waxed_copper_trapdoor',
+        'waxed_exposed_copper_trapdoor',
+        'waxed_oxidized_copper_trapdoor',
+        'waxed_weathered_copper_trapdoor',
+        'weathered_copper_trapdoor',
     ],
     *,
     facing: HorizontalDirection = ...,
@@ -556,11 +592,14 @@ def block(
         'polished_blackstone_brick_wall',
         'polished_blackstone_wall',
         'polished_deepslate_wall',
+        'polished_tuff_wall',
         'prismarine_wall',
         'red_nether_brick_wall',
         'red_sandstone_wall',
         'sandstone_wall',
         'stone_brick_wall',
+        'tuff_brick_wall',
+        'tuff_wall',
     ],
     *,
     east: Literal['low', 'none', 'high'] = ...,
@@ -648,6 +687,7 @@ def block(
         'bubble_coral',
         'bubble_coral_fan',
         'conduit',
+        'copper_grate',
         'dead_brain_coral',
         'dead_brain_coral_fan',
         'dead_bubble_coral',
@@ -658,13 +698,21 @@ def block(
         'dead_horn_coral_fan',
         'dead_tube_coral',
         'dead_tube_coral_fan',
+        'exposed_copper_grate',
         'fire_coral',
         'fire_coral_fan',
+        'heavy_core',
         'horn_coral',
         'horn_coral_fan',
         'mangrove_roots',
+        'oxidized_copper_grate',
         'tube_coral',
         'tube_coral_fan',
+        'waxed_copper_grate',
+        'waxed_exposed_copper_grate',
+        'waxed_oxidized_copper_grate',
+        'waxed_weathered_copper_grate',
+        'weathered_copper_grate',
     ],
     *,
     waterlogged: bool = ...,
@@ -1005,6 +1053,34 @@ def block(id: Literal['composter'], *, level: NaturalNumberBelow9 = ...) -> Bloc
 @overload
 def block(
     id: Literal[
+        'copper_bulb',
+        'exposed_copper_bulb',
+        'oxidized_copper_bulb',
+        'waxed_copper_bulb',
+        'waxed_exposed_copper_bulb',
+        'waxed_oxidized_copper_bulb',
+        'waxed_weathered_copper_bulb',
+        'weathered_copper_bulb',
+    ],
+    *,
+    lit: bool = ...,
+    powered: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['crafter'],
+    *,
+    crafting: bool = ...,
+    orientation: Orientation = ...,
+    triggered: bool = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal[
         'creeper_head',
         'dragon_head',
         'piglin_head',
@@ -1138,24 +1214,7 @@ def block(
 
 
 @overload
-def block(
-    id: Literal['jigsaw'],
-    *,
-    orientation: Literal[
-        'down_east',
-        'down_north',
-        'down_south',
-        'down_west',
-        'east_up',
-        'north_up',
-        'south_up',
-        'up_east',
-        'up_north',
-        'up_south',
-        'up_west',
-        'west_up',
-    ] = ...,
-) -> Block: ...
+def block(id: Literal['jigsaw'], *, orientation: Orientation = ...) -> Block: ...
 
 
 @overload
@@ -1485,6 +1544,22 @@ def block(id: Literal['torchflower_crop'], *, age: Literal[0, 1] = ...) -> Block
 
 @overload
 def block(
+    id: Literal['trial_spawner'],
+    *,
+    ominous: bool = ...,
+    trial_spawner_state: Literal[
+        'active',
+        'cooldown',
+        'ejecting_reward',
+        'inactive',
+        'waiting_for_players',
+        'waiting_for_reward_ejection',
+    ] = ...,
+) -> Block: ...
+
+
+@overload
+def block(
     id: Literal['tripwire'],
     *,
     attached: bool = ...,
@@ -1513,6 +1588,16 @@ def block(
     *,
     eggs: Literal[1, 2, 3, 4] = ...,
     hatch: Literal[0, 1, 2] = ...,
+) -> Block: ...
+
+
+@overload
+def block(
+    id: Literal['vault'],
+    *,
+    facing: HorizontalDirection = ...,
+    ominous: bool = ...,
+    vault_state: Literal['active', 'ejecting', 'inactive', 'unlocking'] = ...,
 ) -> Block: ...
 
 
@@ -1577,6 +1662,7 @@ def block(
         'cauldron',
         'cave_air',
         'cherry_planks',
+        'chiseled_copper',
         'chiseled_deepslate',
         'chiseled_nether_bricks',
         'chiseled_polished_blackstone',
@@ -1584,6 +1670,8 @@ def block(
         'chiseled_red_sandstone',
         'chiseled_sandstone',
         'chiseled_stone_bricks',
+        'chiseled_tuff',
+        'chiseled_tuff_bricks',
         'clay',
         'coal_block',
         'coal_ore',
@@ -1647,6 +1735,7 @@ def block(
         'end_portal',
         'end_stone',
         'end_stone_bricks',
+        'exposed_chiseled_copper',
         'exposed_copper',
         'exposed_cut_copper',
         'fern',
@@ -1746,6 +1835,7 @@ def block(
         'orange_tulip',
         'orange_wool',
         'oxeye_daisy',
+        'oxidized_chiseled_copper',
         'oxidized_copper',
         'oxidized_cut_copper',
         'packed_ice',
@@ -1763,6 +1853,7 @@ def block(
         'polished_deepslate',
         'polished_diorite',
         'polished_granite',
+        'polished_tuff',
         'poppy',
         'potted_acacia_sapling',
         'potted_allium',
@@ -1860,6 +1951,7 @@ def block(
         'torchflower',
         'tube_coral_block',
         'tuff',
+        'tuff_bricks',
         'twisting_vines_plant',
         'void_air',
         'warped_fungus',
@@ -1867,14 +1959,19 @@ def block(
         'warped_planks',
         'warped_roots',
         'warped_wart_block',
+        'waxed_chiseled_copper',
         'waxed_copper_block',
         'waxed_cut_copper',
+        'waxed_exposed_chiseled_copper',
         'waxed_exposed_copper',
         'waxed_exposed_cut_copper',
+        'waxed_oxidized_chiseled_copper',
         'waxed_oxidized_copper',
         'waxed_oxidized_cut_copper',
+        'waxed_weathered_chiseled_copper',
         'waxed_weathered_copper',
         'waxed_weathered_cut_copper',
+        'weathered_chiseled_copper',
         'weathered_copper',
         'weathered_cut_copper',
         'weeping_vines_plant',
@@ -1893,7 +1990,7 @@ def block(
         'yellow_stained_glass',
         'yellow_terracotta',
         'yellow_wool',
-    ]
+    ],
 ) -> Block: ...
 
 
