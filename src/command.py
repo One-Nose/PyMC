@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from itertools import chain
+from traceback import extract_stack
 from typing import TYPE_CHECKING
 
 from .block_class import Block
@@ -41,6 +42,8 @@ class Command(ContextNode):
             )
         )
 
+        self._traceback_stack = extract_stack()
+
     def to_string(self, context: Context) -> str:
         return ' '.join(self._get_str_args(context))
 
@@ -48,7 +51,7 @@ class Command(ContextNode):
         providers = self.flattened(context)
 
         if providers is None:
-            raise FlatteningError
+            raise FlatteningError(stack_summary=self._traceback_stack)
 
         args: list[str] = []
 
