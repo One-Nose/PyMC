@@ -456,6 +456,7 @@ def block(
     half: Literal['bottom', 'top'] = ...,
     open: bool = ...,
     powered: bool = ...,
+    waterlogged: bool = ...,
 ) -> Block: ...
 
 
