@@ -1,4 +1,5 @@
 import json
+from os import PathLike
 from pathlib import Path
 from shutil import rmtree
 from typing import Any
@@ -19,13 +20,15 @@ class DataPack:
         self.description = description
         self.resources = []
 
-    def create(self, output_path: Path) -> None:
-        if output_path.exists():
+    def create(self, output_path: str | PathLike[str]) -> None:
+        root = Path(output_path)
+
+        if root.exists():
             rmtree(output_path)
 
-        output_path.mkdir()
-        self.create_mcmeta(output_path)
-        namespace_dir = output_path / 'data' / str(self.namespace)
+        root.mkdir()
+        self.create_mcmeta(root)
+        namespace_dir = root / 'data' / str(self.namespace)
 
         for resource in self.resources:
             resource_path = namespace_dir / resource.inner_path()
